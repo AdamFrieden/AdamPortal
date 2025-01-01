@@ -5,6 +5,7 @@ A simple project to learn and share.
 ### **Reference**
 - Domain: [Cloudflare](https://dash.cloudflare.com)
 - Source: [GitHub](https://github.com/AdamFrieden/AdamPortal)
+- [Developer Log](DevLog.md)
 - [How To Run](#how-to-run)
 - [ToDo List](#to-do)
 ---
@@ -41,8 +42,8 @@ Run local dev server
 - [x] Create a public github repo
 - [x] Add cc license
 - [x] Clone it locally
-- [ ] Add .gitignore
-- [ ] Use vite to scaffold a basic react app
+- [x] Use vite to scaffold a basic react app
+- [x] Add .gitignore (this came with vite)
 - [ ] Setup AWS S3 bucket
 - [ ] Deploy app to S3
 - [ ] Connect adamportal domain to S3
