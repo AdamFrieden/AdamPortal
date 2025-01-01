@@ -5,7 +5,8 @@ A simple project to learn and share.
 ### **Reference**
 - Domain: [Cloudflare](https://dash.cloudflare.com)
 - Source: [GitHub](https://github.com/AdamFrieden/AdamPortal)
-- Hosting: AWS S3
+- [How To Run](#how-to-run)
+- [ToDo List](#to-do)
 ---
 
 ### **Overview**
@@ -30,10 +31,17 @@ Notably did not use:
 - CRA
 
 ---
+
+### **How to Run**
+
+Run local dev server
+`npm run dev`
+
 ### To Do:
 - [x] Create a public github repo
 - [x] Add cc license
 - [x] Clone it locally
+- [ ] Add .gitignore
 - [ ] Use vite to scaffold a basic react app
 - [ ] Setup AWS S3 bucket
 - [ ] Deploy app to S3
