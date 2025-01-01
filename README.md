@@ -3,17 +3,17 @@ A simple project to learn and share.
 
 
 ### **Reference**
-- Domain: [Cloudflare](https://https://dash.cloudflare.com)
+- Domain: [Cloudflare](https://dash.cloudflare.com)
 - Source: [GitHub](https://github.com/AdamFrieden/AdamPortal)
 - Hosting: AWS S3
 ---
+
 ### **Overview**
 
 **Goals:**
 * Learn new stuff
 * Have something out in the wild to reference
 * Starting point for other projects
-
 
 **Technology:**
 - React (+Router)
@@ -25,9 +25,9 @@ A simple project to learn and share.
 - AWS S3 (+Cloudfront)
 
 Notably did not use:
-Next.js
-Vercel
-CRA
+- Next.js
+- Vercel
+- CRA
 
 ---
 ### To Do:
@@ -41,8 +41,10 @@ CRA
 - [ ] Setup GitHub Actions CICD
 - [ ] Sketch out intended UI
 - [ ] Add Material UI and build out site
+- [ ] Add some creative writing and links to other projects
 
 ## License
-This repository is licensed under a [Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License](https://creativecommons.org/licenses/by-nc-nd/4.0/).
+This repository is licensed under
+[Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License](https://creativecommons.org/licenses/by-nc-nd/4.0/).
 
 ![Creative Commons License](https://licensebuttons.net/l/by-nc-nd/4.0/88x31.png)
