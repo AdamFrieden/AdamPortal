@@ -44,8 +44,8 @@ Run local dev server
 - [x] Clone it locally
 - [x] Use vite to scaffold a basic react app
 - [x] Add .gitignore (this came with vite)
-- [ ] Setup AWS S3 bucket
-- [ ] Deploy app to S3
+- [x] Setup AWS S3 bucket
+- [x] Deploy app to S3
 - [ ] Connect adamportal domain to S3
 - [ ] Setup GitHub Actions CICD
 - [ ] Sketch out intended UI

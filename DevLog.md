@@ -2,6 +2,8 @@
 
 1. [Create Repo](#0---create-github-repository)
 2. [Scaffold App](#1---scaffolding-a-react-app-with-vite)
+3. [Setup S3 Bucket](#3-setup-aws-s3-bucket-to-host)
+4. [Connect Domain](#4-connect-cloudflare-domain-to-s3)
 
 ## 0 - Create GitHub Repository
 
@@ -82,4 +84,43 @@ export default tseslint.config({
 })
 ```
 
+## 3 Setup AWS S3 Bucket to Host
 
+Navigated to the [AWS Console](https://us-east-1.console.aws.amazon.com/console/home?region=us-east-1)
+
+Find S3 and create a new general purpose bucket. You will need to uncheck "Block Public Access settings for this bucket" (this needs to be publicly accessible)
+
+Under properties for that bucket, enable static website hosting.
+
+Then under permissions, add a bucket policy (note that this only grants GetObject action)
+
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "PublicReadGetObject",
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action": "s3:GetObject",
+            "Resource": "arn:aws:s3:::adamportalbucket/*"
+        }
+    ]
+}
+```
+
+Back in our simple Vite app, run this script (from package.json)
+
+`npm run build`
+
+Once complete, upload the contents of the `/dist` folder to the S3 bucket.
+
+## 4 Connect Cloudflare Domain to S3
+
+- Grab the bucket url from the AWS Console. It will look something like:
+
+`http://adamportalbucket.s3-website-us-east-1.amazonaws.com/`
+
+- Then navigate to your domain in the [CloudFlare Dashboard](https://dash.cloudflare.com)
+- Go to DNS Settings
+  - Add a CNAME record for the root domain targetting your S3 bucket url
