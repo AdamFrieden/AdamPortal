@@ -132,7 +132,7 @@ This requires setting up two S3 buckets, one for each url. My two bucket names:
 
 Configuration for both buckets:
 * block all public access is OFF
-* bucket policy granting GetObject
+* bucket policy granting GetObject (see above)
 * static website hosting enabled
 
 On the [CloudFlare Dashboard](https://dash.cloudflare.com) we add a pair of CNAME records and a new redirect rule:
@@ -141,7 +141,7 @@ On the [CloudFlare Dashboard](https://dash.cloudflare.com) we add a pair of CNAM
 * Add a new record
   * Type = `CNAME`
   * Name = `adamportal.com` (root)
-  * Target = `www.adamportal.com`
+  * Target = `www.adamportal.com` (not sure if this matters)
   * Proxy = ON
 * Add a new record
   * Type = `CNAME`

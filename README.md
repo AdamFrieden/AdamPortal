@@ -5,6 +5,7 @@ A simple project to learn and share.
 ### **Reference**
 - Domain: [Cloudflare](https://dash.cloudflare.com)
 - Source: [GitHub](https://github.com/AdamFrieden/AdamPortal)
+- Host: [AWS](https://console.aws.amazon.com)
 - [Developer Log](DevLog.md)
 - [How To Run](#how-to-run)
 - [ToDo List](#to-do)
@@ -38,7 +39,7 @@ Notably did not use:
 Run local dev server
 `npm run dev`
 
-How to build for production
+Build for production
 `npm run build`
 
 ### To Do:
@@ -51,6 +52,7 @@ How to build for production
 - [x] Deploy app to S3
 - [x] Connect adamportal domain to S3
 - [ ] Setup GitHub Actions CICD
+- [ ] Use GitHub Secrets to store keys needed for Actions
 - [ ] Sketch out intended UI
 - [ ] Add Material UI and build out site
 - [ ] Add some creative writing and links to other projects
