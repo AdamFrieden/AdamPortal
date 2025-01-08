@@ -38,6 +38,9 @@ Notably did not use:
 Run local dev server
 `npm run dev`
 
+How to build for production
+`npm run build`
+
 ### To Do:
 - [x] Create a public github repo
 - [x] Add cc license
@@ -46,7 +49,7 @@ Run local dev server
 - [x] Add .gitignore (this came with vite)
 - [x] Setup AWS S3 bucket
 - [x] Deploy app to S3
-- [ ] Connect adamportal domain to S3
+- [x] Connect adamportal domain to S3
 - [ ] Setup GitHub Actions CICD
 - [ ] Sketch out intended UI
 - [ ] Add Material UI and build out site

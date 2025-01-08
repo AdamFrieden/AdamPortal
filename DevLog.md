@@ -88,12 +88,11 @@ export default tseslint.config({
 
 Navigated to the [AWS Console](https://us-east-1.console.aws.amazon.com/console/home?region=us-east-1)
 
-Find S3 and create a new general purpose bucket. You will need to uncheck "Block Public Access settings for this bucket" (this needs to be publicly accessible)
-
-Under properties for that bucket, enable static website hosting.
-
-Then under permissions, add a bucket policy (note that this only grants GetObject action)
-
+* Find S3 and create a new general purpose bucket
+  * Note that the bucket name needs to match the expected url (quirk of S3 as static site host?)
+* Uncheck "Block Public Access settings for this bucket" - bucket needs to be publicly accessible.
+* Enable static website hosting (under properties)
+* Add a bucket policy to grant GetObject permission
 ```
 {
     "Version": "2012-10-17",
@@ -103,11 +102,13 @@ Then under permissions, add a bucket policy (note that this only grants GetObjec
             "Effect": "Allow",
             "Principal": "*",
             "Action": "s3:GetObject",
-            "Resource": "arn:aws:s3:::adamportalbucket/*"
+            "Resource": "arn:aws:s3:::examplebucket/*"
         }
     ]
 }
 ```
+
+#### Build Production App
 
 Back in our simple Vite app, run this script (from package.json)
 
@@ -115,12 +116,37 @@ Back in our simple Vite app, run this script (from package.json)
 
 Once complete, upload the contents of the `/dist` folder to the S3 bucket.
 
+
 ## 4 Connect Cloudflare Domain to S3
 
-- Grab the bucket url from the AWS Console. It will look something like:
 
-`http://adamportalbucket.s3-website-us-east-1.amazonaws.com/`
+> Note that you will not be able to CNAME the top-level / root / apex domain (example.com) and instead need to settle for www.example.com
 
-- Then navigate to your domain in the [CloudFlare Dashboard](https://dash.cloudflare.com)
-- Go to DNS Settings
-  - Add a CNAME record for the root domain targetting your S3 bucket url
+The final setup:
+- www.adamportal.com serves up the app (without showing s3 bucket in url)
+- adamportal.com redirects to www.adamportal.com
+
+This requires setting up two S3 buckets, one for each url. My two bucket names:
+* adamportal.com
+* www.adamportal.com
+
+Configuration for both buckets:
+* block all public access is OFF
+* bucket policy granting GetObject
+* static website hosting enabled
+
+On the [CloudFlare Dashboard](https://dash.cloudflare.com) we add a pair of CNAME records and a new redirect rule:
+
+* Go to DNS Settings
+* Add a new record
+  * Type = `CNAME`
+  * Name = `adamportal.com` (root)
+  * Target = `www.adamportal.com`
+  * Proxy = ON
+* Add a new record
+  * Type = `CNAME`
+  * Name = `www`
+  * Target = `www.adamportal.com.s3-website-us-east-1.amazonaws.com`
+  * Proxy = ON
+* Go to Rules
+* Add a 'Redirect from Root to WWW' rule
