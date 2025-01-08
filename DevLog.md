@@ -4,6 +4,7 @@
 2. [Scaffold App](#1---scaffolding-a-react-app-with-vite)
 3. [Setup S3 Bucket](#3-setup-aws-s3-bucket-to-host)
 4. [Connect Domain](#4-connect-cloudflare-domain-to-s3)
+5. [Create GitHub Actions Deploy Script](.github\workflows\main_deploy.yml)
 
 ## 0 - Create GitHub Repository
 
