@@ -52,7 +52,7 @@ Build for production
 - [x] Deploy app to S3
 - [x] Connect adamportal domain to S3
 - [x] Setup GitHub Actions CICD
-- [ ] Use GitHub Secrets to store keys needed for Actions
+- [x] Use GitHub Secrets to store keys needed for Actions
 - [ ] Sketch out intended UI
 - [ ] Add Material UI and build out site
 - [ ] Add some creative writing and links to other projects
