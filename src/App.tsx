@@ -12,6 +12,8 @@ import {
   useMediaQuery,
   CssBaseline,
   Box,
+  Paper,
+  Link
 } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -135,9 +137,17 @@ const App = () => {
             }}
           >
             <Toolbar /> {/* Spacer for AppBar height */}
-            <Typography variant="h4">Welcome to My App</Typography>
+            <Typography variant="h4">Hey it's Adam</Typography>
             <Typography>
-              This is a simple app with a sidebar navigation and a dark/light theme toggle.
+              <br/>
+              <p>
+                A simple site to learn and share.
+                <br/>
+                {`Follow along `}
+                <Link href="https://github.com/AdamFrieden/AdamPortal/" target="_blank" rel="noopener noreferrer">
+                   here
+                </Link>.
+              </p>
             </Typography>
           </Box>
         </Box>
