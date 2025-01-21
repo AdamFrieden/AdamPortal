@@ -10,6 +10,9 @@ A simple project to learn and share.
 - [How To Run](#how-to-run)
 - [ToDo List](#to-do)
 ---
+- [React API](https://react.dev/reference/react)
+- [Material UI](https://mui.com/material-ui)
+---
 
 ### **Overview**
 
@@ -27,6 +30,11 @@ A simple project to learn and share.
 - Material UI
 - AWS S3 (+Cloudfront)
 
+- Lambda
+- API Gateway
+- Cognito
+- EventBridge
+
 Notably did not use:
 - Next.js
 - Vercel
@@ -41,6 +49,8 @@ Run local dev server
 
 Build for production
 `npm run build`
+
+---
 
 ### To Do:
 - [x] Create a public github repo

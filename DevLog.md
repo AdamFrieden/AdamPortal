@@ -4,7 +4,8 @@
 2. [Scaffold App](#1---scaffolding-a-react-app-with-vite)
 3. [Setup S3 Bucket](#3-setup-aws-s3-bucket-to-host)
 4. [Connect Domain](#4-connect-cloudflare-domain-to-s3)
-5. [Create GitHub Actions Deploy Script](.github/workflows/main_deploy.yml)
+5. [GitHub Actions Deploy Script](.github/workflows/main_deploy.yml)
+6. [Adding Material UI](#6-adding-materialui)
 
 ## 0 - Create GitHub Repository
 
@@ -151,3 +152,21 @@ On the [CloudFlare Dashboard](https://dash.cloudflare.com) we add a pair of CNAM
   * Proxy = ON
 * Go to Rules
 * Add a 'Redirect from Root to WWW' rule
+
+## 5 GitHub Actions Deploy Script
+
+ChatGPT helped create a [simple deploy script](.github/workflows/main_deploy.yml) using GitHub Actions to push the latest `main` build to S3.
+
+## 6 Adding MaterialUI
+
+First, install the libraries:
+
+`npm install @mui/material @emotion/react @emotion/styled`
+
+Found a MaterialUI theme building tool to come up with something simple:
+
+`https://bareynol.github.io/mui-theme-creator/`
+
+
+
+
