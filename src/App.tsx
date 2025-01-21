@@ -12,7 +12,6 @@ import {
   useMediaQuery,
   CssBaseline,
   Box,
-  Paper,
   Link
 } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
