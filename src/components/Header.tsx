@@ -1,5 +1,5 @@
 // components/Header.tsx
-import { AppBar, Toolbar, Typography, IconButton, Switch } from '@mui/material';
+import { AppBar, Toolbar, Typography, IconButton } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useTheme } from '../context/ThemeProvider';
 import LightMode from '@mui/icons-material/LightMode'; // Sun icon
