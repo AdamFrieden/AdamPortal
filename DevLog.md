@@ -167,5 +167,5 @@ Found a MaterialUI theme building tool to come up with something simple:
 
 `https://bareynol.github.io/mui-theme-creator/`
 
-Used React's [useContext](https://react.dev/reference/react/useContext) to provider a theme to the rest of the app
+Used React's [useContext](https://react.dev/reference/react/useContext) to provide a theme to the rest of the app
 

@@ -1,12 +1,12 @@
 // components/MainLayout.tsx
-import { Box } from '@mui/material';
+import { Box, useMediaQuery } from '@mui/material';
 import Header from './Header';
 import Sidebar from './Sidebar';
 import { Outlet } from 'react-router-dom';
 import { useState } from 'react';
 
 const PortalLayout = () => {
-  const isSmallScreen = window.matchMedia('(max-width: 600px)').matches;
+  const isSmallScreen = useMediaQuery('(max-width:600px)');
   const [drawerOpen, setDrawerOpen] = useState(!isSmallScreen);
 
   const handleDrawerToggle = () => setDrawerOpen(!drawerOpen);
