@@ -3,13 +3,19 @@ import { Box, Toolbar, useMediaQuery } from '@mui/material';
 import Header from './Header';
 import Sidebar from './Sidebar';
 import { Outlet } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const PortalLayout = () => {
   const isSmallScreen = useMediaQuery('(max-width:600px)');
   const [drawerOpen, setDrawerOpen] = useState(!isSmallScreen);
 
   const handleDrawerToggle = () => setDrawerOpen(!drawerOpen);
+
+  useEffect(() => {
+    if (isSmallScreen) {
+      setDrawerOpen(false);
+    }
+  }, [isSmallScreen]);
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
