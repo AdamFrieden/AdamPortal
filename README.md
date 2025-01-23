@@ -1,4 +1,4 @@
-# AdamPortal
+# [AdamPortal](https://www.adamportal.com/)
 A simple project to learn and share.
 
 
@@ -22,23 +22,18 @@ A simple project to learn and share.
 * Starting point for other projects
 
 **Technology:**
-- React (+Router)
-- Typescript
-- Vite
-- npm
-- GitHub (+Actions)
-- Material UI
-- AWS S3 (+Cloudfront)
-
-- Lambda
-- API Gateway
-- Cognito
-- EventBridge
+* React (+Router)
+* Typescript
+* Vite
+* npm
+* GitHub (+Actions)
+* Material UI
+* AWS S3 (+Cloudfront)
 
 Notably did not use:
-- Next.js
-- Vercel
-- CRA
+* Next.js
+* Vercel
+* CRA
 
 ---
 
@@ -63,8 +58,8 @@ Build for production
 - [x] Connect adamportal domain to S3
 - [x] Setup GitHub Actions CICD
 - [x] Use GitHub Secrets to store keys needed for Actions
-- [ ] Sketch out intended UI
-- [ ] Add Material UI and build out site
+- [x] Sketch out intended UI
+- [x] Add Material UI and build out site
 - [ ] Add some creative writing and links to other projects
 
 ## License
