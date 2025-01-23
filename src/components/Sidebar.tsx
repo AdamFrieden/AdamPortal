@@ -1,14 +1,13 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   Drawer,
   Toolbar,
   List,
   ListItemButton,
-  ListItemText,
-  Collapse,
+  ListItemText
 } from '@mui/material';
-import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { Link, useLocation } from 'react-router-dom';
+import Submenu from './Submenu';
 
 interface SidebarProps {
   drawerOpen: boolean;
@@ -26,6 +25,16 @@ const Sidebar = ({ drawerOpen, isSmallScreen, onToggleDrawer }: SidebarProps) =>
   const handleSubmenuToggle = (id: string) => {
     setOpenSubmenu((prev) => (prev === id ? null : id)); // Toggle the submenu
   };
+
+  // Memoized styles for Drawer
+  const drawerStyles = useMemo(
+    () => ({
+      width: drawerWidth,
+      flexShrink: 0,
+      [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box' },
+    }),
+    [drawerWidth]
+  );
 
   // Example submenus with their items
   const submenus = [
@@ -47,20 +56,16 @@ const Sidebar = ({ drawerOpen, isSmallScreen, onToggleDrawer }: SidebarProps) =>
     },
   ];
 
-  
-    const location = useLocation();
-    const isActive = (path: string) => location.pathname === path;
+  const location = useLocation();
+  // Memoized check for router path
+  const isActive = React.useCallback((path: string) => location.pathname === path, [location.pathname]);
 
   return (
     <Drawer
       variant={isSmallScreen ? 'temporary' : 'permanent'}
       open={drawerOpen}
       onClose={onToggleDrawer}
-      sx={{
-        width: drawerWidth,
-        flexShrink: 0,
-        [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box' },
-      }}
+      sx={drawerStyles}
     >
       <Toolbar />
       <List>
@@ -77,28 +82,16 @@ const Sidebar = ({ drawerOpen, isSmallScreen, onToggleDrawer }: SidebarProps) =>
 
         {/* Dynamically Render Submenus */}
         {submenus.map((submenu) => (
-          <React.Fragment key={submenu.id}>
-            <ListItemButton onClick={() => handleSubmenuToggle(submenu.id)}>
-              <ListItemText primary={submenu.label} />
-              {openSubmenu === submenu.id ? <ExpandLess /> : <ExpandMore />}
-            </ListItemButton>
-            <Collapse in={openSubmenu === submenu.id} timeout="auto" unmountOnExit>
-              <List component="div" disablePadding>
-                {submenu.items.map((item) => (
-                  <ListItemButton
-                    key={item.path}
-                    sx={{ pl: 4 }}
-                    component={Link}
-                    to={item.path}
-                    selected={isActive(item.path)}
-                    onClick={onToggleDrawer}
-                  >
-                    <ListItemText primary={item.label} />
-                  </ListItemButton>
-                ))}
-              </List>
-            </Collapse>
-          </React.Fragment>
+          <Submenu
+            key={submenu.id}
+            id={submenu.id}
+            label={submenu.label}
+            items={submenu.items}
+            openSubmenu={openSubmenu}
+            onToggle={handleSubmenuToggle}
+            isActive={isActive}
+            onCloseDrawer={onToggleDrawer}
+          />
         ))}
       </List>
     </Drawer>
