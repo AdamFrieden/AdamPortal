@@ -1,15 +1,15 @@
 // components/MainContent.tsx
-import { Box, Toolbar, Typography, Link } from '@mui/material';
+import { Box, Typography, Link } from '@mui/material';
 
 const MainContent = () => {
   return (
-    <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-      <Toolbar />
+    <Box>
       <Typography variant="h4">Hey it's Adam</Typography>
+      <br/>
       <Typography>
-        <p>
           A simple site to learn and share.
-          <br />
+      </Typography>
+      <Typography>
           {`Follow along `}
           <Link
             href="https://github.com/AdamFrieden/AdamPortal/"
@@ -18,7 +18,6 @@ const MainContent = () => {
           >
             here
           </Link>.
-        </p>
       </Typography>
     </Box>
   );

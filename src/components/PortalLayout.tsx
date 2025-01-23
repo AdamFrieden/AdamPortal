@@ -1,5 +1,5 @@
 // components/MainLayout.tsx
-import { Box, useMediaQuery } from '@mui/material';
+import { Box, Toolbar, useMediaQuery } from '@mui/material';
 import Header from './Header';
 import Sidebar from './Sidebar';
 import { Outlet } from 'react-router-dom';
@@ -24,7 +24,8 @@ const PortalLayout = () => {
           onToggleDrawer={handleDrawerToggle}
         />
         <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-          <Outlet /> {/* Render child routes here */}
+            <Toolbar />
+            <Outlet /> {/* Render child routes here */}
         </Box>
       </Box>
     </Box>
