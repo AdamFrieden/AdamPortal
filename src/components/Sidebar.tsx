@@ -1,5 +1,6 @@
 // components/Sidebar.tsx
 import { Drawer, Toolbar, List, ListItemButton, ListItemText } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 interface SidebarProps {
   drawerOpen: boolean;
@@ -23,13 +24,13 @@ const Sidebar = ({ drawerOpen, isSmallScreen, onToggleDrawer }: SidebarProps) =>
     >
       <Toolbar />
       <List>
-        <ListItemButton onClick={() => console.log('Home')}>
+        <ListItemButton component={Link} to="/" onClick={onToggleDrawer}>
           <ListItemText primary="Home" />
         </ListItemButton>
-        <ListItemButton onClick={() => console.log('About')}>
+        <ListItemButton component={Link} to="/about" onClick={onToggleDrawer}>
           <ListItemText primary="About" />
         </ListItemButton>
-        <ListItemButton onClick={() => console.log('Contact')}>
+        <ListItemButton component={Link} to="/contact" onClick={onToggleDrawer}>
           <ListItemText primary="Contact" />
         </ListItemButton>
       </List>
