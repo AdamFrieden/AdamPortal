@@ -39,19 +39,19 @@ const Sidebar = ({ drawerOpen, isSmallScreen, onToggleDrawer }: SidebarProps) =>
   // Example submenus with their items
   const submenus = [
     {
-      id: 'moreOptions',
-      label: 'More Options',
+      id: 'creativeWriting',
+      label: 'Creative Writing',
       items: [
         { label: 'Option 1', path: '/option1' },
         { label: 'Option 2', path: '/option2' },
       ],
     },
     {
-      id: 'settings',
-      label: 'Settings',
+      id: 'projects',
+      label: 'Projects',
       items: [
-        { label: 'Profile', path: '/profile' },
-        { label: 'Account', path: '/account' },
+        { label: 'Ninja Party', path: '/ninjaparty' },
+        { label: 'Space Barbarians', path: '/spacebarbarians' },
       ],
     },
   ];
@@ -73,12 +73,12 @@ const Sidebar = ({ drawerOpen, isSmallScreen, onToggleDrawer }: SidebarProps) =>
         <ListItemButton component={Link} to="/" onClick={onToggleDrawer} selected={isActive('/')}>
           <ListItemText primary="Home" />
         </ListItemButton>
-        <ListItemButton component={Link} to="/about" onClick={onToggleDrawer} selected={isActive('/about')}>
-          <ListItemText primary="About" />
+        <ListItemButton component={Link} to="/travel" onClick={onToggleDrawer} selected={isActive('/travel')}>
+          <ListItemText primary="Travel" />
         </ListItemButton>
-        <ListItemButton component={Link} to="/contact" onClick={onToggleDrawer} selected={isActive('/contact')}>
+        {/* <ListItemButton component={Link} to="/contact" onClick={onToggleDrawer} selected={isActive('/contact')}>
           <ListItemText primary="Contact" />
-        </ListItemButton>
+        </ListItemButton> */}
 
         {/* Dynamically Render Submenus */}
         {submenus.map((submenu) => (
