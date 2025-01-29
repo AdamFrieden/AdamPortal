@@ -6,6 +6,7 @@
 4. [Connect Domain](#4-connect-cloudflare-domain-to-s3)
 5. [GitHub Actions Deploy Script](.github/workflows/main_deploy.yml)
 6. [Adding Material UI](#6-adding-materialui)
+7. [Host Setup for React Routes](#7-host-setup-for-react-routes)
 
 ## 0 - Create GitHub Repository
 
@@ -169,3 +170,15 @@ Found a MaterialUI theme building tool to come up with something simple:
 
 Used React's [useContext](https://react.dev/reference/react/useContext) to provide a theme to the rest of the app
 
+## 7 Host Setup for React Routes
+
+A user could put `https://www.adamportal.com` in their browser and click a link inside our React SPA to correctly navigate to `https://www.adamportal.com/somepage`. However, if a user put that `/somepage` url directly in their browser they would see an ungraceful S3 404 error.
+
+We need navigating to any adamportal.com/* url to serve up index.html so that our react SPA can handle it: 
+
+* In Cloudflare add a new page rule
+  * `https://www.adamportal.com/*`
+  * `Cache Level: Bypass` 
+  * `Origin Cache Control: On`
+* In S3 update static website hosting
+  * Error document: `index.html`
