@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "850167715024",
+    "firebase_url": "https://spacebar-4c201.firebaseio.com",
+    "project_id": "spacebar-4c201",
+    "storage_bucket": "spacebar-4c201.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:850167715024:android:4cba7c8a3bdef559387ad5",
+        "android_client_info": {
+          "package_name": "com.ManaFactory.SpaceBarbariansTest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "850167715024-2uo1e8auib62e04u8b9dd95b2va5tpu5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAcWCwyDTZgkIzFuRLSnGHsVm34Ru_B5mk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "850167715024-2uo1e8auib62e04u8b9dd95b2va5tpu5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

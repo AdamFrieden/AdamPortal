@@ -42,8 +42,7 @@ const Sidebar = ({ drawerOpen, isSmallScreen, onToggleDrawer }: SidebarProps) =>
       id: 'creativeWriting',
       label: 'Creative Writing',
       items: [
-        { label: 'Option 1', path: '/option1' },
-        { label: 'Option 2', path: '/option2' },
+        { label: '[empty]', path: '/' },
       ],
     },
     {
@@ -51,7 +50,7 @@ const Sidebar = ({ drawerOpen, isSmallScreen, onToggleDrawer }: SidebarProps) =>
       label: 'Projects',
       items: [
         { label: 'Ninja Party', path: '/ninjaparty' },
-        { label: 'Space Barbarians', path: '/spacebarbarians' },
+        { label: 'Verse Commander', path: '/versecommander' },
       ],
     },
   ];
@@ -76,9 +75,6 @@ const Sidebar = ({ drawerOpen, isSmallScreen, onToggleDrawer }: SidebarProps) =>
         <ListItemButton component={Link} to="/travel" onClick={onToggleDrawer} selected={isActive('/travel')}>
           <ListItemText primary="Travel" />
         </ListItemButton>
-        {/* <ListItemButton component={Link} to="/contact" onClick={onToggleDrawer} selected={isActive('/contact')}>
-          <ListItemText primary="Contact" />
-        </ListItemButton> */}
 
         {/* Dynamically Render Submenus */}
         {submenus.map((submenu) => (
