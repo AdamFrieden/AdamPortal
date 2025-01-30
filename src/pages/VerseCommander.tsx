@@ -3,7 +3,14 @@ import { Link as RouterLink } from 'react-router-dom';
 
 const VerseCommander = () => {
   return (
-    <Box display="flex" alignItems="flex-start" pl={2} pr={4} pt={2}>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: { xs: 'column', md: 'row' }, // Vertical stacking on small screens, horizontal on medium and larger screens
+        alignItems: 'flex-start',
+        p: { xs: 2, md: '16px 32px' }, // Responsive padding
+      }}
+    >
       <Box flexGrow={1} p={2}>
         <Typography variant="h4" gutterBottom>
           Verse Commander
