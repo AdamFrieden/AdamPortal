@@ -51,6 +51,7 @@ const Sidebar = ({ drawerOpen, isSmallScreen, onToggleDrawer }: SidebarProps) =>
       items: [
         { label: 'Ninja Party', path: '/ninjaparty' },
         { label: 'Verse Commander', path: '/versecommander' },
+        { label: 'Star Clans', path: '/starclans' },
       ],
     },
   ];
