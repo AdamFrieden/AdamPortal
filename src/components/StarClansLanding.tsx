@@ -1,16 +1,17 @@
 // pages/StarClansLanding.tsx
-import { Box, Stack, Typography } from '@mui/material';
-import StatusComponent from '../components/StatusComponent';
+import { Stack, Typography } from '@mui/material';
+// import StatusComponent from '../components/StatusComponent';
+import ProfilePage from './ProfilePage';
+import StatusComponent from './StatusComponent';
 
 const StarClansLanding = () => {
   return (
     <div>
-      <Box pt={2}>
-        <Typography variant="h4" mb={4}>
-              Research
-          </Typography>
-        </Box>
+      <ProfilePage />
       <Stack spacing={2}>
+        <Typography variant="h4" mb={4}>
+          Research
+        </Typography>
         <StatusComponent name='High-Grav Chamber'/>
         <StatusComponent name='Med Bay'/>
         <StatusComponent name='Bio Recycler'/>
