@@ -10,6 +10,7 @@ import VerseCommanderDemo from './components/VerseCommanderDemo';
 import StarClanLayout from './components/StarClanLayout';
 import StarClans from './pages/StarClans';
 import StarClansLanding from './components/StarClansLanding';
+import 'leaflet/dist/leaflet.css';
 
 const App = () => {
 
