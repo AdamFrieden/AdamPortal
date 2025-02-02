@@ -1,5 +1,4 @@
 import { Box, Typography, Link, Paper, Divider } from '@mui/material';
-import EmailIcon from '@mui/icons-material/Email';
 
 const MainContent = () => {
   return (
@@ -39,11 +38,8 @@ const MainContent = () => {
         <Typography variant="body2" sx={{ mt: 4, fontStyle: 'italic' }}>
           I am a software engineer with 15+ years of experience in SaaS. I love skiing, hiking, books, games, travel, and food.
         </Typography>
-        {/* <Typography variant="body2" sx={{ mt: 4, mb: 0, fontStyle: 'italic' }}>
-        </Typography> */}
         <Box sx={{ mt: 4, display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
           <Typography variant="body2" sx={{ display: 'flex', mb: 0, alignItems: 'center', fontStyle: 'italic' }}>
-            {/* <EmailIcon sx={{ mr: 1 }} /> */}
             adam@frieden.org
           </Typography>
         </Box>
