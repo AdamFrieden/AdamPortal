@@ -29,9 +29,9 @@ const PortalLayout = () => {
           isSmallScreen={isSmallScreen}
           onToggleDrawer={handleDrawerToggle}
         />
-        <Box component="main" sx={{ flexGrow: 1, p: 3, overflow: 'auto'}}>
+        <Box component="main" sx={{ flexGrow: 1, p: 0, overflow: 'auto', mt: 10, display: 'flex'}}>
             {/* spacing to account for the floating toolbar in the header */}
-            <Toolbar />
+            {/* <Toolbar /> */}
             <Outlet /> {/* Render child routes here */}
         </Box>
       </Box>

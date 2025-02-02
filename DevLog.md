@@ -187,3 +187,16 @@ We need navigating to any adamportal.com/* url to serve up index.html so that ou
 ## 8 TODO Update with Leaflet Notes
 
 And MUI timeline component - see Travel page!
+
+
+
+## Scratch Space
+
+Check out this sweet draggable list:
+https://stackblitz.com/edit/draggable-mui-list?file=components%2FDraggableList.tsx
+
+Consider zustand for simple state management
+
+sweet drag n drop - maybe for a roster page?
+https://github.com/atlassian/react-beautiful-dnd
+https://react-beautiful-dnd.netlify.app

@@ -10,7 +10,7 @@ export const lightTheme = createTheme({
     text: { primary: '#000000', secondary: '#2979ff' },
     error: { main: '#e2756d' },
   },
-  typography: { fontFamily: 'Silkscreen' },
+  typography: { fontFamily: 'Noto Sans' },
   shape: { borderRadius: 8 },
 });
 

@@ -1,6 +1,6 @@
 // TravelPage.tsx
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { Box, Button, Container, Typography } from '@mui/material';
+import { Box, Button, Container, Paper, Typography } from '@mui/material';
 import {
   Timeline,
   TimelineItem,
@@ -13,7 +13,7 @@ import {
 } from '@mui/lab';
 import { MapContainer, TileLayer, Marker, Popup, GeoJSON } from 'react-leaflet';
 import { Map as LeafletMap, LatLngExpression, Marker as LeafletMarker } from 'leaflet';
-import 'leaflet/dist/leaflet.css';
+// import 'leaflet/dist/leaflet.css';
 import { TravelData, Trip } from './TravelData';
 
 const trips: Trip[] = TravelData;
@@ -53,7 +53,7 @@ const Travel: React.FC = () => {
     setActiveTripId(trip.id);
     if (mapRef.current) {
       // Fly to the trip's position with a higher zoom (e.g., zoom level 8)
-      mapRef.current.flyTo(trip.position, 8, { duration: 1.5 });
+      mapRef.current.flyTo(trip.position, 4, { duration: 1.5 });
     }
     const marker = markerRefs.current[trip.id];
     if (marker) {
@@ -73,7 +73,7 @@ const Travel: React.FC = () => {
   };
 
   const mapCenter: LatLngExpression = [20, 0];
-  const initialZoom = 2;
+  const initialZoom = 1;
 
   // Style function for the GeoJSON layer: highlight visited countries.
   const geoJsonStyle = (feature: any) => {
@@ -100,111 +100,115 @@ const Travel: React.FC = () => {
   const visitedCountriesMemo = useMemo(() => visitedCountries, []);
 
   return (
-    <Container maxWidth="lg" sx={{ my: 4 }}>
-      {/* <Typography variant="h3" gutterBottom>
-        My Travels
-      </Typography> */}
-
-      {/* Reset Button */}
-
-
-
-      {/* Map Section */}
-      <Box 
-        sx={{
-          position: 'sticky',
-          top: 0,
-          height: '35vh', // fixed height
-          zIndex: 'auto',      // ensure it stays on top of other content
-          py: 2,
-        }}
-      >
-        <MapContainer
-          center={mapCenter}
-          zoom={initialZoom}
-          scrollWheelZoom={false}
-          style={{ height: '100%', width: '100%' }}
-          ref={mapRef as any} // cast if necessary
-        >
-          {/* GeoJSON layer for country boundaries with visited shading */}
-          {countriesGeoJson && (
-            <GeoJSON data={countriesGeoJson} style={geoJsonStyle} />
-          )}
-          <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            keepBuffer={4}
-          />
-          {trips.map((trip) => (
-            <Marker
-              key={trip.id}
-              position={trip.position}
-              ref={(ref) => {
-                markerRefs.current[trip.id] = ref;
-              }}
-              eventHandlers={{
-                click: () => {
-                  handleMarkerClick(trip.id);
-                },
-              }}
-            >
-              <Popup>
-                <Typography variant="subtitle1">{trip.destination}</Typography>
-                <Typography variant="body2">{trip.date}</Typography>
-              </Popup>
-            </Marker>
-          ))}
-        </MapContainer>
-        <Box sx={{ mb: 2, display: 'flex', justifyContent: 'flex-end' }}>
-          <Button variant="contained" color="primary" onClick={handleResetMap}>
-            Reset
-          </Button>
-        </Box>
-      </Box>
-      {/* Timeline Section */}
-      <Box sx={{ maxHeight: '35vh', overflowY: 'auto', my: 5 }}>
-        {/* <Typography variant="h4" gutterBottom>
-          Trip Timeline
-        </Typography> */}
-        <Timeline
+      <Container sx={{ py: 0, my: 0 }}>
+        {/* Map Section */}
+        <Paper sx={{ py: 0, my: 1 }}>
+        <Box 
           sx={{
-            [`& .${timelineOppositeContentClasses.root}`]: {
-              flex: 0.2,
-            },
+            position: 'sticky',
+            top: 0,
+            height: '35vh', // fixed height
+            zIndex: '10',      // ensure it stays on top of other content
+            py: 0,
           }}
-          position="right">
-          {[...trips].reverse().map((trip) => (
-            <TimelineItem
-              key={trip.id}
-              id={`timeline-${trip.id}`}
-              onClick={() => handleTimelineClick(trip)}
-              sx={{
-                cursor: 'pointer',
-                backgroundColor: activeTripId === trip.id ? 'rgba(255, 255, 0, 0.2)' : 'inherit',
-                borderRadius: 1,
-                my: 1,
-                '&:hover': { backgroundColor: 'rgba(200,200,200,0.2)' },
-              }}
-            >
-              {/* Dates always appear on the left side */}
-              <TimelineOppositeContent sx={{ flex: 0.3, m: 'auto 0' }} color="text.secondary">
-                {trip.date}
-              </TimelineOppositeContent>
-              <TimelineSeparator>
-                <TimelineDot color="primary" />
-                <TimelineConnector />
-              </TimelineSeparator>
-              <TimelineContent sx={{ py: '12px', px: 2 }}>
-                <Typography variant="h6" component="span">
-                  {trip.destination}
-                </Typography>
-                <Typography>{trip.description}</Typography>
-              </TimelineContent>
-            </TimelineItem>
-          ))}
-        </Timeline>
-      </Box>
-    </Container>
+        >
+          <Button variant="contained" color="primary" onClick={handleResetMap}
+            sx={{ 
+              position: 'absolute', // Absolute position for the button
+              top: 16, // Adjust top and right according to your needs
+              right: 16,
+              zIndex: 1000, // Ensure the button is on top of all map layers
+              width: '5vw',
+              minWidth: '5vw'
+            }}
+          >
+            X
+          </Button>
+
+          <MapContainer
+            center={mapCenter}
+            zoom={initialZoom}
+            scrollWheelZoom={false}
+            style={{ height: '100%', width: '100%' }}
+            ref={mapRef as any} // cast if necessary
+          >
+
+            {/* GeoJSON layer for country boundaries with visited shading */}
+            {countriesGeoJson && (
+              <GeoJSON data={countriesGeoJson} style={geoJsonStyle} />
+            )}
+            <TileLayer
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              keepBuffer={4}
+            />
+            {trips.map((trip) => (
+              <Marker
+                key={trip.id}
+                position={trip.position}
+                ref={(ref) => {
+                  markerRefs.current[trip.id] = ref;
+                }}
+                eventHandlers={{
+                  click: () => {
+                    handleMarkerClick(trip.id);
+                  },
+                }}
+              >
+                <Popup>
+                  <Typography variant="subtitle1">{trip.destination}</Typography>
+                  <Typography variant="body2">{trip.date}</Typography>
+                </Popup>
+              </Marker>
+            ))}
+          </MapContainer>
+
+        </Box>
+        </Paper>
+        {/* Timeline Section */}
+        <Box sx={{ overflowY: 'auto', my: 0, maxHeight: '50vh' }}>
+          {/* <Typography variant="h4" gutterBottom>
+            Trip Timeline
+          </Typography> */}
+          <Timeline
+            sx={{
+              [`& .${timelineOppositeContentClasses.root}`]: {
+                flex: 0.2,
+              },
+            }}
+            position="right">
+            {[...trips].reverse().map((trip) => (
+              <TimelineItem
+                key={trip.id}
+                id={`timeline-${trip.id}`}
+                onClick={() => handleTimelineClick(trip)}
+                sx={{
+                  cursor: 'pointer',
+                  backgroundColor: activeTripId === trip.id ? 'rgba(255, 255, 0, 0.2)' : 'inherit',
+                  borderRadius: 1,
+                  my: 1,
+                  '&:hover': { backgroundColor: 'rgba(200,200,200,0.2)' },
+                }}
+              >
+                {/* Dates always appear on the left side */}
+                <TimelineOppositeContent sx={{ flex: 0.3, m: 'auto 0' }} color="text.secondary">
+                  {trip.date}
+                </TimelineOppositeContent>
+                <TimelineSeparator>
+                  <TimelineDot color="primary" />
+                  <TimelineConnector />
+                </TimelineSeparator>
+                <TimelineContent sx={{ py: '12px', px: 2 }}>
+                  <Typography variant="h6" component="span">
+                    {trip.destination}
+                  </Typography>
+                  <Typography>{trip.description}</Typography>
+                </TimelineContent>
+              </TimelineItem>
+            ))}
+          </Timeline>
+        </Box>
+      </Container>
   );
 };
 
