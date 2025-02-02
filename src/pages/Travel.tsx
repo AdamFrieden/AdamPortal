@@ -96,20 +96,24 @@ const Travel: React.FC = () => {
 
   return (
     <Container maxWidth="lg" sx={{ my: 4 }}>
-      <Typography variant="h3" gutterBottom>
+      {/* <Typography variant="h3" gutterBottom>
         My Travels
-      </Typography>
+      </Typography> */}
 
       {/* Reset Button */}
-      <Box sx={{ mb: 2, display: 'flex', justifyContent: 'flex-end' }}>
-        <Button variant="contained" color="primary" onClick={handleResetMap}>
-          Reset Map
-        </Button>
-      </Box>
+
 
 
       {/* Map Section */}
-      <Box sx={{ height: '400px', mb: 4 }}>
+      <Box 
+        sx={{
+          position: 'sticky',
+          top: 0,
+          height: '40vh', // fixed height
+          zIndex: 'auto',      // ensure it stays on top of other content
+          py: 2,
+        }}
+      >
         <MapContainer
           center={mapCenter}
           zoom={initialZoom}
@@ -146,13 +150,17 @@ const Travel: React.FC = () => {
             </Marker>
           ))}
         </MapContainer>
+        <Box sx={{ mb: 2, display: 'flex', justifyContent: 'flex-end' }}>
+          <Button variant="contained" color="primary" onClick={handleResetMap}>
+            Reset
+          </Button>
+        </Box>
       </Box>
-
       {/* Timeline Section */}
-      <Box sx={{ maxHeight: '500px', overflowY: 'auto' }}>
-        <Typography variant="h4" gutterBottom>
+      <Box sx={{ maxHeight: '40vh', overflowY: 'auto', my: 5 }}>
+        {/* <Typography variant="h4" gutterBottom>
           Trip Timeline
-        </Typography>
+        </Typography> */}
         <Timeline position="right">
           {[...trips].reverse().map((trip) => (
             <TimelineItem
