@@ -9,6 +9,7 @@ import {
   TimelineContent,
   TimelineDot,
   TimelineOppositeContent,
+  timelineOppositeContentClasses,
 } from '@mui/lab';
 import { MapContainer, TileLayer, Marker, Popup, GeoJSON } from 'react-leaflet';
 import { Map as LeafletMap, LatLngExpression, Marker as LeafletMarker } from 'leaflet';
@@ -64,6 +65,10 @@ const Travel: React.FC = () => {
   const handleResetMap = () => {
     if (mapRef.current) {
       mapRef.current.setView(mapCenter, initialZoom);
+      const marker = markerRefs.current[activeTripId ?? 0];
+      if (marker) {
+        marker.closePopup();
+      }
     }
   };
 
@@ -109,7 +114,7 @@ const Travel: React.FC = () => {
         sx={{
           position: 'sticky',
           top: 0,
-          height: '40vh', // fixed height
+          height: '35vh', // fixed height
           zIndex: 'auto',      // ensure it stays on top of other content
           py: 2,
         }}
@@ -157,11 +162,17 @@ const Travel: React.FC = () => {
         </Box>
       </Box>
       {/* Timeline Section */}
-      <Box sx={{ maxHeight: '40vh', overflowY: 'auto', my: 5 }}>
+      <Box sx={{ maxHeight: '35vh', overflowY: 'auto', my: 5 }}>
         {/* <Typography variant="h4" gutterBottom>
           Trip Timeline
         </Typography> */}
-        <Timeline position="right">
+        <Timeline
+          sx={{
+            [`& .${timelineOppositeContentClasses.root}`]: {
+              flex: 0.2,
+            },
+          }}
+          position="right">
           {[...trips].reverse().map((trip) => (
             <TimelineItem
               key={trip.id}

@@ -14,7 +14,7 @@ interface Gladiator {
 const mockGladiators: Gladiator[] = [
   {
     id: 1,
-    name: "Cyber Reaper",
+    name: "Rico Kordell",
     avatar: "https://via.placeholder.com/150",
     power: 11,
     stamina: 75,
@@ -28,16 +28,72 @@ const mockGladiators: Gladiator[] = [
   },
   {
     id: 2,
-    name: "Neon Phantom",
+    name: "Dante Holt",
     avatar: "https://via.placeholder.com/150",
     power: 7,
-    stamina: 60,
+    stamina: 90,
     recentMatches: [
       { arena: "The Colossus", points: 10 },
       { arena: "The Colossus", points: 11 },
-      { arena: "Blood Gulch", points: 3 },
+      { arena: "The Pit", points: 3 },
       { arena: "Blood Gulch", points: 1 },
       { arena: "Deck 17", points: 8 },
+    ],
+  },
+  {
+    id: 3,
+    name: "Jace Zayne",
+    avatar: "https://via.placeholder.com/150",
+    power: 9,
+    stamina: 60,
+    recentMatches: [
+      { arena: "Exile's Run", points: 10 },
+      { arena: "The Colossus", points: 7 },
+      { arena: "The Pit", points: 7 },
+      { arena: "Blood Gulch", points: 11 },
+      { arena: "Deck 17", points: 6 },
+    ],
+  },
+  {
+    id: 4,
+    name: "Orion Graves",
+    avatar: "https://via.placeholder.com/150",
+    power: 10,
+    stamina: 55,
+    recentMatches: [
+      { arena: "Exile's Run", points: 10 },
+      { arena: "The Colossus", points: 11 },
+      { arena: "Deck 17", points: 7 },
+      { arena: "Blood Gulch", points: 9 },
+      { arena: "Deck 17", points: 16 },
+    ],
+  },
+  {
+    id: 5,
+    name: "Zephyr Kain",
+    avatar: "https://via.placeholder.com/150",
+    power: 19,
+    stamina: 88,
+    recentMatches: [
+      { arena: "The Pit", points: 10 },
+      { arena: "The Pit", points: 17 },
+      { arena: "Iron Throne", points: 22 },
+      { arena: "Blood Gulch", points: 25 },
+      { arena: "Deck 17", points: 8 },
+    ],
+  },
+  {
+    id: 6,
+    name: "Stellan Rex",
+    avatar: "https://via.placeholder.com/150",
+    power: 14,
+    stamina: 15,
+    recentMatches: [
+      { arena: "The Colossus", points: 11 },
+      { arena: "Neon Wastes", points: 24 },
+      { arena: "Blood Gulch", points: 0 },
+      { arena: "Iron Throne", points: 5 },
+      { arena: "Deck 17", points: 12 },
     ],
   },
 ];
@@ -78,7 +134,7 @@ export default function ProfilePage() {
           fullWidth
         >
           {mockGladiators.map((g) => (
-            <MenuItem key={g.id} value={g.id}>{g.name} ({g.power})</MenuItem>
+            <MenuItem key={g.id} value={g.id}>{g.name}</MenuItem>
           ))}
         </Select>
 
