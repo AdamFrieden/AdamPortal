@@ -12,7 +12,7 @@ const MainContent = () => {
         // p: 3
       }}
     >
-      <Paper elevation={3} sx={{ width: '100%', maxWidth: 600, p: 4, m: 2 }}>
+      <Paper elevation={3} sx={{ width: '80%', maxWidth: 600, p: 4, m: 2 }}>
         <Typography variant="body1" gutterBottom>
           Just a simple site to learn and share.
         </Typography>
@@ -23,7 +23,7 @@ const MainContent = () => {
             target="_blank"
             rel="noopener noreferrer"
           >
-            developer log
+            log
           </Link>
           {` on my `}
           <Link
