@@ -17,32 +17,25 @@ const HomeContent = () => {
           Just a simple site to learn and share.
         </Typography>
         <Typography variant="body1" sx={{ mb: 4 }}>
-          {`Follow along with the `}
-          <Link
-            href="https://github.com/AdamFrieden/AdamPortal/blob/main/DevLog.md"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            log
-          </Link>
-          {` on my `}
+          {`See `}
           <Link
             href="https://github.com/AdamFrieden/AdamPortal/"
             target="_blank"
             rel="noopener noreferrer"
           >
-            GitHub repository.
+            how it's built
           </Link>
+          .
         </Typography>
         <Divider variant="middle" />
         <Typography variant="body2" sx={{ mt: 4, fontStyle: 'italic' }}>
           I'm a software engineer with 15+ years of experience in SaaS. I love skiing, hiking, books, games, travel, and food.
         </Typography>
-        <Box sx={{ mt: 4, display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
+        {/* <Box sx={{ mt: 4, display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
           <Typography variant="body2" sx={{ display: 'flex', mb: 0, alignItems: 'center', fontStyle: 'italic' }}>
             adam@frieden.org
           </Typography>
-        </Box>
+        </Box> */}
       </Paper>
     </Box>
   );

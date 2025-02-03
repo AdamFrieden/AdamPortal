@@ -22,7 +22,7 @@ const Header = ({ isSmallScreen, onToggleDrawer }: HeaderProps) => {
             </IconButton>
           )}
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
-            Adam Portal
+            adam@frieden.org
           </Typography>
           {/* Toggle Button with Sun/Moon Icons */}
           <IconButton

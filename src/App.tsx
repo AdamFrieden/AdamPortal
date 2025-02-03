@@ -1,7 +1,6 @@
 // App.tsx
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import PortalLayout from './components/PortalLayout';
-import HomeContent from './components/HomeContent';
 import { ThemeProvider } from './context/ThemeProvider';
 import NinjaParty from './pages/NinjaParty';
 import Travel from './pages/Travel';
@@ -10,6 +9,7 @@ import VerseCommanderDemo from './components/VerseCommanderDemo';
 import StarClanLayout from './components/StarClanLayout';
 import StarClans from './pages/StarClans';
 import StarClansLanding from './components/StarClansLanding';
+import HomeContent from './components/HomeContent';
 
 const App = () => {
 
