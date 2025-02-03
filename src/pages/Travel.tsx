@@ -13,7 +13,7 @@ import {
 } from '@mui/lab';
 import { MapContainer, TileLayer, Marker, Popup, GeoJSON } from 'react-leaflet';
 import { Map as LeafletMap, LatLngExpression, Marker as LeafletMarker } from 'leaflet';
-// import 'leaflet/dist/leaflet.css';
+import 'leaflet/dist/leaflet.css';
 import { TravelData, Trip } from './TravelData';
 
 const trips: Trip[] = TravelData;
@@ -102,7 +102,7 @@ const Travel: React.FC = () => {
   return (
       <Container sx={{ py: 0, my: 0 }}>
         {/* Map Section */}
-        <Paper sx={{ py: 0, my: 1 }}>
+        <Paper sx={{ py: 0, my: 0 }}>
         <Box 
           sx={{
             position: 'sticky',
@@ -124,7 +124,6 @@ const Travel: React.FC = () => {
           >
             X
           </Button>
-
           <MapContainer
             center={mapCenter}
             zoom={initialZoom}
@@ -132,7 +131,6 @@ const Travel: React.FC = () => {
             style={{ height: '100%', width: '100%' }}
             ref={mapRef as any} // cast if necessary
           >
-
             {/* GeoJSON layer for country boundaries with visited shading */}
             {countriesGeoJson && (
               <GeoJSON data={countriesGeoJson} style={geoJsonStyle} />
@@ -162,14 +160,10 @@ const Travel: React.FC = () => {
               </Marker>
             ))}
           </MapContainer>
-
         </Box>
         </Paper>
         {/* Timeline Section */}
-        <Box sx={{ overflowY: 'auto', my: 0, maxHeight: '50vh' }}>
-          {/* <Typography variant="h4" gutterBottom>
-            Trip Timeline
-          </Typography> */}
+        <Box sx={{ overflowY: 'auto', my: 0, maxHeight: '50vh', mt: 2 }}>
           <Timeline
             sx={{
               [`& .${timelineOppositeContentClasses.root}`]: {
@@ -184,21 +178,20 @@ const Travel: React.FC = () => {
                 onClick={() => handleTimelineClick(trip)}
                 sx={{
                   cursor: 'pointer',
-                  backgroundColor: activeTripId === trip.id ? 'rgba(255, 255, 0, 0.2)' : 'inherit',
+                  backgroundColor: activeTripId === trip.id ? 'rgba(113, 168, 209, 0.2)' : 'inherit',
                   borderRadius: 1,
                   my: 1,
                   '&:hover': { backgroundColor: 'rgba(200,200,200,0.2)' },
                 }}
               >
-                {/* Dates always appear on the left side */}
-                <TimelineOppositeContent sx={{ flex: 0.3, m: 'auto 0' }} color="text.secondary">
+                <TimelineOppositeContent sx={{ flex: 0.3, m: 'auto 0' }} color="primary">
                   {trip.date}
                 </TimelineOppositeContent>
                 <TimelineSeparator>
-                  <TimelineDot color="primary" />
+                  <TimelineDot color="secondary" />
                   <TimelineConnector />
                 </TimelineSeparator>
-                <TimelineContent sx={{ py: '12px', px: 2 }}>
+                <TimelineContent sx={{ py: '10px', px: 2 }}>
                   <Typography variant="h6" component="span">
                     {trip.destination}
                   </Typography>

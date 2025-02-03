@@ -1,18 +1,18 @@
 import { Box, Typography, Link, Paper, Divider } from '@mui/material';
 
-const MainContent = () => {
+const HomeContent = () => {
   return (
     <Box
+      id='MainContentBoxContent123'
       sx={{
         display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
         flexDirection: 'column',
-        alignItems: 'top',
-        // justifyContent: 'center',
-        minHeight: '100vh',
-        // p: 3
+        pt: 2
       }}
     >
-      <Paper elevation={3} sx={{ width: '80%', maxWidth: 600, p: 4, m: 2 }}>
+      <Paper elevation={3} sx={{ width: '100%', maxWidth: 600, p: 4, m: 2 }}>
         <Typography variant="body1" gutterBottom>
           Just a simple site to learn and share.
         </Typography>
@@ -36,7 +36,7 @@ const MainContent = () => {
         </Typography>
         <Divider variant="middle" />
         <Typography variant="body2" sx={{ mt: 4, fontStyle: 'italic' }}>
-          I am a software engineer with 15+ years of experience in SaaS. I love skiing, hiking, books, games, travel, and food.
+          I'm a software engineer with 15+ years of experience in SaaS. I love skiing, hiking, books, games, travel, and food.
         </Typography>
         <Box sx={{ mt: 4, display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
           <Typography variant="body2" sx={{ display: 'flex', mb: 0, alignItems: 'center', fontStyle: 'italic' }}>
@@ -48,4 +48,4 @@ const MainContent = () => {
   );
 };
 
-export default MainContent;
+export default HomeContent;
