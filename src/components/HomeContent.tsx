@@ -9,10 +9,10 @@ const HomeContent = () => {
         alignItems: 'center',
         justifyContent: 'flex-start',
         flexDirection: 'column',
-        pt: 2
+        pt: 0
       }}
     >
-      <Paper elevation={3} sx={{ width: '100%', maxWidth: 600, p: 4, m: 2 }}>
+      <Paper elevation={3} sx={{ maxWidth: 600, p: 3, mx: 2 }}>
         <Typography variant="body1" gutterBottom>
           Just a simple site to learn and share.
         </Typography>
