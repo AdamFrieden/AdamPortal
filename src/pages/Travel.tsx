@@ -52,8 +52,14 @@ const Travel: React.FC = () => {
   const handleTimelineClick = (trip: Trip) => {
     setActiveTripId(trip.id);
     if (mapRef.current) {
+
+      const offsetLat = 3;
+      // Cast to a number tuple
+      const [lat, lng] = trip.position as [number, number];
+      const newCenter: LatLngExpression = [lat + offsetLat, lng];
+
       // Fly to the trip's position with a higher zoom (e.g., zoom level 8)
-      mapRef.current.flyTo(trip.position, 4, { duration: 1.5 });
+      mapRef.current.flyTo(newCenter, 4, { duration: 1.5 });
     }
     const marker = markerRefs.current[trip.id];
     if (marker) {
@@ -153,21 +159,24 @@ const Travel: React.FC = () => {
                   },
                 }}
               >
-                <Popup>
-                  <Typography variant="subtitle1">{trip.destination}</Typography>
-                  {/* <Typography variant="body2">{trip.date}</Typography> */}
-                  {trip.photoUrls.length > 0 && (
-                  <div>
+              <Popup>
+                <Typography variant="subtitle1" sx={{ margin: 0 }}>
+                  {trip.destination}
+                </Typography>
+
+                {trip.photoUrls.length > 0 && (
+                  <Box>
                     {trip.photoUrls.map((url, index) => (
-                      <Typography key={index} variant="body2">
+                      // Override default Typography margin here
+                      <Typography key={index} variant="body2" sx={{ margin: '0 !important', padding: 0 }}>
                         <a href={url} target="_blank" rel="noopener noreferrer">
                           Photos
                         </a>
                       </Typography>
                     ))}
-                  </div>
+                  </Box>
                 )}
-                </Popup>
+              </Popup>
               </Marker>
             ))}
           </MapContainer>
