@@ -245,7 +245,9 @@ export const TravelData: Trip[] = [
     date: '2018-02-23',
     position: [-26.3055, 31.1367],
     description: 'Visited the mountainous capital of eSwatini (formerly Swaziland).',
-    photoUrls: []
+    photoUrls: [
+      'https://www.facebook.com/share/15ogP3yftD/'
+    ]
   },
   {
     id: 23,
