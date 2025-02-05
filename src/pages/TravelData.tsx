@@ -19,7 +19,7 @@ export const TravelData: Trip[] = [
     position: [-36.8485, 174.7633],
     description: 'First trip to New Zealand, enjoyed scenic beaches and city life.',
     photoUrls: [
-      'https://www.facebook.com/media/set/?set=a.10102692563832382&type=3'
+      'https://www.facebook.com/share/12EjoYff1sF/'
     ]
   },
   {
@@ -30,7 +30,7 @@ export const TravelData: Trip[] = [
     position: [52.3676, 4.9041],
     description: 'Explored the canals, museums, and vibrant city atmosphere.',
     photoUrls: [
-      'https://www.facebook.com/media/set/?set=a.10101598479591360&type=3'
+      'https://www.facebook.com/share/167H3LseQE/'
     ]
   },
   {
@@ -41,7 +41,7 @@ export const TravelData: Trip[] = [
     position: [50.8503, 4.3517],
     description: 'Enjoyed Belgian waffles, chocolate, and the famous Grand Place.',
     photoUrls: [
-      'https://www.facebook.com/media/set/?set=a.10101598479591360&type=3'
+      'https://www.facebook.com/share/167H3LseQE/'
     ]
   },
   {
@@ -52,7 +52,7 @@ export const TravelData: Trip[] = [
     position: [48.8566, 2.3522],
     description: 'Visited the Eiffel Tower, the Louvre, and charming cafés.',
     photoUrls: [
-      'https://www.facebook.com/media/set/?set=a.10101598479591360&type=3'
+      'https://www.facebook.com/share/167H3LseQE/'
     ]
   },
   {
@@ -63,7 +63,7 @@ export const TravelData: Trip[] = [
     position: [18.5601, -68.3725],
     description: 'Relaxed on pristine beaches and enjoyed tropical weather.',
     photoUrls: [
-      'https://www.facebook.com/media/set/?set=a.10153852654943387&type=3'
+      'https://www.facebook.com/share/15w4YrroNG/'
     ]
   },
   {
@@ -74,7 +74,7 @@ export const TravelData: Trip[] = [
     position: [29.9511, -90.0715],
     description: 'Savored Creole cuisine, jazz music, and the French Quarter.',
     photoUrls: [
-      'https://www.facebook.com/media/set/?set=a.10153957583663387&type=3'
+      'https://www.facebook.com/share/18kadVViW9/'
     ]
   },
   {
@@ -85,7 +85,7 @@ export const TravelData: Trip[] = [
     position: [28.5383, -81.3792],
     description: 'Theme parks and endless sunshine in central Florida.',
     photoUrls: [
-      'https://www.facebook.com/media/set/?set=a.10154308853613387&type=3'
+      'https://www.facebook.com/share/1GieAM4rgf/'
     ]
   },
   {
@@ -96,7 +96,7 @@ export const TravelData: Trip[] = [
     position: [25.7617, -80.1918],
     description: 'Beachfront skyline and vibrant nightlife in South Florida.',
     photoUrls: [
-      'https://www.facebook.com/media/set/?set=a.10154421324768387&type=3'
+      'https://www.facebook.com/share/1CQEDo2sQ1/'
     ]
   },
   {
@@ -107,7 +107,7 @@ export const TravelData: Trip[] = [
     position: [36.1699, -115.1398],
     description: 'The Entertainment Capital with dazzling shows and casinos.',
     photoUrls: [
-      'https://www.facebook.com/media/set/?set=a.10154526940273387&type=3'
+      'https://www.facebook.com/share/15k9VdfoUt/'
     ]
   },
   {
@@ -118,7 +118,7 @@ export const TravelData: Trip[] = [
     position: [64.1466, -21.9426],
     description: 'Chased the Northern Lights during the winter solstice.',
     photoUrls: [
-      'https://www.facebook.com/media/set/?set=a.10154569511428387&type=3'
+      'https://www.facebook.com/share/19qzSc4h1R/'
     ]
   },
   {
@@ -129,7 +129,7 @@ export const TravelData: Trip[] = [
     position: [43.6532, -79.3832],
     description: 'Enjoyed diverse neighborhoods, CN Tower, and Lake Ontario views.',
     photoUrls: [
-      'https://www.facebook.com/media/set/?set=a.10155013837873387&type=3'
+      'https://www.facebook.com/share/17FnKrbwfF/'
     ]
   },
   {
@@ -140,7 +140,7 @@ export const TravelData: Trip[] = [
     position: [58.3019, -134.4197],
     description: 'Alaska’s capital with stunning glaciers and mountainous terrain.',
     photoUrls: [
-      'https://www.facebook.com/media/set/?set=a.10155161038888387&type=3'
+      'https://www.facebook.com/share/1B3WXdKGtQ/'
     ]
   },
   {
@@ -151,7 +151,7 @@ export const TravelData: Trip[] = [
     position: [59.4583, -135.3139],
     description: 'Gateway to the Klondike Gold Rush with historic charm.',
     photoUrls: [
-      'https://www.facebook.com/media/set/?set=a.10155161038888387&type=3'
+      'https://www.facebook.com/share/1B3WXdKGtQ/'
     ]
   },
   {
@@ -162,7 +162,7 @@ export const TravelData: Trip[] = [
     position: [58.1336, -135.4437],
     description: 'Remote Alaskan inlet near Hoonah, rich in Native culture.',
     photoUrls: [
-      'https://www.facebook.com/media/set/?set=a.10155161038888387&type=3'
+      'https://www.facebook.com/share/1B3WXdKGtQ/'
     ]
   },
   {
@@ -173,7 +173,7 @@ export const TravelData: Trip[] = [
     position: [55.3422, -131.6461],
     description: 'Salmon capital of the world with rich Tlingit heritage.',
     photoUrls: [
-      'https://www.facebook.com/media/set/?set=a.10155161038888387&type=3'
+      'https://www.facebook.com/share/1B3WXdKGtQ/'
     ]
   },
   {
@@ -184,7 +184,7 @@ export const TravelData: Trip[] = [
     position: [49.2827, -123.1207],
     description: 'Coastal seaport city surrounded by mountains and ocean.',
     photoUrls: [
-      'https://www.facebook.com/media/set/?set=a.10155161038888387&type=3'
+      'https://www.facebook.com/share/1B3WXdKGtQ/'
     ]
   },
   {
@@ -195,7 +195,7 @@ export const TravelData: Trip[] = [
     position: [45.5051, -122.6750],
     description: 'Known for its food trucks, breweries, and “Keep Portland Weird.”',
     photoUrls: [
-      'https://www.facebook.com/media/set/?set=a.10155161038888387&type=3'
+      'https://www.facebook.com/share/1B3WXdKGtQ/'
     ]
   },
   {
@@ -224,7 +224,7 @@ export const TravelData: Trip[] = [
     position: [53.3498, -6.2603],
     description: 'Toured historic pubs and soaked in the city’s literary heritage.',
     photoUrls: [
-      'https://www.facebook.com/media/set/?set=a.10155523841613387&type=3'
+      'https://www.facebook.com/share/18cTYkczWJ/'
     ]
   },
   {
@@ -235,7 +235,7 @@ export const TravelData: Trip[] = [
     position: [-33.9249, 18.4241],
     description: 'Saw Table Mountain, the Cape Peninsula, and local vineyards.',
     photoUrls: [
-      'https://www.facebook.com/media/set/?set=a.10155847286313387&type=3'
+      'https://www.facebook.com/share/15ogP3yftD/'
     ]
   },
   {
@@ -255,7 +255,7 @@ export const TravelData: Trip[] = [
     position: [-26.2041, 28.0473],
     description: 'Explored the largest city in South Africa and cultural hubs.',
     photoUrls: [
-      'https://www.facebook.com/media/set/?set=a.10155847286313387&type=3'
+      'https://www.facebook.com/share/15ogP3yftD/'
     ]
   },
   {
@@ -266,7 +266,7 @@ export const TravelData: Trip[] = [
     position: [40.2443, 23.2830],
     description: 'Enjoyed the beaches and fresh seafood on the Chalkidiki peninsula.',
     photoUrls: [
-      'https://www.facebook.com/media/set/?set=a.10156096967398387&type=3'
+      'https://www.facebook.com/share/1AeCTqwTxx/'
     ]
   },
   {
@@ -277,7 +277,7 @@ export const TravelData: Trip[] = [
     position: [32.7157, -117.1611],
     description: 'Known for its zoo, beaches, and near-perfect weather.',
     photoUrls: [
-      'https://www.facebook.com/media/set/?set=a.10156465971148387&type=3'
+      'https://www.facebook.com/share/14mMiqAa72/'
     ]
   },
   {
@@ -288,7 +288,7 @@ export const TravelData: Trip[] = [
     position: [34.0522, -118.2437],
     description: 'Hollywood, Santa Monica, and countless cultural neighborhoods.',
     photoUrls: [
-      'https://www.facebook.com/media/set/?set=a.10156465971148387&type=3'
+      'https://www.facebook.com/share/14mMiqAa72/'
     ]
   },
   {
@@ -358,7 +358,8 @@ export const TravelData: Trip[] = [
     position: [25.7617, -80.1918],
     description: 'Beachfront skyline and vibrant nightlife in South Florida.',
     photoUrls: [
-      'https://www.instagram.com/p/B8KylbYAJc1/?img_index=1'
+      'https://www.instagram.com/p/B8KylbYAJc1/?img_index=1',
+      'https://www.facebook.com/share/1CQEDo2sQ1/'
     ]
   },
   {
@@ -406,7 +407,7 @@ export const TravelData: Trip[] = [
     position: [32.7157, -117.1611],
     description: 'Return to San Diego for its sunny beaches and attractions.',
     photoUrls: [
-      'https://www.facebook.com/media/set/?set=a.10156465971148387&type=3'
+      'https://www.facebook.com/share/14mMiqAa72/'
     ]
   },
   {
@@ -483,7 +484,7 @@ export const TravelData: Trip[] = [
     position: [13.7563, 100.5018],
     description: 'Explored bustling markets and iconic temples.',
     photoUrls: [
-      'https://www.facebook.com/media/set/?set=a.10159712005478387&type=3',
+      'https://www.facebook.com/share/15dxLmGdRN/',
       'https://www.instagram.com/stories/highlights/17960555885229471/',
       'https://www.instagram.com/p/CmrlKSeuZxG/?img_index=1'
     ]
@@ -496,7 +497,7 @@ export const TravelData: Trip[] = [
     position: [18.7061, 98.9817],
     description: 'Visited lush mountains and historic temples in northern Thailand.',
     photoUrls: [
-      'https://www.facebook.com/media/set/?set=a.10159712005478387&type=3',
+      'https://www.facebook.com/share/15dxLmGdRN/',
       'https://www.instagram.com/stories/highlights/17960555885229471/',
       'https://www.instagram.com/p/Cmx5TFmt2UM/?img_index=1',
       'https://www.instagram.com/p/Cmu94Rhtn_R/?img_index=1'
@@ -510,7 +511,7 @@ export const TravelData: Trip[] = [
     position: [7.7396, 98.7784],
     description: 'Enjoyed crystal-clear waters and island nightlife.',
     photoUrls: [
-      'https://www.facebook.com/media/set/?set=a.10159712005478387&type=3',
+      'https://www.facebook.com/share/15dxLmGdRN/',
       'https://www.instagram.com/stories/highlights/17960555885229471/',
       'https://www.instagram.com/p/Cm0FiJqNrNP/?img_index=1'
     ]
@@ -523,7 +524,7 @@ export const TravelData: Trip[] = [
     position: [8.0071, 98.8388],
     description: 'Rock climbing paradise with stunning limestone cliffs.',
     photoUrls: [
-      'https://www.facebook.com/media/set/?set=a.10159712005478387&type=3',
+      'https://www.facebook.com/share/15dxLmGdRN/',
       'https://www.instagram.com/stories/highlights/17960555885229471/',
       'https://www.instagram.com/p/Cm1gvMpO_0R/?img_index=1'
     ]
@@ -651,7 +652,7 @@ export const TravelData: Trip[] = [
     position: [52.0597, -9.5064],
     description: 'Explored the scenic lakes and mountains of County Kerry.',
     photoUrls: [
-      'https://www.facebook.com/media/set/?set=a.10155523841613387&type=3',
+      'https://www.facebook.com/share/18cTYkczWJ/',
       'https://www.instagram.com/p/DAzMWRFvRFl/?img_index=1'
     ]
   },
@@ -663,7 +664,7 @@ export const TravelData: Trip[] = [
     position: [53.2707, -9.0568],
     description: 'Coastal city known for live music and a vibrant arts scene.',
     photoUrls: [
-      'https://www.facebook.com/media/set/?set=a.10155523841613387&type=3',
+      'https://www.facebook.com/share/18cTYkczWJ/',
       'https://www.instagram.com/p/DBFIFQ9PMvb/?img_index=1'
     ]
   },
@@ -675,7 +676,7 @@ export const TravelData: Trip[] = [
     position: [53.3498, -6.2603],
     description: 'Second visit to Dublin, discovering more of its rich heritage.',
     photoUrls: [
-      'https://www.facebook.com/media/set/?set=a.10155523841613387&type=3',
+      'https://www.facebook.com/share/18cTYkczWJ/',
       'https://www.instagram.com/p/DBSFUF3vGzd/?img_index=1'
     ]
   }
