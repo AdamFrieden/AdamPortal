@@ -140,7 +140,7 @@ const Travel: React.FC = () => {
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               keepBuffer={4}
             />
-            {trips.map((trip) => (
+            {trips.map((trip: Trip) => (
               <Marker
                 key={trip.id}
                 position={trip.position}
@@ -155,7 +155,18 @@ const Travel: React.FC = () => {
               >
                 <Popup>
                   <Typography variant="subtitle1">{trip.destination}</Typography>
-                  <Typography variant="body2">{trip.date}</Typography>
+                  {/* <Typography variant="body2">{trip.date}</Typography> */}
+                  {trip.photoUrls.length > 0 && (
+                  <div>
+                    {trip.photoUrls.map((url, index) => (
+                      <Typography key={index} variant="body2">
+                        <a href={url} target="_blank" rel="noopener noreferrer">
+                          Photos
+                        </a>
+                      </Typography>
+                    ))}
+                  </div>
+                )}
                 </Popup>
               </Marker>
             ))}
