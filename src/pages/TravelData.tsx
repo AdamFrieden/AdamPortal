@@ -311,7 +311,9 @@ export const TravelData: Trip[] = [
     date: '2019-09-03',
     position: [41.3851, 2.1734],
     description: 'Admired Gaudí’s architecture and lively Catalan culture.',
-    photoUrls: []
+    photoUrls: [
+      'https://www.instagram.com/p/B2NbyvWAVyQ/'
+    ]
   },
   {
     id: 29,

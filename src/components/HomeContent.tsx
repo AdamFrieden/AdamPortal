@@ -1,7 +1,11 @@
 import { Box, Typography, Link, Paper, Divider } from '@mui/material';
+import DeployInfo from './DeployInfo';
+
+
 
 const HomeContent = () => {
   return (
+    <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height:'100%' }}>
     <Box
       id='MainContentBoxContent123'
       sx={{
@@ -37,6 +41,8 @@ const HomeContent = () => {
           </Typography>
         </Box> */}
       </Paper>
+    </Box>
+    <DeployInfo />
     </Box>
   );
 };

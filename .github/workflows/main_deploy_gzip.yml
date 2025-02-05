@@ -13,10 +13,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@master
 
+      - name: Set deployment variables
+        run: |
+          echo "VITE_DEPLOYED_AT=$(date -u +"%Y-%m-%dT%H:%M:%SZ")" >> .env
+          echo "VITE_COMMIT_HASH=${GITHUB_SHA}" >> .env
+
       - name: Install dependencies and build
         run: |
           npm install
           npm run build
+        env:
+          VITE_DEPLOYED_AT: ${{ env.VITE_DEPLOYED_AT }}
+          VITE_COMMIT_HASH: ${{ env.VITE_COMMIT_HASH }}
 
       - name: Upload gzipped files to S3
         uses: jakejarvis/s3-sync-action@master
