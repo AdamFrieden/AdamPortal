@@ -594,7 +594,8 @@ export const TravelData: Trip[] = [
     position: [-12.5933, -69.1890],
     description: 'Amazon rainforest adventure with remarkable biodiversity.',
     photoUrls: [
-      'https://www.instagram.com/p/Cz8Hm_NgHfO/?img_index=1'
+      'https://www.instagram.com/p/Cz8Hm_NgHfO/?img_index=1',
+      'https://www.instagram.com/p/Cz2jQDUtAiu/?img_index=3'
     ]
   },
   {
@@ -604,7 +605,9 @@ export const TravelData: Trip[] = [
     date: '2024-03-06',
     position: [40.4848, -106.8317],
     description: 'Famous for Champagne Powder skiing and hot springs.',
-    photoUrls: []
+    photoUrls: [
+      'https://www.instagram.com/p/C4Yfcu5x6Bk/'
+    ]
   },
   {
     id: 54,
