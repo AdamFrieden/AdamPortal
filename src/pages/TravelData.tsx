@@ -467,7 +467,9 @@ export const TravelData: Trip[] = [
     date: '2022-02-28',
     position: [40.7608, -111.8910],
     description: 'Surrounded by mountains, home to Temple Square and ski resorts.',
-    photoUrls: []
+    photoUrls: [
+      'https://www.instagram.com/p/CqEihXdPC1h/?img_index=6'
+    ]
   },
   {
     id: 42,
