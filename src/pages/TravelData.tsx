@@ -235,7 +235,8 @@ export const TravelData: Trip[] = [
     position: [-33.9249, 18.4241],
     description: 'Saw Table Mountain, the Cape Peninsula, and local vineyards.',
     photoUrls: [
-      'https://www.facebook.com/share/15ogP3yftD/'
+      'https://www.facebook.com/share/15ogP3yftD/',
+      'https://www.instagram.com/p/BucptYllItpMTPh4vCd94cb40MwcadPpTjBovw0/?img_index=5',
     ]
   },
   {
@@ -257,7 +258,8 @@ export const TravelData: Trip[] = [
     position: [-26.2041, 28.0473],
     description: 'Explored the largest city in South Africa and cultural hubs.',
     photoUrls: [
-      'https://www.facebook.com/share/15ogP3yftD/'
+      'https://www.facebook.com/share/15ogP3yftD/',
+      'https://www.instagram.com/p/BucptYllItpMTPh4vCd94cb40MwcadPpTjBovw0/?img_index=5'
     ]
   },
   {
@@ -301,7 +303,8 @@ export const TravelData: Trip[] = [
     position: [40.4168, -3.7038],
     description: 'Experienced the capital’s art museums, parks, and tapas scene.',
     photoUrls: [
-      'https://www.instagram.com/p/B2NbyvWAVyQ/?img_index=1'
+      'https://www.instagram.com/p/B2NbyvWAVyQ/?img_index=1',
+      'https://www.instagram.com/p/B18kLRqHbjSLAJYOxMjYRxqYXzXWOxf93ChrlM0/?img_index=4'
     ]
   },
   {
@@ -542,7 +545,9 @@ export const TravelData: Trip[] = [
     date: '2023-03-15',
     position: [40.7608, -111.8910],
     description: 'Return visit for more skiing, hiking, and city exploration.',
-    photoUrls: []
+    photoUrls: [
+      'https://www.instagram.com/p/CqEihXdPC1h/?img_index=6'
+    ]
   },
   {
     id: 48,
@@ -619,7 +624,9 @@ export const TravelData: Trip[] = [
     date: '2024-03-20',
     position: [40.7608, -111.8910],
     description: 'Third trip to SLC, exploring new neighborhoods and ski resorts.',
-    photoUrls: []
+    photoUrls: [
+      'https://www.instagram.com/p/CqEihXdPC1h/?img_index=6'
+    ]
   },
   {
     id: 55,
