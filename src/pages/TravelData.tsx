@@ -559,7 +559,8 @@ export const TravelData: Trip[] = [
     position: [10.1387, -85.7694],
     description: 'Surfing, lush jungles, and pura vida vibes.',
     photoUrls: [
-      'https://www.instagram.com/p/CxRCznjPzmb/?img_index=1'
+      'https://www.instagram.com/p/CxRCznjPzmb/?img_index=1',
+      'https://www.instagram.com/p/Cw54Rw5P3oO/?img_index=9'
     ]
   },
   {
