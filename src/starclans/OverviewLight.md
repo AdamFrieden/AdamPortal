@@ -79,9 +79,6 @@
 3. **Narrative & Atmosphere**  
    - The use of **LLM-generated descriptions** adds a **personalized narrative layer** to each gladiator, making them feel more like unique characters rather than just stat blocks.
 
-4. **Idle Progression with Visual Payoff**  
-   - Even though it’s an idle/management game, the **conflict presentation** is dynamic and satisfying, giving players a **visual reward** for their strategic decisions.
-
 ---
 
 ### **Quick Elevator Pitch (If Needed)**
