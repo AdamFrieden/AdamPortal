@@ -8,8 +8,8 @@ import VerseCommander from './pages/VerseCommander';
 import VerseCommanderDemo from './components/VerseCommanderDemo';
 import StarClanLayout from './components/StarClanLayout';
 import StarClans from './pages/StarClans';
-import StarClansLanding from './components/StarClansLanding';
 import HomeContent from './components/HomeContent';
+import ConflictMockup from './components/StarClansLanding';
 
 const App = () => {
 
@@ -32,7 +32,7 @@ const App = () => {
           </Route>
 
           <Route element={<StarClanLayout />}>
-            <Route path="/starclandemo" element={<StarClansLanding />} />
+            <Route path="/starclandemo" element={<ConflictMockup />} />
           </Route>
         </Routes>
       </Router>

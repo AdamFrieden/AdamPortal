@@ -152,9 +152,9 @@ export default function ProfilePage() {
         <Typography variant="h6" gutterBottom>Recent Matches</Typography>
         <Stack spacing={1}>
           {selectedGladiator.recentMatches.map((match, index) => (
-            <Box key={index} sx={{ display: "flex", justifyContent: "space-between", bgcolor: match.points >= selectedGladiator.power ? "#d4edda" : "#f8d7da", p: 1, borderRadius: 1 }}>
+            <Box key={index} sx={{ display: "flex", justifyContent: "space-between", border: 2, borderColor: match.points >= selectedGladiator.power ? "rgb(112, 235, 140)" : "rgb(198, 78, 78)", p: 1, borderRadius: 1}}>
               <Typography>{match.arena}</Typography>
-              <Typography fontWeight="bold" color={match.points >= selectedGladiator.power ? "green" : "red"}>{match.points}</Typography>
+              <Typography fontWeight="bold" color={match.points >= selectedGladiator.power ? "rgb(112, 235, 140)" : "rgb(198, 78, 78)"}>{match.points}</Typography>
               {/* <Typography>{match.score}</Typography> */}
             </Box>
           ))}
