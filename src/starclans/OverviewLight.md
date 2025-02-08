@@ -89,3 +89,7 @@
 *"Imagine fantasy football meets gladiator battles in space. You recruit warriors with hidden stats, revealed slowly through performance and AI-generated hints. You scan the galaxy for conflicts, manage your team’s stamina, traits, and training —balancing risk and reward as you push deeper into dangerous territory."*
 
 ---
+
+### **Initial Mockups**
+
+See some [initial component mockups](https://www.adamportal.com/starclandemo) to help brainstorm
