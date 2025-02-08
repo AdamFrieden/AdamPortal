@@ -81,7 +81,7 @@
 
 ---
 
-### **Quick Elevator Pitch (If Needed)**
+### **Quick Elevator Pitch**
 
 *"Imagine fantasy football meets gladiator battles in space. You recruit warriors with hidden stats, revealed slowly through performance and AI-generated hints. You scan the galaxy for conflicts, manage your team’s stamina, traits, and training —balancing risk and reward as you push deeper into dangerous territory."*
 
