@@ -11,6 +11,7 @@ export const lightTheme = createTheme({
     error: { main: '#e2756d' },
   },
   typography: { fontFamily: 'Noto Sans' },
+  // typography: { fontFamily: 'Orbitron' },
   shape: { borderRadius: 8 },
 });
 

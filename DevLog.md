@@ -183,14 +183,9 @@ We need navigating to any adamportal.com/* url to serve up index.html so that ou
 * In S3 update static website hosting
   * Error document: `index.html`
 
-
-## 8 TODO Update with Leaflet Notes
+## Scratch Space
 
 And MUI timeline component - see Travel page!
-
-
-
-## Scratch Space
 
 Check out this sweet draggable list:
 https://stackblitz.com/edit/draggable-mui-list?file=components%2FDraggableList.tsx
@@ -200,3 +195,21 @@ Consider zustand for simple state management
 sweet drag n drop - maybe for a roster page?
 https://github.com/atlassian/react-beautiful-dnd
 https://react-beautiful-dnd.netlify.app
+
+Update DevLog with yml updates for deploy date and commit hash
+
+Update DevLog with usage of vite rollup plugin visualizer
+  looks like leaflet is using up all the space
+  figure out how to either:
+    use the minified version
+    lazy load the module
+    use a CDN rather than bundle it
+
+
+Things to add:
+
+Search trips
+See all visits in popup(?) 
+
+
+Update devlog with starclans demo project / POC

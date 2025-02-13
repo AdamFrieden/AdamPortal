@@ -10,6 +10,7 @@ import StarClanLayout from './components/StarClanLayout';
 import StarClans from './pages/StarClans';
 import HomeContent from './components/HomeContent';
 import ConflictMockup from './components/StarClansLanding';
+import ClanShipDashboard from './starclans/components/ClanShipDashboard';
 
 const App = () => {
 
@@ -32,7 +33,8 @@ const App = () => {
           </Route>
 
           <Route element={<StarClanLayout />}>
-            <Route path="/starclandemo" element={<ConflictMockup />} />
+            <Route path="/starclanmockup" element={<ConflictMockup />} />
+            <Route path="/starclandemo" element={<ClanShipDashboard />} />
           </Route>
         </Routes>
       </Router>
