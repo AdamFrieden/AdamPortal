@@ -3,7 +3,7 @@ import useStarclanStore from '../context/useStarclanStore';
 
 function UpdateDataForm() {
   // We'll grab the existing data to pre-fill our form
-  const isLoadingSave = useStarclanStore((state) => state.isLoadingSave);
+  const isLoadingGameState = useStarclanStore((state) => state.isLoadingGameState);
   const saveError = useStarclanStore((state) => state.saveError);
 
   // Action to save data
@@ -16,8 +16,8 @@ function UpdateDataForm() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Save to the store (which simulates the API call)
-    currentGameState.clanName = name;
-    saveData(currentGameState);
+    currentGameState!.clanName = name;
+    saveData(currentGameState!);
   };
 
   return (
@@ -33,12 +33,12 @@ function UpdateDataForm() {
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              disabled={isLoadingSave}
+              disabled={isLoadingGameState}
             />
           </label>
         </div>
-        <button type="submit" disabled={isLoadingSave}>
-          {isLoadingSave ? 'Saving...' : 'Save'}
+        <button type="submit" disabled={isLoadingGameState}>
+          {isLoadingGameState ? 'Saving...' : 'Save'}
         </button>
       </form>
     </div>

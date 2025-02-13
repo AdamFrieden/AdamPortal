@@ -6,11 +6,11 @@ import NinjaParty from './pages/NinjaParty';
 import Travel from './pages/Travel';
 import VerseCommander from './pages/VerseCommander';
 import VerseCommanderDemo from './components/VerseCommanderDemo';
-import StarClanLayout from './components/StarClanLayout';
 import StarClans from './pages/StarClans';
 import HomeContent from './components/HomeContent';
 import ConflictMockup from './components/StarClansLanding';
 import ClanShipDashboard from './starclans/components/ClanShipDashboard';
+import StarClanLayout from './starclans/components/StarClanLayout';
 
 const App = () => {
 

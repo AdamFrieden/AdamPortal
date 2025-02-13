@@ -12,6 +12,10 @@ export interface FakePlayerActionResponse extends FakeApiResponse {
   actionValid: boolean;
 }
 
+export const deleteData = () => {
+  localStorage.removeItem('starclanData');
+}
+
 export const getDataFromFakeApi = async (): Promise<GameState> => {
   await randomDelay();
   maybeFail();
@@ -20,10 +24,10 @@ export const getDataFromFakeApi = async (): Promise<GameState> => {
   return data ? JSON.parse(data) : {};
 };
 
-//  api should never be doing this, we should only make requests and let the game engine change state
+//  ultimately the api should never be doing this - we should only make requests and let the game engine change state
 export const saveDataToFakeApi = async (state: GameState): Promise<any> => {
   await randomDelay();
-  maybeFail();
+  // maybeFail();
 
   saveToFakeDatabase(state)
   return state;
