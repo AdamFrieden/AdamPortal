@@ -21,7 +21,7 @@ export const darkTheme = createTheme({
     primary: { main: '#658e70', light: '#363950' },
     secondary: { main: '#5bc5bc' },
     background: { default: '#121314', paper: '#161e29' },
-    text: { primary: '#95c9fb', secondary: '#2979ff' },
+    text: { primary: '#95c9fb', secondary: '#53a0ff' },
     error: { main: '#e2756d' },
   },
   typography: { fontFamily: 'Silkscreen' },

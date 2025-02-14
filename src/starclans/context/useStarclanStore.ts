@@ -5,9 +5,13 @@ import type { StateCreator } from 'zustand';
 import { deleteData, FakePlayerActionResponse, getDataFromFakeApi, postActionToFakeApi, postRefreshToFakeApi, saveDataToFakeApi } from './fakeApi';
 import { GamePlayerAction, GameState } from '../domain/models';
 
+// app should start UNKNOWN, then once a load successful happens
+// set to NO_SAVE_FOUND if there is no valid data,
+// or SAVE_LOADED if valid data is found
+export type GameSaveStatus = 'UNKNOWN' | 'NO_SAVE_FOUND' | 'SAVE_LOADED';
+
 interface StarclanAppState {
   isLoadingGameState: boolean;
-  startNewGame: boolean;
   isApiProcessing: boolean;
   loadError: string | null;
   saveError: string | null;
@@ -17,6 +21,7 @@ interface StarclanAppState {
   refreshData: () => Promise<void>;
   tryGameAction: (gameAction: GamePlayerAction) => Promise<void>;
   gameState: GameState | null;
+  gameSaveStatus: GameSaveStatus;
 }
 
 export const getStartingGameState = (name: string): GameState => {
@@ -29,22 +34,20 @@ export const getStartingGameState = (name: string): GameState => {
   };
 }
 
+const isValidGameState = (state: GameState): boolean => {
+  return !!state?.clanName && state.clanName.length > 2;
+};
+
 const storeLogic: StateCreator<StarclanAppState> = (set, get) => ({
   isLoadingGameState: false,
-  startNewGame: false,
   isApiProcessing: false,
   loadError: null,
   saveError: null,
-  gameState: {
-    researchTasks: [],
-    lastRefresh: Date.now(),
-    clanName: '',
-    timeTravelMs: 0,
-    resourcium: 0,
-  },
+  gameState: null,
+  gameSaveStatus: 'UNKNOWN',
   deleteData: () => {
-    {set({ gameState: null, startNewGame: true })};
     deleteData();
+    {set({ gameState: null, gameSaveStatus: 'NO_SAVE_FOUND' })};
   },
   refreshData: async () => {
     set({ isApiProcessing: true })
@@ -62,7 +65,10 @@ const storeLogic: StateCreator<StarclanAppState> = (set, get) => ({
     set({ isLoadingGameState: true, isApiProcessing: true, loadError: null });
     try {
       const data = await getDataFromFakeApi();
-      set({ startNewGame: !data,  gameState: data, isLoadingGameState: false, isApiProcessing: false });
+      const isValid = isValidGameState(data);
+      const saveStatus: GameSaveStatus = isValid ? 'SAVE_LOADED' : 'NO_SAVE_FOUND';
+      const stateToSave = isValid ? data : null;
+      set({ gameSaveStatus: saveStatus,  gameState: stateToSave, isLoadingGameState: false, isApiProcessing: false });
     } catch (error: any) {
       set({ loadError: error.message, isLoadingGameState: false, isApiProcessing: false });
     }
@@ -71,7 +77,7 @@ const storeLogic: StateCreator<StarclanAppState> = (set, get) => ({
     set({ saveError: null, isApiProcessing: true });
     try {
       const savedData = await saveDataToFakeApi(newData);
-      set({ gameState: savedData, isApiProcessing: false, startNewGame: false });
+      set({ gameState: savedData, isApiProcessing: false, gameSaveStatus: 'SAVE_LOADED'});
     } catch (error: any) {
       set({ saveError: error.message, isApiProcessing: false });
     }

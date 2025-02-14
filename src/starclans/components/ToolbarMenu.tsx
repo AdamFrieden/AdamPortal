@@ -9,10 +9,12 @@ import Logout from '@mui/icons-material/Logout';
 import Refresh from '@mui/icons-material/Refresh';
 import useStarclanStore from '../context/useStarclanStore';
 
-export default function AccountMenu() {
+export default function ToolbarMenu() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const loadData = useStarclanStore((state) => state.loadData)
   const refreshData = useStarclanStore((state) => state.refreshData)
   const deleteData = useStarclanStore((state) => state.deleteData);
+  const gameSaveStatus = useStarclanStore((state) => state.gameSaveStatus);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -88,7 +90,7 @@ export default function AccountMenu() {
           </ListItemIcon>
           Add another account
         </MenuItem> */}
-        <MenuItem onClick={refreshData}>
+        <MenuItem onClick={gameSaveStatus === 'SAVE_LOADED' ? refreshData : loadData}>
           <ListItemIcon>
             <Refresh fontSize="small" />
           </ListItemIcon>
