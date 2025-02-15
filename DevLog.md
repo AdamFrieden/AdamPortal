@@ -185,8 +185,6 @@ We need navigating to any adamportal.com/* url to serve up index.html so that ou
 
 ## Scratch Space
 
-And MUI timeline component - see Travel page!
-
 Check out this sweet draggable list:
 https://stackblitz.com/edit/draggable-mui-list?file=components%2FDraggableList.tsx
 
@@ -205,11 +203,9 @@ Update DevLog with usage of vite rollup plugin visualizer
     lazy load the module
     use a CDN rather than bundle it
 
-
-Things to add:
-
 Search trips
 See all visits in popup(?) 
 
-
 Update devlog with starclans demo project / POC
+
+Checkout what a progressive web app would look like

@@ -1,8 +1,9 @@
 // components/StarClanLayout.tsx
-import { AppBar, Box, LinearProgress, Toolbar, Typography, useMediaQuery } from '@mui/material';
+import { AppBar, Box, Divider, LinearProgress, Toolbar, Typography, useMediaQuery } from '@mui/material';
 import { Outlet } from 'react-router-dom';
 import useStarclanStore from '../context/useStarclanStore';
 import ToolbarMenu from './ToolbarMenu';
+import React from 'react';
 
 const StarClanLayout = () => {
 
@@ -21,10 +22,13 @@ const StarClanLayout = () => {
               StarClans
             </Typography>
           { gameSaveStatus === 'SAVE_LOADED' &&
-            <Box sx={{ flexGrow: 3, mx: 2, display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around' }}>
-              <Typography>{ !isSmallScreen ? 'Clan: ' : ''}{gameState?.clanName}</Typography>
-              <Typography>{ !isSmallScreen ? 'Credits: ' : ''}{gameState?.resourcium}</Typography>
-              <Typography>Deep Space</Typography>
+            <Box sx={{ flexGrow: 3, mx: 2, display: 'flex', flexDirection: 'row', alignContent: 'center', alignItems: 'center', justifyContent: 'space-around' }}>
+              {true && <Divider orientation="vertical" flexItem />}
+              <Typography>{gameState?.clanName}</Typography>
+              <Divider orientation="vertical" flexItem />
+              {/* <Typography>Deep Space</Typography>
+              <Divider orientation="vertical" flexItem /> */}
+              <Typography>${gameState?.resourcium}</Typography>
             </Box>  
           }
             <ToolbarMenu />

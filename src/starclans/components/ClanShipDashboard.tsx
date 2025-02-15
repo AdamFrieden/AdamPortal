@@ -1,9 +1,10 @@
-import { Box, Button, Stack, TextField, Typography } from "@mui/material";
+import { Box, Button, Divider, Stack, TextField, Typography } from "@mui/material";
 import StatusComponent from "./StatusComponent";
 import DisplayData from "./DisplayData";
 import UpdateDataForm from "./UpdateDataForm";
 import useStarclanStore, { getStartingGameState } from "../context/useStarclanStore";
 import { useEffect, useState } from "react";
+import DebugPanel from "./DebugPanel";
 
 export default function ClanShipDashboard() {
 
@@ -64,13 +65,19 @@ export default function ClanShipDashboard() {
         </Box>
       )}
       {hasGameState &&
-      <Stack spacing={2} my={5}>
-        <StatusComponent name='Advanced Scanner'/>
-        <StatusComponent name='Resource Module'/>
-        <StatusComponent name='Medica Pod'/>
-        <DisplayData />
-        <UpdateDataForm />
-      </Stack>}
+      // <Stack spacing={2} my={5}>
+      //   <StatusComponent name='Advanced Scanner'/>
+      //   <StatusComponent name='Resource Module'/>
+      //   <StatusComponent name='Medica Pod'/>
+      //   {/* <DisplayData />
+      //   <UpdateDataForm /> */}
+      // </Stack>
+      <Box>
+        <Divider flexItem />
+        <DebugPanel />
+        <Divider flexItem />
+      </Box>
+      }
     </Box>
   );
 }

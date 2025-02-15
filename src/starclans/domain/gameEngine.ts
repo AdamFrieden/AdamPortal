@@ -45,7 +45,7 @@ export function tryPlayerAction(state: GameState, playerAction: GamePlayerAction
 
 //  update all research tasks to the given 'now' Date, completing them if enough time has elapsed
 function updateResearch(state: GameState, now: number): void {
-  const tasks = state.researchTasks;
+  const tasks = state.researchTasks ?? [];
 
   for (let task of tasks) {
     if (!task.completed) {
@@ -59,7 +59,7 @@ function updateResearch(state: GameState, now: number): void {
 
 // Utility function to start new research
 function startResearch(state: GameState, name: string, durationMs: number) {
-  state.researchTasks.push({
+  state.researchTasks?.push({
     id: crypto.randomUUID(),
     name,
     startTime: Date.now(),

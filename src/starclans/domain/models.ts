@@ -7,7 +7,7 @@ export interface ResearchTask {
 }
 
 export interface GameState {
-  researchTasks: ResearchTask[];
+  researchTasks?: ResearchTask[];
   lastRefresh: number;
   timeTravelMs: number;
   clanName: string;
