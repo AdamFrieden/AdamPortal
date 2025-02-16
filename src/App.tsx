@@ -6,10 +6,11 @@ import NinjaParty from './pages/NinjaParty';
 import Travel from './pages/Travel';
 import VerseCommander from './pages/VerseCommander';
 import VerseCommanderDemo from './components/VerseCommanderDemo';
-import StarClanLayout from './components/StarClanLayout';
 import StarClans from './pages/StarClans';
-import HomeContent from './components/HomeContent';
-import ConflictMockup from './components/StarClansLanding';
+import HomeContent from './pages/HomeContent';
+import ConflictMockup from './starclans/components/StarClansLanding';
+import ClanShipDashboard from './starclans/components/ClanShipDashboard';
+import StarClanLayout from './starclans/components/StarClanLayout';
 
 const App = () => {
 
@@ -32,7 +33,8 @@ const App = () => {
           </Route>
 
           <Route element={<StarClanLayout />}>
-            <Route path="/starclandemo" element={<ConflictMockup />} />
+            <Route path="/starclanmockup" element={<ConflictMockup />} />
+            <Route path="/starclandemo" element={<ClanShipDashboard />} />
           </Route>
         </Routes>
       </Router>

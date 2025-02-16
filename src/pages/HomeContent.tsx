@@ -1,5 +1,5 @@
 import { Box, Typography, Link, Paper, Divider } from '@mui/material';
-import DeployInfo from './DeployInfo';
+import DeployInfo from '../components/DeployInfo';
 
 
 

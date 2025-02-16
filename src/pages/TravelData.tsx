@@ -19,7 +19,8 @@ export const TravelData: Trip[] = [
     position: [-36.8485, 174.7633],
     description: 'First trip to New Zealand, enjoyed scenic beaches and city life.',
     photoUrls: [
-      'https://www.facebook.com/share/12EjoYff1sF/'
+      'https://www.facebook.com/share/12EjoYff1sF/',
+      'https://www.facebook.com/share/18d66dpPrE/'
     ]
   },
   {
