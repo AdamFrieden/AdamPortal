@@ -7,7 +7,6 @@ function UpdateDataForm() {
   const saveError = useStarclanStore((state) => state.saveError);
 
   // Action to save data
-  const saveData = useStarclanStore((state) => state.saveData);
   const currentGameState = useStarclanStore((state) => state.gameState);
 
   // Local state for form inputs
@@ -17,7 +16,6 @@ function UpdateDataForm() {
     e.preventDefault();
     // Save to the store (which simulates the API call)
     currentGameState!.clanName = name;
-    saveData(currentGameState!);
   };
 
   return (

@@ -65,7 +65,6 @@ const useStarclanStore = create<StarclanAppState>()(
       // -------------------------------------------
       // Game Actions
       // -------------------------------------------
-
       startNewClan: async (clanName: string) => {
         set((s) => { s.isApiProcessing = true; });
         const response = await apiService.startNewClan(clanName);
