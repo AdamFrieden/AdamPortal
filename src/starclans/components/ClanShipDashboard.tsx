@@ -1,7 +1,4 @@
-import { Box, Button, Divider, Stack, TextField, Typography } from "@mui/material";
-import StatusComponent from "./StatusComponent";
-import DisplayData from "./DisplayData";
-import UpdateDataForm from "./UpdateDataForm";
+import { Box, Button, Divider, TextField, Typography } from "@mui/material";
 import useStarclanStore from "../context/useStarclanStore";
 import { useEffect, useState } from "react";
 import DebugPanel from "./DebugPanel";

@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import useStarclanStore from '../context/useStarclanStore';
 import { GameState } from '../domain/models';
 
@@ -9,13 +8,7 @@ function DisplayData() {
   const loadError = useStarclanStore((state) => state.loadError);
   
   // Action to load data
-  const loadData = useStarclanStore((state) => state.loadData);
   const refreshData = useStarclanStore((state) => state.refreshGameState)
-
-  // Automatically load data on component mount
-  useEffect(() => {
-    loadData();
-  }, []);
 
   if (isLoadingGameState) {
     return <div>Loading data...</div>;
@@ -25,7 +18,7 @@ function DisplayData() {
     return (
       <div>
         <p style={{ color: 'red' }}>Error: {loadError}</p>
-        <button onClick={loadData}>Retry</button>
+        <button onClick={() => {}}>Retry</button>
       </div>
     );
   }
@@ -34,7 +27,7 @@ function DisplayData() {
     <div>
       <h2>Display Data</h2>
       <pre>{JSON.stringify(data as GameState, null, 2)}</pre>
-      <button onClick={loadData}>Reload Data</button>
+      <button onClick={() => {}}>Reload Data</button>
       <button onClick={refreshData}>Refresh</button>
     </div>
   );
