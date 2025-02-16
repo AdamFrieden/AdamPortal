@@ -1,13 +1,12 @@
 // components/StarClanLayout.tsx
-import { AppBar, Box, Divider, LinearProgress, Toolbar, Typography, useMediaQuery } from '@mui/material';
+import { AppBar, Box, Divider, LinearProgress, Toolbar, Typography } from '@mui/material';
 import { Outlet } from 'react-router-dom';
 import useStarclanStore from '../context/useStarclanStore';
 import ToolbarMenu from './ToolbarMenu';
-import React from 'react';
 
 const StarClanLayout = () => {
 
-  const isSmallScreen = useMediaQuery('(max-width:600px)');
+  // const isSmallScreen = useMediaQuery('(max-width:600px)');
 
   const isApiActive = useStarclanStore((state) => state.isApiProcessing);
   const gameState = useStarclanStore((state) => state.gameState);
@@ -28,7 +27,7 @@ const StarClanLayout = () => {
               <Divider orientation="vertical" flexItem />
               {/* <Typography>Deep Space</Typography>
               <Divider orientation="vertical" flexItem /> */}
-              <Typography>${gameState?.resourcium}</Typography>
+              <Typography>${gameState?.resourcium.toFixed(0)}</Typography>
             </Box>  
           }
             <ToolbarMenu />
