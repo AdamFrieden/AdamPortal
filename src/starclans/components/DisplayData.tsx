@@ -10,7 +10,7 @@ function DisplayData() {
   
   // Action to load data
   const loadData = useStarclanStore((state) => state.loadData);
-  const refreshData = useStarclanStore((state) => state.refreshData)
+  const refreshData = useStarclanStore((state) => state.refreshGameState)
 
   // Automatically load data on component mount
   useEffect(() => {

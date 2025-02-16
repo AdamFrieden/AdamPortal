@@ -3,18 +3,11 @@ import { useState } from "react";
 import useStarclanStore from "../context/useStarclanStore";
 
 export default function DebugPanel() {
-  const updateGameState = useStarclanStore((state) => state.updateGameState);
-  const refresh = useStarclanStore((state) => state.refreshData)
-  const starDateRaw = useStarclanStore((state) => state.gameState?.lastRefresh);
+
+  const timeTravelAction = useStarclanStore((s) => s.timeTravel);
+  const starDateRaw = useStarclanStore((state) => state.getStarDate());
   const starDateFormatted = new Date(starDateRaw ?? 0).toISOString();
-  const existingTimeTravel = useStarclanStore((state) => state.gameState?.timeTravelMs);
-
-  const [timeTravelValue, setTimeTravelValue] = useState<number>(0);
-
-  const handleTimeTravelUpdate = () => {
-    updateGameState({ timeTravelMs: (timeTravelValue * 1000) + (existingTimeTravel ?? 0) });
-    refresh();
-  };
+  const [timeTravelValue, setTimeTravelValue] = useState<number>(3600);
 
   return (
     <Box>
@@ -23,19 +16,19 @@ export default function DebugPanel() {
       <Typography>StarDateRaw: {starDateRaw}</Typography>
       <Typography>StarDate: {starDateFormatted}</Typography>
       
-      <TextField
-        label="Time"
-        type="number"
-        value={timeTravelValue}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          setTimeTravelValue(Number(e.target.value))
-        }
-      />
-
-      {/* Button to update the timeTravelMs field */}
-      <Button variant="contained" onClick={handleTimeTravelUpdate}>
-        Update Time Travel
-      </Button>
+      <Box sx={{ display: 'flex', flexDirection: 'column', m: 2}}>
+        <TextField
+          label="Seconds"
+          type="numeric"
+          value={timeTravelValue}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setTimeTravelValue(Number(e.target.value))
+          }
+        />
+        <Button variant="contained" onClick={() => { timeTravelAction(timeTravelValue * 1000); }}>
+          Time Travel
+        </Button>
+      </Box>
     </Box>
   );
 }

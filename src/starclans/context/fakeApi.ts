@@ -1,98 +1,152 @@
 // src/api/fakeApi.ts
 
-import { refreshGameState, tryPlayerAction } from "../domain/gameEngine";
-import { GamePlayerAction, GameState } from "../domain/models";
+import { GameEngine } from "../domain/gameEngine";
+import { ClientGameState, PlayerAction, GameState, PlayerActionResult, toClientGameState, emptyGameState } from "../domain/models";
 
-export interface FakeApiResponse {
-  responseCode: number;
-  responseSuccess: boolean;
+export interface ApiResponse<T> {
+  status: number;
+  success: boolean;
+  data?: T;
 }
 
-export interface FakePlayerActionResponse extends FakeApiResponse {
-  actionValid: boolean;
-}
+const STORAGE_KEY = 'starclanData';
 
-export const deleteData = () => {
-  localStorage.removeItem('starclanData');
-}
+class FakeApi {
+  private gameState: GameState;
 
-export const getDataFromFakeApi = async (): Promise<GameState> => {
-  await randomDelay();
-  maybeFail();
+  constructor() {
+    this.gameState = this.loadGameState();
+  }
+
+  private saveGameState(state: GameState): void {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }
   
-  const data = localStorage.getItem('starclanData');
-  return data ? JSON.parse(data) : {};
-};
+  private loadGameState(): GameState {
+    console.log('loading game state...');
+    const data = localStorage.getItem(STORAGE_KEY);
+    if (!data || data.trim() === '') {
+      console.log('returning empty game state...');
+      return emptyGameState();
+    }
+    return JSON.parse(data) as GameState;
+  }
 
-//  ultimately the api should never be doing this - we should only make requests and let the game engine change state
-export const saveDataToFakeApi = async (state: GameState): Promise<any> => {
-  await randomDelay();
-  // maybeFail();
+  //  Utility function to delete state from local storage for testing
+  public deleteGameState(): void {
+    localStorage.removeItem(STORAGE_KEY);
+  }
 
-  saveToFakeDatabase(state)
-  return state;
-};
+  //  careful this will overwrite existing clan data
+  public startNewClan = async (clanName: string): Promise<ApiResponse<ClientGameState>> => {
+    try {
+      await mockApiBehavior();
+    } catch {
+      return {
+        status: 500,
+        success: false
+      }
+    }
 
-export const postRefreshToFakeApi = async (state: GameState): Promise<any> => {
-  await randomDelay();
-  try {
-    maybeFail();
-  } catch (error: any) {
+    const newClanGameState: GameState = {
+      clanName: clanName,
+      gladiators: [],
+      researchTasks: [],
+      lastRefresh: Date.now(),
+      timeTravelMs: 0,
+      resourcium: Math.random() * 100,
+    }
+    this.saveGameState(newClanGameState);
+    this.gameState = newClanGameState;
+
     return {
-      responseCode: 500,
-      responseSuccess: false,
+      data: toClientGameState(newClanGameState),
+      status: 200,
+      success: true
     }
   }
 
-  const refreshedState = refreshGameState(state);
-  saveToFakeDatabase(refreshedState as GameState);
+  public timeTravel = async (timeToTravelMs: number): Promise<ApiResponse<ClientGameState>> => {
+    try {
+      await mockApiBehavior();
+    } catch {
+      return {
+        status: 500,
+        success: false
+      }
+    }
+    
+    const nextState = GameEngine.timeTravel(this.gameState, timeToTravelMs, Date.now());
+    this.saveGameState(nextState);
+    this.gameState = nextState;
 
-  const response: FakeApiResponse & GameState & { elapsedTimeMs: number } = {
-    responseCode: 200,
-    responseSuccess: true,
-    ...refreshedState
-  }
-  return response;
-}
-
-// notably posting a player action doesn't call refresh on the gameState so no time will progress
-export const postActionToFakeApi = async (playerAction: GamePlayerAction, state: GameState): Promise<any> => {
-  await randomDelay();
-  try {
-    maybeFail();
-  } catch (error: any) {
     return {
-      responseCode: 500,
-      responseSuccess: false,
+      data: toClientGameState(nextState),
+      status: 200,
+      success: true
     }
   }
 
-  const gameResult = tryPlayerAction(state, playerAction)
-  saveToFakeDatabase(gameResult)
 
-  const response: FakePlayerActionResponse & GameState = {
-    actionValid: gameResult.success,
-    responseCode: 200,
-    responseSuccess: true,
-    ...gameResult
-  };
+  public getClientGameState = async (): Promise<ApiResponse<ClientGameState>> => {
+    //  first fake some api behavior with a delay and possible failure
+    try {
+      await mockApiBehavior();
+    } catch {
+      return {
+        status: 500,
+        success: false
+      }
+    }
 
-  return response;
+    //  now run server side logic
+    const gameStateNow = GameEngine.updateGameStateToNow(this.gameState, Date.now()); //  calculate next gamestate based on the current time
+    this.saveGameState(gameStateNow); //  persist the updated state
+    this.gameState = gameStateNow;
+
+    //  return a client state
+    const clientState = toClientGameState(gameStateNow);
+    return {
+      data: clientState,
+      status: 200,
+      success: true
+    }
+  }
+
+  public postPlayerAction = async (playerAction: PlayerAction): Promise<ApiResponse<PlayerActionResult<ClientGameState>>> => {
+    try {
+      await mockApiBehavior();
+    } catch {
+      return {
+        status: 500,
+        success: false
+      }
+    }
+
+    const { state: nextState, actionSuccess } = GameEngine.attemptPlayerAction(this.gameState, Date.now(), playerAction);
+    this.saveGameState(nextState);
+    this.gameState = nextState;
+
+    const resultForClient = { state: toClientGameState(nextState), actionSuccess };
+    return {
+      data: resultForClient,
+      status: 200,
+      success: true
+    }
+  }
 }
 
-const saveToFakeDatabase = (state: GameState) => {
-  localStorage.setItem('starclanData', JSON.stringify(state));
-}
-
-// Utility to simulate random network latency: 0.5s to 2.0s
-const randomDelay = async () => {
+// Utility function to simulate api behavior
+const mockApiBehavior = async (): Promise<void> => {
+  // Simulate random network latency between 500ms and 2000ms.
   const ms = 500 + Math.floor(Math.random() * 1500);
-  return new Promise((resolve) => setTimeout(resolve, ms));
-};
-
-// Utility to simulate random chance of failure (15%).
-const maybeFail = () => {
+  await new Promise((resolve) => setTimeout(resolve, ms));
+  
+  // Simulate a 15% chance of failure.
   if (Math.random() < 0.15) {
-    throw new Error('Simulated network error');
+    throw new Error("Simulated network error");
   }
 };
+
+const apiService = new FakeApi();
+export default apiService;

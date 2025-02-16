@@ -8,17 +8,19 @@ import DebugPanel from "./DebugPanel";
 
 export default function ClanShipDashboard() {
 
+  const refreshGameState = useStarclanStore((state) => state.refreshGameState);
+  const startNewClan = useStarclanStore((state) => state.startNewClan);
+
   useEffect(() => {
-    loadData();
+    refreshGameState();
   }, []);
 
   // const startNewGame = useStarclanStore((state) => state.startNewGame);
   const gameSaveStatus = useStarclanStore((state) => state.gameSaveStatus);
   const hasGameState = useStarclanStore((state) => !!state.gameState);
   const apiProcessing = useStarclanStore((state) => state.isApiProcessing);
+
   // const gameState = useStarclanStore((state) => state.gameState);
-  const saveData = useStarclanStore((state) => state.saveData);
-  const loadData = useStarclanStore((state) => state.loadData);
   const [clanName, setClanName] = useState<string>('');
 
   // const [dashStatus, setDashStatus] = useState<DashboardState>('START_NEW_GAME');
@@ -38,9 +40,7 @@ export default function ClanShipDashboard() {
   };
 
   const handleClanNameSubmit = () => {
-    const newClan = getStartingGameState(clanName);
-    setClanName('');
-    saveData(newClan);
+    startNewClan(clanName);
   };
 
   const validateClanName = (name: string) => {

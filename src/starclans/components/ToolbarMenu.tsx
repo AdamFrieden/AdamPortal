@@ -12,7 +12,7 @@ import useStarclanStore from '../context/useStarclanStore';
 export default function ToolbarMenu() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const loadData = useStarclanStore((state) => state.loadData)
-  const refreshData = useStarclanStore((state) => state.refreshData)
+  const refreshData = useStarclanStore((state) => state.refreshGameState)
   const deleteData = useStarclanStore((state) => state.deleteData);
   const gameSaveStatus = useStarclanStore((state) => state.gameSaveStatus);
   const open = Boolean(anchorEl);
