@@ -23,10 +23,8 @@ class FakeApi {
   }
   
   private loadGameState(): GameState {
-    console.log('loading game state...');
     const data = localStorage.getItem(STORAGE_KEY);
     if (!data || data.trim() === '') {
-      console.log('returning empty game state...');
       return emptyGameState();
     }
     return JSON.parse(data) as GameState;

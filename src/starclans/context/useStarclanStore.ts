@@ -10,8 +10,6 @@ import { PlayerAction, ClientGameState } from '../domain/models';
 
 export type GameSaveStatus = 'UNKNOWN' | 'NO_SAVE_FOUND' | 'SAVE_LOADED';
 
-const STORE_DEBUG = false;
-
 export interface StarclanAppState {
   // UI and meta state
   isShowingDebugPanel: boolean;
@@ -84,27 +82,12 @@ const useStarclanStore = create<StarclanAppState>()(
       //  ##MISSING currently not doing anything when we get a fail api response
       timeTravel: async (timeMs: number) => {
 
-        if (STORE_DEBUG) {
-          console.log('Store.timeTravel Before:', {
-            timeTravelMs: get().gameState?.timeTravelMs,
-            lastRefresh: get().gameState?.lastRefresh,
-            timeMs,
-          });
-        }
-
         set((s) => { s.isApiProcessing = true; });
         const response = await apiService.timeTravel(timeMs);
         if (response.success) {
           set((s) => { 
             s.gameState = response.data!;
            })
-        }
-
-        if (STORE_DEBUG) {
-          console.log('Store.timeTravel After:', {
-            success: response.success,
-            timeTravelMs: response.data?.timeTravelMs,
-          });
         }
 
         set((s) => { s.isApiProcessing = false; });

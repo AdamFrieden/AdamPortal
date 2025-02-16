@@ -2,15 +2,12 @@
 // src/domain/gameEngine.ts
 import { PlayerAction, GameState, PlayerActionResult, ResearchTask } from './models';
 
-const GAME_ENGINE_DEBUG = false;
-
 //  this should not maintain any state. use all pure functions that have no side effects.
-//  state changes are always returned as a brand new state object without mutating inputs.
+//  state changes are always returned as a  new state object without mutating inputs.
 export class GameEngine {
 
   public static updateGameStateToNow(state: GameState, now: number): GameState {
     const totalNow = now + state.timeTravelMs;
-    // const elapsedTimeMs = now - state.lastRefresh;
 
     // Call each system
     // updateResearch(state, now);
@@ -19,8 +16,6 @@ export class GameEngine {
     // More systems: updateResources, etc.
     const updatedResearchTasks = GameEngine.updateResearchTasks(state.researchTasks, totalNow);
   
-    //  note we need to create a new object because our app code relies in immer for state management
-    //  DO NOT DIRECTLY MUTATE STATE
     const updatedState: GameState = {
       ...state,
       researchTasks: updatedResearchTasks,
@@ -31,27 +26,9 @@ export class GameEngine {
 
   public static timeTravel(state: GameState, travelMs: number, now: number): GameState {
 
-    if (GAME_ENGINE_DEBUG) {
-      console.log('GameEngine.timeTravel Before:', {
-        timeTravelMs: state.timeTravelMs,
-        lastRefresh: state.lastRefresh,
-        travelMs,
-        now,
-      });
-    }
-
     const totalTimeTravel = state.timeTravelMs + travelMs;
     const timeTraveledState: GameState = { ...state, timeTravelMs: totalTimeTravel };
     const refreshedState = GameEngine.updateGameStateToNow(timeTraveledState, now);
-
-    if (GAME_ENGINE_DEBUG) {
-      console.log('[TimeTravel] Before:', {
-        timeTravelMs: state.timeTravelMs,
-        lastRefresh: state.lastRefresh,
-        travelMs,
-        now,
-      });
-    }
 
     return refreshedState;
   }

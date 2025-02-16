@@ -2,7 +2,7 @@ import { Box, Button, Divider, Stack, TextField, Typography } from "@mui/materia
 import StatusComponent from "./StatusComponent";
 import DisplayData from "./DisplayData";
 import UpdateDataForm from "./UpdateDataForm";
-import useStarclanStore, { getStartingGameState } from "../context/useStarclanStore";
+import useStarclanStore from "../context/useStarclanStore";
 import { useEffect, useState } from "react";
 import DebugPanel from "./DebugPanel";
 
