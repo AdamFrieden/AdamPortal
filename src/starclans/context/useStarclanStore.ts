@@ -131,9 +131,7 @@ const useStarclanStore = create<StarclanAppState>()(
         });
       },
 
-      // -------------------------------------------
-      // CRUD
-      // -------------------------------------------
+      //  utility delete function that won't exist in the final game
       deleteData: () => {
         apiService.deleteGameState();
         set((state) => {

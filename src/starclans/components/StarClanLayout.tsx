@@ -13,7 +13,7 @@ const StarClanLayout = () => {
   const gameSaveStatus = useStarclanStore((state) => state.gameSaveStatus);
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+    <Box id='topLayoutBox' sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
       <AppBar position="fixed">
         <Toolbar>
           <Box sx={{ width: '100vw', display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
@@ -39,7 +39,7 @@ const StarClanLayout = () => {
         </Box>}
       </AppBar>
       <Box sx={{ display: 'flex', flexGrow: 1, overflow: 'auto' }}>
-        <Box component="main" sx={{ flexGrow: 1, p: 3, overflow: 'auto'}}>
+        <Box component="main" sx={{ flexGrow: 1, p: 0, overflow: 'auto'}}>
             <Toolbar /> {/* spacing to account for the floating toolbar in the header */}
             <Outlet /> {/* Render child routes here */}
         </Box>

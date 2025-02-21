@@ -8,9 +8,14 @@ export default function DebugPanel() {
   const starDateRaw = useStarclanStore((state) => state.getStarDate());
   const starDateFormatted = new Date(starDateRaw ?? 0).toISOString();
   const [timeTravelValue, setTimeTravelValue] = useState<number>(3600);
+  const showDebugPanel = useStarclanStore((s) => s.isShowingDebugPanel);
+
+  if (!showDebugPanel) {
+    return (<></>);
+  }
 
   return (
-    <Box>
+    <Box sx={{ maxWidth: '50vw' }}>
       <Typography variant="h6">Debug Panel</Typography>
       
       <Typography>StarDateRaw: {starDateRaw}</Typography>

@@ -8,35 +8,43 @@ import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
 import Refresh from '@mui/icons-material/Refresh';
 import useStarclanStore from '../context/useStarclanStore';
+import { Delete, Info } from '@mui/icons-material';
 
 export default function ToolbarMenu() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const refreshData = useStarclanStore((state) => state.refreshGameState)
   const deleteData = useStarclanStore((state) => state.deleteData);
+  const showDebugPanel = useStarclanStore((state) => state.showDebugPanel);
+  const isShowingDebugPanel = useStarclanStore((state) => state.isShowingDebugPanel);
+
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const handleDebugToggle = () => {
+    showDebugPanel(!isShowingDebugPanel);
+  };
+
   return (
     <React.Fragment>
       <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
         {/* <Typography sx={{ minWidth: 100 }}>Contact</Typography>
         <Typography sx={{ minWidth: 100 }}>Profile</Typography> */}
-        {/* <Tooltip title="Account settings"> */}
-          <IconButton
-            onClick={handleClick}
-            size="small"
-            sx={{ ml: 2 }}
-            aria-controls={open ? 'account-menu' : undefined}
-            aria-haspopup="true"
-            aria-expanded={open ? 'true' : undefined}
-          >
-            <Settings />
-          </IconButton>
-        {/* </Tooltip> */}
+        <IconButton
+          onClick={handleClick}
+          size="small"
+          sx={{ ml: 2 }}
+          aria-controls={open ? 'account-menu' : undefined}
+          aria-haspopup="true"
+          aria-expanded={open ? 'true' : undefined}
+        >
+          <Settings />
+        </IconButton>
       </Box>
       <Menu
         anchorEl={anchorEl}
@@ -88,6 +96,12 @@ export default function ToolbarMenu() {
           </ListItemIcon>
           Add another account
         </MenuItem> */}
+        <MenuItem onClick={handleDebugToggle}>
+          <ListItemIcon>
+            <Info fontSize="small" />
+          </ListItemIcon>
+          Debug
+        </MenuItem>
         <MenuItem onClick={refreshData}>
           <ListItemIcon>
             <Refresh fontSize="small" />
@@ -96,7 +110,7 @@ export default function ToolbarMenu() {
         </MenuItem>
         <MenuItem onClick={deleteData}>
           <ListItemIcon>
-            <Logout fontSize="small" />
+            <Delete fontSize="small" />
           </ListItemIcon>
           Delete
         </MenuItem>
