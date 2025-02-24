@@ -18,12 +18,8 @@ export default function TopTabBar() {
 
   return (
   <React.Fragment>
-    <Toolbar /> {/* for spacing since the app bar is fixed */}
+    <Toolbar sx={{ mb:2 }} /> {/* for spacing since the app bar is fixed */}
     <AppBar sx={{ width:'100%' }} position="fixed">
-      {isApiActive && //  fix this so its below the tabs and doesn't move the UI
-      <Box sx={{ width: '100%' }}>
-        <LinearProgress />
-      </Box>}
       <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
         <Box sx={{flexGrow: 1}}>
           <Tabs
@@ -46,6 +42,10 @@ export default function TopTabBar() {
         </Box>
         <ToolbarMenu />
       </Box>
+      {isApiActive && //  fix this so its below the tabs and doesn't move the UI
+      <Box sx={{ width: '100%', mb: 0.5 }}>
+        <LinearProgress />
+      </Box>}
     </AppBar>
   </React.Fragment>
   );

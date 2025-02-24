@@ -8,10 +8,9 @@ interface GladiatorGridProps {
   gladiators: ClientGladiator[];
 }
 
-
 export const GladiatorGrid: React.FC<GladiatorGridProps> = ({ gladiators }) => {
   return (
-    <Grid container spacing={2} sx={{ p: 2 }}>
+    <Grid container spacing={2} sx={{ p: 2, justifyContent: 'center' }}>
       {gladiators.map((glad) => (
         <GladiatorCard key={glad.name} gladiator={glad} />
       ))}

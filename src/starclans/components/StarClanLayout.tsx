@@ -30,7 +30,9 @@ const StarClanLayout = () => {
               <Box id='dashContextBox' width='100%'>
                 <TopTabBar />
                 <DebugPanel />
-                <GladiatorGrid gladiators={mockupGladiators} />
+                <Box id='gridContentAdam' sx={{ display: 'flex', justifyContent: 'center' }}>
+                  <GladiatorGrid gladiators={mockupGladiators} />
+                </Box>
               </Box>
             }
         </Box>

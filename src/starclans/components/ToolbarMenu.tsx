@@ -7,7 +7,8 @@ import IconButton from '@mui/material/IconButton';
 import Settings from '@mui/icons-material/Settings';
 import Refresh from '@mui/icons-material/Refresh';
 import useStarclanStore from '../context/useStarclanStore';
-import { Delete, Info } from '@mui/icons-material';
+import { DarkModeOutlined, Delete, Info, LightMode } from '@mui/icons-material';
+import { useTheme } from '../../context/ThemeProvider';
 
 export default function ToolbarMenu() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -15,6 +16,7 @@ export default function ToolbarMenu() {
   const deleteData = useStarclanStore((state) => state.deleteData);
   const showDebugPanel = useStarclanStore((state) => state.showDebugPanel);
   const isShowingDebugPanel = useStarclanStore((state) => state.isShowingDebugPanel);
+  const { darkMode, toggleDarkMode } = useTheme();
 
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -31,9 +33,7 @@ export default function ToolbarMenu() {
 
   return (
     <React.Fragment>
-      <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
-        {/* <Typography sx={{ minWidth: 100 }}>Contact</Typography>
-        <Typography sx={{ minWidth: 100 }}>Profile</Typography> */}
+      <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center', mr: '1.5rem' }}>
         <IconButton
           onClick={handleClick}
           size="small"
@@ -82,19 +82,6 @@ export default function ToolbarMenu() {
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        {/* <MenuItem onClick={handleClose}>
-          <Avatar /> Profile
-        </MenuItem>
-        <MenuItem onClick={handleClose}>
-          <Avatar /> My account
-        </MenuItem> */}
-        {/* <Divider /> */}
-        {/* <MenuItem onClick={handleClose}>
-          <ListItemIcon>
-            <PersonAdd fontSize="small" />
-          </ListItemIcon>
-          Add another account
-        </MenuItem> */}
         <MenuItem onClick={handleDebugToggle}>
           <ListItemIcon>
             <Info fontSize="small" />
@@ -112,6 +99,12 @@ export default function ToolbarMenu() {
             <Delete fontSize="small" />
           </ListItemIcon>
           Delete
+        </MenuItem>
+        <MenuItem onClick={toggleDarkMode}>
+          <ListItemIcon>
+            {darkMode ? <DarkModeOutlined /> : <LightMode />}
+          </ListItemIcon>
+          {darkMode ? 'Light' : 'Dark'}
         </MenuItem>
       </Menu>
     </React.Fragment>
