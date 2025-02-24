@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Box, Button, Typography, LinearProgress, Stack } from '@mui/material';
 import StatusComponent from './StatusComponent';
-import ProfilePage from '../../components/ProfilePage';
+import ProfilePage from '../../../components/ProfilePage';
 
 // ------------------ Types ------------------ //
 interface Gladiator {

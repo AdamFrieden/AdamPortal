@@ -1,4 +1,4 @@
-import { ClientGladiator } from "../domain/models";
+import { ClientGladiator } from "../../domain/models";
 
 const exampleGladiator1: ClientGladiator = {
   name: 'Craigus Starbound',

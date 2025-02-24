@@ -5,7 +5,6 @@ import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import IconButton from '@mui/material/IconButton';
 import Settings from '@mui/icons-material/Settings';
-import Logout from '@mui/icons-material/Logout';
 import Refresh from '@mui/icons-material/Refresh';
 import useStarclanStore from '../context/useStarclanStore';
 import { Delete, Info } from '@mui/icons-material';
