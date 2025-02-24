@@ -6,6 +6,7 @@ const exampleGladiator1: ClientGladiator = {
   description: "Hulking size, strength and endless fortitude.",
   estimatedPower: 12,
   knownTraits: ['Tireless'],
+  status: "RESTING",
 };
 
 const exampleGladiator2: ClientGladiator = {
@@ -14,6 +15,7 @@ const exampleGladiator2: ClientGladiator = {
   description: "Warlord from beyond the rim. Excels in adverse environments with extreme cunning.",
   estimatedPower: 9,
   knownTraits: ['Hazard Resist'],
+  status: "TRAINING",
 };
 
 const exampleGladiator3: ClientGladiator = {
@@ -22,6 +24,7 @@ const exampleGladiator3: ClientGladiator = {
   description: "Legendary fighter with unmatched precision and tactical genius.",
   estimatedPower: 15,
   knownTraits: ['Legendary', 'Precision'],
+  status: "TRAINING",
 };
 
 const exampleGladiator4: ClientGladiator = {
@@ -30,6 +33,7 @@ const exampleGladiator4: ClientGladiator = {
   description: "A strategic and agile combatant known for quick maneuvers.",
   estimatedPower: 11,
   knownTraits: ['Agile', 'Strategic'],
+  status: "RESTING",
 };
 
 const exampleGladiator5: ClientGladiator = {
@@ -38,6 +42,7 @@ const exampleGladiator5: ClientGladiator = {
   description: "Fierce and relentless warrior with a fiery spirit.",
   estimatedPower: 11,
   knownTraits: ['Fiery', 'Resilient'],
+  status: "TRAINING",
 };
 
 const exampleGladiator6: ClientGladiator = {
@@ -46,6 +51,7 @@ const exampleGladiator6: ClientGladiator = {
   description: "A seasoned veteran of many battles with deep tactical insight.",
   estimatedPower: 10,
   knownTraits: ['Veteran', 'Tactical'],
+  status: "TRAINING",
 };
 
 const exampleGladiator7: ClientGladiator = {
@@ -54,6 +60,7 @@ const exampleGladiator7: ClientGladiator = {
   description: "Stalwart defender with an indomitable will and iron resolve.",
   estimatedPower: 8,
   knownTraits: ['Defender', 'Resilient'],
+  status: "RESTING",
 };
 
 const exampleGladiator8: ClientGladiator = {
@@ -62,6 +69,7 @@ const exampleGladiator8: ClientGladiator = {
   description: "Fearless leader with impeccable combat skills and charisma.",
   estimatedPower: 13,
   knownTraits: ['Bold', 'Charismatic'],
+  status: "RESTING",
 };
 
 const exampleGladiator9: ClientGladiator = {
@@ -70,6 +78,7 @@ const exampleGladiator9: ClientGladiator = {
   description: "Swift and strategic fighter, renowned for her tactical strikes.",
   estimatedPower: 9,
   knownTraits: ['Swift', 'Cunning'],
+  status: "TRAINING",
 };
 
 const exampleGladiator10: ClientGladiator = {
@@ -78,6 +87,7 @@ const exampleGladiator10: ClientGladiator = {
   description: "Powerful fighter harnessing the might of storms to overwhelm foes.",
   estimatedPower: 14,
   knownTraits: ['Thunderous', 'Dominant'],
+  status: "RESTING",
 };
 
 const exampleGladiator11: ClientGladiator = {
@@ -86,6 +96,7 @@ const exampleGladiator11: ClientGladiator = {
   description: "Unyielding presence on the battlefield with formidable defense.",
   estimatedPower: 12,
   knownTraits: ['Stalwart', 'Unbreakable'],
+  status: "TRAINING",
 };
 
 const exampleGladiator12: ClientGladiator = {
@@ -94,6 +105,7 @@ const exampleGladiator12: ClientGladiator = {
   description: "Cunning tactician with a chilling precision in every move.",
   estimatedPower: 10,
   knownTraits: ['Frost', 'Cunning'],
+  status: "RESTING",
 };
 
 const exampleGladiator13: ClientGladiator = {
@@ -102,6 +114,7 @@ const exampleGladiator13: ClientGladiator = {
   description: "Master of disorienting foes with rapid, swirling maneuvers.",
   estimatedPower: 11,
   knownTraits: ['Evasive', 'Quick'],
+  status: "TRAINING",
 };
 
 const exampleGladiator14: ClientGladiator = {
@@ -110,6 +123,7 @@ const exampleGladiator14: ClientGladiator = {
   description: "A protector with an iron will and a commitment to his allies.",
   estimatedPower: 9,
   knownTraits: ['Guardian', 'Loyal'],
+  status: "RESTING",
 };
 
 const exampleGladiator15: ClientGladiator = {
@@ -118,6 +132,7 @@ const exampleGladiator15: ClientGladiator = {
   description: "Stealthy fighter renowned for her lethal precision and agility.",
   estimatedPower: 8,
   knownTraits: ['Stealth', 'Agile'],
+  status: "RESTING",
 };
 
 const exampleGladiator16: ClientGladiator = {
@@ -126,6 +141,7 @@ const exampleGladiator16: ClientGladiator = {
   description: "Passionate warrior with a burning desire to overcome any challenge.",
   estimatedPower: 10,
   knownTraits: ['Passionate', 'Fierce'],
+  status: "TRAINING",
 };
 
 const exampleGladiator17: ClientGladiator = {
@@ -134,6 +150,7 @@ const exampleGladiator17: ClientGladiator = {
   description: "Renowned for valor and relentless pursuit of victory in the arena.",
   estimatedPower: 13,
   knownTraits: ['Valiant', 'Strategic'],
+  status: "TRAINING",
 };
 
 const exampleGladiator18: ClientGladiator = {
@@ -142,6 +159,7 @@ const exampleGladiator18: ClientGladiator = {
   description: "Swift and agile, blending wind and precision in combat.",
   estimatedPower: 9,
   knownTraits: ['Swift', 'Windborne'],
+  status: "RESTING",
 };
 
 const exampleGladiator19: ClientGladiator = {
@@ -150,6 +168,7 @@ const exampleGladiator19: ClientGladiator = {
   description: "Intense warrior with a fiery approach to every battle.",
   estimatedPower: 11,
   knownTraits: ['Inferno', 'Determined'],
+  status: "RESTING",
 };
 
 const exampleGladiator20: ClientGladiator = {
@@ -158,6 +177,7 @@ const exampleGladiator20: ClientGladiator = {
   description: "A master of battle who breaks through enemy lines with ease.",
   estimatedPower: 14,
   knownTraits: ['Breaker', 'Unyielding'],
+  status: "RESTING",
 };
 
 export default [

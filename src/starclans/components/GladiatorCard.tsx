@@ -39,9 +39,15 @@ export const GladiatorCard: React.FC<GladiatorCardProps> = ({ gladiator }) => {
       <CardContent>
         {/* Stamina */}
         <Typography variant="caption" display="block" gutterBottom>
-          Stamina
+          { gladiator.status === 'RESTING' ? (`Resting`) : (`Training`)}
         </Typography>
-        <LinearProgress variant="determinate" value={gladiator.stamina} />
+        <LinearProgress variant="determinate" value={gladiator.stamina} sx={{ height: '0.75rem' }} />
+        { gladiator.status === 'RESTING' && 
+        <LinearProgress color='secondary' />
+        }
+        { gladiator.status === 'TRAINING' && 
+        <LinearProgress color='error' sx={{ transform: 'scaleX(-1)' }} />
+        }
       </CardContent>
 
       <CardContent>

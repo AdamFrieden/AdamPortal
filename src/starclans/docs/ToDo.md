@@ -1,0 +1,2 @@
+- Add cache busting
+- skeleton loading while the user waits on the page

@@ -6,6 +6,7 @@ import BiotechIcon from '@mui/icons-material/Biotech';
 import PermScanWifiIcon from '@mui/icons-material/PermScanWifi';
 import React from "react";
 import useStarclanStore from "../context/useStarclanStore";
+import StarClock from "./StarClock";
 
 export default function TopTabBar() {
 
@@ -21,6 +22,7 @@ export default function TopTabBar() {
     <Toolbar sx={{ mb:2 }} /> {/* for spacing since the app bar is fixed */}
     <AppBar sx={{ width:'100%' }} position="fixed">
       <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
+        <StarClock />
         <Box sx={{flexGrow: 1}}>
           <Tabs
             value={tabValue}

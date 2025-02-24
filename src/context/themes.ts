@@ -24,7 +24,10 @@ export const darkTheme = createTheme({
     text: { primary: '#95c9fb', secondary: '#53a0ff' },
     error: { main: '#e2756d' },
   },
-  typography: { fontFamily: 'Silkscreen' },
+  // typography: { fontFamily: 'Silkscreen' },
+  typography: {
+    fontFamily: '"Share Tech Mono", monospace', // monospaced for a techy feel
+  },
   shape: { borderRadius: 8 },
 });
 

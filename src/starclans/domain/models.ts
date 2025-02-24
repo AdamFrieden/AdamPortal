@@ -6,6 +6,8 @@ export interface ResearchTask {
   completed: boolean;
 }
 
+export type GladiatorStatus = 'RESTING' | 'TRAINING' | 'CONFLICT';
+
 export interface Gladiator {
   name: string;
   stamina: number;
@@ -14,6 +16,7 @@ export interface Gladiator {
   truePower: number;
   hiddenTraits: string[];
   description: string;
+  status: GladiatorStatus
 }
 
 //  this currently represents everything persisted on the db AND whatever is needed to display in the app
