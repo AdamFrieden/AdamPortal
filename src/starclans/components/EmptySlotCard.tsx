@@ -9,7 +9,7 @@ interface EmptySlotCardProps {
 export const EmptySlotCard: React.FC<EmptySlotCardProps> = ({ onAdd }) => {
   return (
     // <Card sx={{ width: '20rem', height: '26.67rem', p: 1 }}>
-    <Card variant='outlined' sx={{ width: 300, height: 400, p: 1 }}>
+    <Card variant='outlined' sx={{ width: '17.5rem', height: '24.5rem', p: 1 }}>
       {/* <CardActionArea onClick={onAdd} sx={{ width: '100%', height: '100%' }}> */}
         <CardContent
           sx={{

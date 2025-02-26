@@ -16,7 +16,7 @@ interface GladiatorCardProps {
 
 export const GladiatorCard: React.FC<GladiatorCardProps> = ({ gladiator }) => {
   return (
-    <Card sx={{ width: 300, height: 400, p: 1 }}>
+    <Card sx={{ width: '17.5rem', height: '24.5rem', p: 1 }}>
       {/* Profile Image */}
       {/* <CardMedia
         component="img"
@@ -41,12 +41,18 @@ export const GladiatorCard: React.FC<GladiatorCardProps> = ({ gladiator }) => {
         <Typography variant="caption" display="block" gutterBottom>
           { gladiator.status === 'RESTING' ? (`Resting`) : (`Training`)}
         </Typography>
-        <LinearProgress variant="determinate" value={gladiator.stamina} sx={{ height: '0.75rem' }} />
         { gladiator.status === 'RESTING' && 
-        <LinearProgress color='secondary' />
+        <LinearProgress color='primary' sx={{ height: '0.1rem' }} />
         }
         { gladiator.status === 'TRAINING' && 
-        <LinearProgress color='error' sx={{ transform: 'scaleX(-1)' }} />
+        <LinearProgress color='error' sx={{ transform: 'scaleX(-1)', height: '0.1rem'  }} />
+        }
+        <LinearProgress variant="determinate" value={gladiator.stamina} sx={{ height: '0.75rem' }} />
+        { gladiator.status === 'RESTING' && 
+        <LinearProgress color='primary' sx={{ height: '0.1rem' }} />
+        }
+        { gladiator.status === 'TRAINING' && 
+        <LinearProgress color='error' sx={{ transform: 'scaleX(-1)', height: '0.1rem'  }} />
         }
       </CardContent>
 
@@ -62,7 +68,7 @@ export const GladiatorCard: React.FC<GladiatorCardProps> = ({ gladiator }) => {
       <CardContent>
         {/* Estimated Power */}
         <Typography variant="body2" color="text.primary">
-          Estimated Power: {gladiator.estimatedPower}
+          Power: ~{gladiator.estimatedPower}
         </Typography>
       </CardContent>
     </Card>

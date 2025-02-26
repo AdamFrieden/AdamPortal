@@ -20,15 +20,15 @@ export default function StartNewClan() {
   };
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', m: 4 }}>
-    <TextField 
-      label="clan name"
-      value={clanName}
-      variant="outlined" 
-      error={false}
-      onChange={handleClanNameChange}
-    />
-    <Button disabled={!validateClanName(clanName)} sx={{ m: 3 }} onClick={handleClanNameSubmit}>{'Launch >>'}</Button>
-  </Box>
+    <Box id='startNewClan' sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', height: '50vh', m: 4 }}>
+      <TextField 
+        label="clan name"
+        value={clanName}
+        variant="outlined" 
+        error={false}
+        onChange={handleClanNameChange}
+      />
+      <Button disabled={!validateClanName(clanName)} sx={{ m: 3 }} onClick={handleClanNameSubmit}>{'Launch >>'}</Button>
+    </Box>
   );
 }

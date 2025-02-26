@@ -30,8 +30,8 @@ const App = () => {
             <Route path="/versecommanderdemo" element={<div />} />
           </Route>
 
-          <Route path="/starclandemo" element={<StarClanLayout />}>
-          </Route>
+          <Route path="/starclandemo" element={<StarClanLayout />} />
+          <Route path="/starclansdemo" element={<StarClanLayout />} />
         </Routes>
       </Router>
     </ThemeProvider>

@@ -1,12 +1,13 @@
 // components/StarClanLayout.tsx
 import { Box } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 import useStarclanStore from '../context/useStarclanStore';
 import StartNewClan from './StartNewClan';
 import DebugPanel from './DebugPanel';
 import { GladiatorGrid } from './GladiatorGrid';
 import TopTabBar from './TopTabBar';
-import mockupGladiators from "./mockup/TestGladiatorData";
 import { useEffect } from 'react';
+import { GladiatorCardSkeleton } from './GladiatorSkeletonCard';
 
 const StarClanLayout = () => {
 
@@ -14,6 +15,7 @@ const StarClanLayout = () => {
   const apiProcessing = useStarclanStore((state) => state.isApiProcessing);
   const hasGameState = useStarclanStore((state) => !!state.gameState);
   const refreshGameState = useStarclanStore((state) => state.refreshGameState);
+  const gladiators = useStarclanStore((state) => state.gameState?.gladiators);
 
   useEffect(() => {
     refreshGameState();
@@ -26,13 +28,23 @@ const StarClanLayout = () => {
             {gameSaveStatus === 'NO_SAVE_FOUND' && !apiProcessing && (
               <StartNewClan />
             )}
+            {!hasGameState && gameSaveStatus === 'NO_SAVE_FOUND' && apiProcessing && (
+              <Box id='dashContextBoxLoading' width='100%'>
+                <TopTabBar />
+                <Grid container spacing={2} sx={{ p: 2, justifyContent: 'center' }}>
+                  <GladiatorCardSkeleton />
+                  <GladiatorCardSkeleton />
+                  <GladiatorCardSkeleton />
+                  <GladiatorCardSkeleton />
+                  <GladiatorCardSkeleton />
+                </Grid>
+              </Box>
+            )}
             {hasGameState && 
               <Box id='dashContextBox' width='100%'>
                 <TopTabBar />
                 <DebugPanel />
-                <Box id='gridContentAdam' sx={{ display: 'flex', justifyContent: 'center' }}>
-                  <GladiatorGrid gladiators={mockupGladiators} />
-                </Box>
+                {gladiators && <GladiatorGrid gladiators={gladiators} />}
               </Box>
             }
         </Box>

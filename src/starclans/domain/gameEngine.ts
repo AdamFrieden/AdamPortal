@@ -1,12 +1,13 @@
 
 // src/domain/gameEngine.ts
-import { PlayerAction, GameState, PlayerActionResult, ResearchTask } from './models';
+import { PlayerAction, GameState, PlayerActionResult, ResearchTask, Gladiator } from './models';
 
 //  this should not maintain any state. use all pure functions that have no side effects.
 //  state changes are always returned as a  new state object without mutating inputs.
 export class GameEngine {
 
   public static updateGameStateToNow(state: GameState, now: number): GameState {
+
     const totalNow = now + state.timeTravelMs;
 
     // Call each system
@@ -15,10 +16,12 @@ export class GameEngine {
     // updateGladiators(state, now);
     // More systems: updateResources, etc.
     const updatedResearchTasks = GameEngine.updateResearchTasks(state.researchTasks, totalNow);
+    const updatedGladiators = GameEngine.updateGladiators(state.gladiators, totalNow);
   
     const updatedState: GameState = {
       ...state,
       researchTasks: updatedResearchTasks,
+      gladiators: updatedGladiators,
       lastRefresh: now
     };
     return updatedState;
@@ -58,6 +61,20 @@ export class GameEngine {
   
     // Create a result that indicates success if an action was processed
     return { state: nextState, actionSuccess: true };
+  }
+
+
+
+  private static updateGladiators(gladiators: Gladiator[], now: number): Gladiator[] {
+    return gladiators.map(g => {
+      const elapsedTime = now - g.lastRefresh;
+      const staminaRecovered = elapsedTime * 0.001;
+      let finalStamina = g.stamina + staminaRecovered;
+      if (finalStamina >= 100) {
+        finalStamina = 100;
+      }
+      return { ...g, stamina: finalStamina }
+    });
   }
 
   //  update all research tasks to the given 'now' Date, completing them if enough time has elapsed

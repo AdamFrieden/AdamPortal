@@ -1,5 +1,6 @@
 // src/api/fakeApi.ts
 
+import { ContentFactory } from "../domain/contentFactory";
 import { GameEngine } from "../domain/gameEngine";
 import { ClientGameState, PlayerAction, GameState, PlayerActionResult, toClientGameState, emptyGameState } from "../domain/models";
 
@@ -13,9 +14,11 @@ const STORAGE_KEY = 'starclanData';
 
 class FakeApi {
   private gameState: GameState;
+  private contentFactory: ContentFactory;
 
   constructor() {
     this.gameState = this.loadGameState();
+    this.contentFactory = new ContentFactory();
   }
 
   private saveGameState(state: GameState): void {
@@ -46,9 +49,15 @@ class FakeApi {
       }
     }
 
+    const startingGladiators = this.contentFactory.getRandomGladiators(3);
+    const now = Date.now();
+    startingGladiators.forEach(gladiator => {
+      gladiator.lastRefresh = now;
+    });
+    
     const newClanGameState: GameState = {
       clanName: clanName,
-      gladiators: [],
+      gladiators: startingGladiators,
       researchTasks: [],
       lastRefresh: Date.now(),
       timeTravelMs: 0,
@@ -65,14 +74,14 @@ class FakeApi {
   }
 
   public timeTravel = async (timeToTravelMs: number): Promise<ApiResponse<ClientGameState>> => {
-    try {
-      await mockApiBehavior();
-    } catch {
-      return {
-        status: 500,
-        success: false
-      }
-    }
+    // try {
+    //   await mockApiBehavior();
+    // } catch {
+    //   return {
+    //     status: 500,
+    //     success: false
+    //   }
+    // }
     
     const nextState = GameEngine.timeTravel(this.gameState, timeToTravelMs, Date.now());
     this.saveGameState(nextState);

@@ -20,9 +20,6 @@ export const GladiatorGrid: React.FC<GladiatorGridProps> = ({ gladiators }) => {
       <EmptySlotCard onAdd={function (): void {
         console.log('empty card 2 selected')
       } } />
-      <EmptySlotCard onAdd={function (): void {
-        console.log('empty card 3 selected')
-      } } />
     </Grid>
   );
 };

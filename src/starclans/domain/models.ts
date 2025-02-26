@@ -16,7 +16,8 @@ export interface Gladiator {
   truePower: number;
   hiddenTraits: string[];
   description: string;
-  status: GladiatorStatus
+  status: GladiatorStatus;
+  lastRefresh: number;  // do I really want to track a timestamp on each gladiator? should this just be on gamestate? this might make sense given the game design - could even add tests to make sure a returned gamestate has refreshed entities?
 }
 
 //  this currently represents everything persisted on the db AND whatever is needed to display in the app
