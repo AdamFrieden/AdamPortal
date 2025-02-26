@@ -39,7 +39,7 @@ export const GladiatorCard: React.FC<GladiatorCardProps> = ({ gladiator }) => {
       {/* Bottom: Traits, Stamina, Estimated Power */}
       <CardContent sx={{ mt: "auto" }}>
         {/* Traits (Chips) */}
-        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5, mb: 4 }}>
+        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5, mb: 3.5 }}>
           {gladiator.knownTraits.map((trait, idx) => (
             <Chip key={idx} label={trait} size="small" />
           ))}
@@ -77,7 +77,7 @@ export const GladiatorCard: React.FC<GladiatorCardProps> = ({ gladiator }) => {
         )}
 
         {/* Estimated Power aligned to bottom-right */}
-        <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 1 }}>
+        <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 3 }}>
           <Typography variant="h6" color="success">
             ~{gladiator.estimatedPower}
           </Typography>
