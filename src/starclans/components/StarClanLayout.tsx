@@ -6,8 +6,10 @@ import StartNewClan from './StartNewClan';
 import DebugPanel from './DebugPanel';
 import { GladiatorGrid } from './GladiatorGrid';
 import TopTabBar from './TopTabBar';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { GladiatorCardSkeleton } from './GladiatorSkeletonCard';
+import { RecruitGladiatorsDialog } from './RecruitGladiatorDialogue';
+import { ContentFactory } from '../domain/contentFactory';
 
 const StarClanLayout = () => {
 
@@ -17,6 +19,12 @@ const StarClanLayout = () => {
   const refreshGameState = useStarclanStore((state) => state.refreshGameState);
   const gladiators = useStarclanStore((state) => state.gameState?.gladiators);
 
+  const contentFactory = new ContentFactory()
+  
+
+
+  const [dialogOpen, setDialogOpen] = useState(false);
+  
   useEffect(() => {
     refreshGameState();
   }, []);
@@ -44,7 +52,11 @@ const StarClanLayout = () => {
               <Box id='dashContextBox' width='100%'>
                 <TopTabBar />
                 <DebugPanel />
-                {gladiators && <GladiatorGrid gladiators={gladiators} />}
+                {gladiators && <GladiatorGrid gladiators={gladiators} onAdd={() => { setDialogOpen(!dialogOpen)}} />}
+                  <RecruitGladiatorsDialog
+                open={dialogOpen}
+                onClose={() => setDialogOpen(false)}
+                gladiators={contentFactory.getRandomGladiators(3)} onRecruit={()=>{}} />
               </Box>
             }
         </Box>

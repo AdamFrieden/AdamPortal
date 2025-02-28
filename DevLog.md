@@ -194,6 +194,9 @@ sweet drag n drop - maybe for a roster page?
 https://github.com/atlassian/react-beautiful-dnd
 https://react-beautiful-dnd.netlify.app
 
+possible animation framework?
+https://motion.dev/
+
 Update DevLog with yml updates for deploy date and commit hash
 
 Update DevLog with usage of vite rollup plugin visualizer
@@ -209,3 +212,5 @@ See all visits in popup(?)
 Update devlog with starclans demo project / POC
 
 Checkout what a progressive web app would look like
+
+started using immer due to nested objects in my zustand state
