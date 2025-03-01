@@ -67,13 +67,18 @@ export class GameEngine {
 
   private static updateGladiators(gladiators: Gladiator[], now: number): Gladiator[] {
     return gladiators.map(g => {
-      const elapsedTime = now - g.lastRefresh;
-      const staminaRecovered = elapsedTime * 0.001;
-      let finalStamina = g.stamina + staminaRecovered;
-      if (finalStamina >= 100) {
-        finalStamina = 100;
-      }
-      return { ...g, stamina: finalStamina }
+
+        const elapsedTime = now - g.lastRefresh;
+        const staminaModifier = g.status === 'RESTING' ? 0.001 : -0.001;
+        const staminaChange = elapsedTime * staminaModifier;
+        let finalStamina = g.stamina + staminaChange;
+        if (finalStamina >= 100) {
+          finalStamina = 100;
+        }
+        if (finalStamina <= 0) {
+          finalStamina = 0;
+        }
+        return { ...g, stamina: finalStamina }
     });
   }
 

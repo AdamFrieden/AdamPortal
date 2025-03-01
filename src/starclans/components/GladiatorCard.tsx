@@ -6,8 +6,12 @@ import {
   LinearProgress,
   Chip,
   Box,
-  Avatar
+  Avatar,
+  IconButton,
+  Menu,
+  MenuItem
 } from '@mui/material';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 import { ClientGladiator } from '../domain/models'; // adjust the import path as needed
 
@@ -16,6 +20,10 @@ interface GladiatorCardProps {
 }
 
 export const GladiatorCard: React.FC<GladiatorCardProps> = ({ gladiator }) => {
+
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => setAnchorEl(event.currentTarget);
+  const handleMenuClose = () => setAnchorEl(null);
 
   function stringToColor(name: string): string {
     let hash = 0;
@@ -51,12 +59,12 @@ export const GladiatorCard: React.FC<GladiatorCardProps> = ({ gladiator }) => {
         {gladiator.status === "RESTING" && (
           <LinearProgress color="primary" sx={{ height: "0.1rem" }} />
         )}
-        {gladiator.status === "TRAINING" && (
+        {/* {gladiator.status === "TRAINING" && (
           <LinearProgress
             color="error"
             sx={{ transform: "scaleX(-1)", height: "0.1rem" }}
           />
-        )}
+        )} */}
 
         <LinearProgress
           variant="determinate"
@@ -77,6 +85,7 @@ export const GladiatorCard: React.FC<GladiatorCardProps> = ({ gladiator }) => {
   }
 
   return (
+    <>
     <Card
       sx={{
         width: "17.5rem",
@@ -86,19 +95,22 @@ export const GladiatorCard: React.FC<GladiatorCardProps> = ({ gladiator }) => {
         flexDirection: "column",
       }}
     >
-
-      {/* Top: Name & Description */}
       <CardContent>
-        <Box display="flex" alignItems="center" mb={2}>
+      <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
+        <Box display="flex" alignItems="center">
           <Avatar {...stringAvatar(gladiator.name)} aria-label={gladiator.name} />
           <Typography sx={{ ml: 2 }}>
             {gladiator.name}
           </Typography>
         </Box>
-        <Typography variant="body2" color="text.secondary">
-          {gladiator.description}
-        </Typography>
-      </CardContent>
+        <IconButton aria-label="settings" onClick={handleMenuOpen}>
+          <MoreVertIcon />
+        </IconButton>
+      </Box>
+      <Typography variant="body2" color="text.secondary">
+        {gladiator.description}
+      </Typography>
+    </CardContent>
 
       {/* Bottom: Traits, Stamina, Estimated Power */}
       <CardContent sx={{ mt: "auto" }}>
@@ -119,5 +131,16 @@ export const GladiatorCard: React.FC<GladiatorCardProps> = ({ gladiator }) => {
         </Box>
       </CardContent>
     </Card>
+     <Menu
+     anchorEl={anchorEl}
+     open={Boolean(anchorEl)}
+     onClose={handleMenuClose}
+   >
+     <MenuItem onClick={() => { console.log("Train"); handleMenuClose(); }}>Train</MenuItem>
+     <MenuItem onClick={() => { console.log("Rest"); handleMenuClose(); }}>Rest</MenuItem>
+     <MenuItem onClick={() => { console.log("Drop"); handleMenuClose(); }}>Drop</MenuItem>
+     <MenuItem onClick={() => { console.log("Recruit"); handleMenuClose(); }}>Recruit</MenuItem>
+   </Menu>
+   </>
   );
 };
