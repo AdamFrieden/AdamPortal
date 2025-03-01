@@ -20,7 +20,8 @@ const StarClanLayout = () => {
   const gladiators = useStarclanStore((state) => state.gameState?.gladiators);
 
   const contentFactory = new ContentFactory()
-  
+  const exampleSlaverGladiators = contentFactory.getRandomGladiators(3);
+  exampleSlaverGladiators.forEach((g) => {g.status = 'ENSLAVED'})
 
 
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -53,10 +54,10 @@ const StarClanLayout = () => {
                 <TopTabBar />
                 <DebugPanel />
                 {gladiators && <GladiatorGrid gladiators={gladiators} onAdd={() => { setDialogOpen(!dialogOpen)}} />}
-                  <RecruitGladiatorsDialog
+                <RecruitGladiatorsDialog
                 open={dialogOpen}
                 onClose={() => setDialogOpen(false)}
-                gladiators={contentFactory.getRandomGladiators(3)} onRecruit={()=>{}} />
+                gladiators={exampleSlaverGladiators} onRecruit={()=>{}} />
               </Box>
             }
         </Box>

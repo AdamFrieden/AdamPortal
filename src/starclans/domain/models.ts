@@ -6,7 +6,7 @@ export interface ResearchTask {
   completed: boolean;
 }
 
-export type GladiatorStatus = 'RESTING' | 'TRAINING' | 'CONFLICT';
+export type GladiatorStatus = 'RESTING' | 'TRAINING' | 'CONFLICT' | 'ENSLAVED';
 
 export interface Gladiator {
   name: string;

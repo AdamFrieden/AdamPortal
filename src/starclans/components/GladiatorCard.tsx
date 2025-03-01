@@ -5,7 +5,8 @@ import {
   Typography,
   LinearProgress,
   Chip,
-  Box
+  Box,
+  Avatar
 } from '@mui/material';
 
 import { ClientGladiator } from '../domain/models'; // adjust the import path as needed
@@ -15,36 +16,33 @@ interface GladiatorCardProps {
 }
 
 export const GladiatorCard: React.FC<GladiatorCardProps> = ({ gladiator }) => {
-  return (
-    <Card
-      sx={{
-        width: "17.5rem",
-        height: "24.5rem",
-        p: 1,
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
 
-      {/* Top: Name & Description */}
-      <CardContent>
-        <Typography variant="h6" gutterBottom>
-          {gladiator.name}
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          {gladiator.description}
-        </Typography>
-      </CardContent>
+  function stringToColor(name: string): string {
+    let hash = 0;
+    for (let i = 0; i < name.length; i++) {
+      hash = name.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    let color = '#';
+    for (let i = 0; i < 3; i++) {
+      const value = (hash >> (i * 8)) & 0xff;
+      color += ('00' + value.toString(16)).slice(-2);
+    }
+    return color;
+  }
+  
+  function stringAvatar(name: string) {
+    const nameParts = name.split(' ');
+    return {
+      sx: {
+        bgcolor: stringToColor(name),
+      },
+      children: `${nameParts[0][0]}${nameParts[1][0]}`,
+    };
+  }
 
-      {/* Bottom: Traits, Stamina, Estimated Power */}
-      <CardContent sx={{ mt: "auto" }}>
-        {/* Traits (Chips) */}
-        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5, mb: 3.5 }}>
-          {gladiator.knownTraits.map((trait, idx) => (
-            <Chip key={idx} label={trait} size="small" />
-          ))}
-        </Box>
-
+  function renderStaminaSection() {
+    return (
+        <>
         {/* Status & Stamina */}
         <Typography variant="caption" display="block" gutterBottom>
           {gladiator.status === "RESTING" ? "Resting" : "Training"}
@@ -74,7 +72,44 @@ export const GladiatorCard: React.FC<GladiatorCardProps> = ({ gladiator }) => {
             color="error"
             sx={{ transform: "scaleX(-1)", height: "0.1rem" }}
           />
-        )}
+        )}</>
+    );
+  }
+
+  return (
+    <Card
+      sx={{
+        width: "17.5rem",
+        height: "24.5rem",
+        p: 1,
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+
+      {/* Top: Name & Description */}
+      <CardContent>
+        <Box display="flex" alignItems="center" mb={2}>
+          <Avatar {...stringAvatar(gladiator.name)} aria-label={gladiator.name} />
+          <Typography sx={{ ml: 2 }}>
+            {gladiator.name}
+          </Typography>
+        </Box>
+        <Typography variant="body2" color="text.secondary">
+          {gladiator.description}
+        </Typography>
+      </CardContent>
+
+      {/* Bottom: Traits, Stamina, Estimated Power */}
+      <CardContent sx={{ mt: "auto" }}>
+        {/* Traits (Chips) */}
+        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5, mb: 3.5 }}>
+          {gladiator.knownTraits.map((trait, idx) => (
+            <Chip key={idx} label={trait} size="small" />
+          ))}
+        </Box>
+        
+        {gladiator.status !== 'ENSLAVED' && renderStaminaSection()}
 
         {/* Estimated Power aligned to bottom-right */}
         <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 3 }}>
