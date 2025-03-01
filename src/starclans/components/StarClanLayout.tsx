@@ -17,7 +17,11 @@ const StarClanLayout = () => {
   const apiProcessing = useStarclanStore((state) => state.isApiProcessing);
   const hasGameState = useStarclanStore((state) => !!state.gameState);
   const refreshGameState = useStarclanStore((state) => state.refreshGameState);
-  const gladiators = useStarclanStore((state) => state.gameState?.gladiators);
+  const roster = useStarclanStore((state) => state.gameState?.roster);
+  const rosterCapacity = useStarclanStore((state) => state.gameState?.rosterCapacity) || 0;
+  const availableSlots = Math.max(0, rosterCapacity - (roster?.length || 0));
+  const waiverWire = useStarclanStore((state) => state.gameState?.waiverWire) || [];
+
 
   const contentFactory = new ContentFactory()
   const exampleSlaverGladiators = contentFactory.getRandomGladiators(3);
@@ -41,11 +45,9 @@ const StarClanLayout = () => {
               <Box id='dashContextBoxLoading' width='100%'>
                 <TopTabBar />
                 <Grid container spacing={2} sx={{ p: 2, justifyContent: 'center' }}>
-                  <GladiatorCardSkeleton />
-                  <GladiatorCardSkeleton />
-                  <GladiatorCardSkeleton />
-                  <GladiatorCardSkeleton />
-                  <GladiatorCardSkeleton />
+                  {[...Array(rosterCapacity)].map(() => (
+                    <GladiatorCardSkeleton />
+                  ))}
                 </Grid>
               </Box>
             )}
@@ -53,11 +55,11 @@ const StarClanLayout = () => {
               <Box id='dashContextBox' width='100%'>
                 <TopTabBar />
                 <DebugPanel />
-                {gladiators && <GladiatorGrid gladiators={gladiators} onAdd={() => { setDialogOpen(!dialogOpen)}} />}
+                {roster && <GladiatorGrid gladiators={roster} emptySlots={availableSlots} onAdd={() => { setDialogOpen(!dialogOpen)}} />}
                 <RecruitGladiatorsDialog
                 open={dialogOpen}
                 onClose={() => setDialogOpen(false)}
-                gladiators={exampleSlaverGladiators} onRecruit={()=>{}} />
+                gladiators={waiverWire} onRecruit={()=>{}} />
               </Box>
             }
         </Box>

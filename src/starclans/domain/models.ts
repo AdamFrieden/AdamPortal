@@ -28,15 +28,44 @@ export interface GameState {
   timeTravelMs: number;
   clanName: string;
   resourcium: number;
-  gladiators: Gladiator[];
+  roster: Gladiator[];
+  rosterCapacity: number;
+  waiverWire: Gladiator[];
+  //  need some 'waiver wire' collection for available gladiators
 }
 
-export type ClientGameState = Omit<GameState, 'gladiators'> & {
-  gladiators: ClientGladiator[];
+export type ClientGameState = Omit<GameState, 'roster'> & {
+  roster: ClientGladiator[];
 }
 
 export type ClientGladiator = Omit<Gladiator, 'truePower' | 'hiddenTraits'>
 
+export function toClientGladiator(gladiator: Gladiator): ClientGladiator {
+  // Use object destructuring to remove 'truePower'
+  const { truePower, ...clientGladiator } = gladiator;
+  return clientGladiator;
+}
+
+export function toClientGameState(state: GameState): ClientGameState {
+  return {
+    // Spread the original state but override 'gladiators'
+    ...state,
+    roster: state.roster.map(toClientGladiator),
+  };
+}
+
+export function emptyGameState(): GameState {
+  return {
+    clanName: '',
+    roster: [],
+    researchTasks: [],
+    resourcium: 0,
+    timeTravelMs: 0,
+    lastRefresh: 0,
+    rosterCapacity: 0,
+    waiverWire: []
+  }
+}
 
 export interface PlayerActionResult<T extends GameState | ClientGameState> {
   state: T
@@ -59,30 +88,29 @@ export interface CancelResearchAction extends BasePlayerAction {
   researchId: string;
 }
 
-export type PlayerAction = StartResearchAction | CancelResearchAction;
-
-export function toClientGladiator(gladiator: Gladiator): ClientGladiator {
-  // Use object destructuring to remove 'truePower'
-  const { truePower, ...clientGladiator } = gladiator;
-  return clientGladiator;
+export interface DropGladiatorAction extends BasePlayerAction {
+  type: 'DROP_GLADIATOR'
+  gladiatorName: string;
 }
 
-export function toClientGameState(state: GameState): ClientGameState {
-  return {
-    // Spread the original state but override 'gladiators'
-    ...state,
-    gladiators: state.gladiators.map(toClientGladiator),
-  };
+export interface RestGladiatorAction extends BasePlayerAction {
+  type: 'REST_GLADIATOR'
+  gladiatorName: string;
 }
 
-export function emptyGameState(): GameState {
-  return {
-    clanName: '',
-    gladiators: [],
-    researchTasks: [],
-    resourcium: 0,
-    timeTravelMs: 0,
-    lastRefresh: 0
-  }
+export interface TrainGladiatorAction extends BasePlayerAction {
+  type: 'TRAIN_GLADIATOR'
+  gladiatorName: string;
 }
 
+export interface RecruitGladiatorAction extends BasePlayerAction {
+  type: 'RECRUIT_GLADIATOR'
+  gladiatorName: string;
+}
+
+export type PlayerAction = StartResearchAction 
+  | CancelResearchAction 
+  | DropGladiatorAction 
+  | RestGladiatorAction 
+  | TrainGladiatorAction
+  | RecruitGladiatorAction

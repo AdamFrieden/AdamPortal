@@ -14,16 +14,21 @@ import {
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 import { ClientGladiator } from '../domain/models'; // adjust the import path as needed
+import useStarclanStore from '../context/useStarclanStore';
 
 interface GladiatorCardProps {
   gladiator: ClientGladiator;
 }
+
+//  ##MISSING update GladiatorCard to appear in a loading/processing state if the api is processing and dealing with the current gladiator
 
 export const GladiatorCard: React.FC<GladiatorCardProps> = ({ gladiator }) => {
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => setAnchorEl(event.currentTarget);
   const handleMenuClose = () => setAnchorEl(null);
+
+  const attemptPlayerAction = useStarclanStore((state) => state.attemptPlayerAction);
 
   function stringToColor(name: string): string {
     let hash = 0;
@@ -94,6 +99,8 @@ export const GladiatorCard: React.FC<GladiatorCardProps> = ({ gladiator }) => {
         display: "flex",
         flexDirection: "column",
       }}
+
+      variant={gladiator.status === 'ENSLAVED' ? 'outlined' : undefined}
     >
       <CardContent>
       <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
@@ -131,15 +138,19 @@ export const GladiatorCard: React.FC<GladiatorCardProps> = ({ gladiator }) => {
         </Box>
       </CardContent>
     </Card>
-     <Menu
+    <Menu
      anchorEl={anchorEl}
      open={Boolean(anchorEl)}
      onClose={handleMenuClose}
-   >
-     <MenuItem onClick={() => { console.log("Train"); handleMenuClose(); }}>Train</MenuItem>
-     <MenuItem onClick={() => { console.log("Rest"); handleMenuClose(); }}>Rest</MenuItem>
-     <MenuItem onClick={() => { console.log("Drop"); handleMenuClose(); }}>Drop</MenuItem>
-     <MenuItem onClick={() => { console.log("Recruit"); handleMenuClose(); }}>Recruit</MenuItem>
+    >
+     { gladiator.status !== 'ENSLAVED' && (
+      <>
+        <MenuItem onClick={() => { attemptPlayerAction({ type: 'TRAIN_GLADIATOR', gladiatorName: gladiator.name  }); handleMenuClose(); }}>Train</MenuItem>
+        <MenuItem onClick={() => { attemptPlayerAction({ type: 'REST_GLADIATOR', gladiatorName: gladiator.name  }); handleMenuClose(); }}>Rest</MenuItem>
+        <MenuItem onClick={() => { attemptPlayerAction({ type: 'DROP_GLADIATOR', gladiatorName: gladiator.name  }); handleMenuClose(); }}>Drop</MenuItem> 
+      </>
+    )}
+     { gladiator.status === 'ENSLAVED' && <MenuItem onClick={() => { attemptPlayerAction({ type: 'RECRUIT_GLADIATOR', gladiatorName: gladiator.name  }); handleMenuClose(); }}>Recruit</MenuItem> }
    </Menu>
    </>
   );

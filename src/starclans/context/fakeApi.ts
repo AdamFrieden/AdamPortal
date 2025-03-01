@@ -2,7 +2,7 @@
 
 import { ContentFactory } from "../domain/contentFactory";
 import { GameEngine } from "../domain/gameEngine";
-import { ClientGameState, PlayerAction, GameState, PlayerActionResult, toClientGameState, emptyGameState } from "../domain/models";
+import { ClientGameState, PlayerAction, GameState, PlayerActionResult, toClientGameState, emptyGameState, Gladiator } from "../domain/models";
 
 export interface ApiResponse<T> {
   status: number;
@@ -49,19 +49,19 @@ class FakeApi {
       }
     }
 
-    const startingGladiators = this.contentFactory.getRandomGladiators(3);
     const now = Date.now();
-    startingGladiators.forEach(gladiator => {
-      gladiator.lastRefresh = now;
-    });
-    
+    const startingGladiators = this.contentFactory.getRandomGladiators(3).map((g) => { return { ...g, stamina: 0, status: 'RESTING', lastRefresh: now }});
+    const startingWaiverWire = this.contentFactory.getRandomGladiators(3).map((g) => { return { ...g, stamina: 0, status: 'ENSLAVED', lastRefresh: now }});
+
     const newClanGameState: GameState = {
       clanName: clanName,
-      gladiators: startingGladiators,
+      roster: startingGladiators as Gladiator[],
       researchTasks: [],
       lastRefresh: Date.now(),
       timeTravelMs: 0,
       resourcium: Math.random() * 100,
+      rosterCapacity: 5,
+      waiverWire: startingWaiverWire as Gladiator[]
     }
     this.saveGameState(newClanGameState);
     this.gameState = newClanGameState;
@@ -150,7 +150,7 @@ const mockApiBehavior = async (): Promise<void> => {
   await new Promise((resolve) => setTimeout(resolve, ms));
   
   // Simulate a 15% chance of failure.
-  if (Math.random() < 0.15) {
+  if (Math.random() < 0.05) {
     throw new Error("Simulated network error");
   }
 };
