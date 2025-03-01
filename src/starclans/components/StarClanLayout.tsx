@@ -38,23 +38,23 @@ const StarClanLayout = () => {
   
   useEffect(() => {
     // Attempt an immediate refresh if not currently processing.
-    if (!apiProcessingRef.current) {
+    if (!apiProcessingRef.current && hasGameState) {
       refreshGameState();
     }
 
     const timer = setInterval(() => {
-      if (!apiProcessingRef.current) {
+      if (!apiProcessingRef.current && hasGameState) {
         refreshGameState();
       }
     }, 5000)
     return () => clearInterval(timer);
-  }, []);
+  }, [hasGameState]);
 
   return (
     <Box id='topLayoutBox' sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
       <Box sx={{ display: 'flex', flexGrow: 1, overflow: 'auto' }}>
         <Box component="main" sx={{ p: 0, maxWidth: '100vw', margin: '0 auto', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            {gameSaveStatus === 'NO_SAVE_FOUND' && !apiProcessing && (
+            {(gameSaveStatus === 'NO_SAVE_FOUND' || !hasGameState) && !apiProcessing && (
               <StartNewClan />
             )}
             {!hasGameState && gameSaveStatus === 'NO_SAVE_FOUND' && apiProcessing && (
