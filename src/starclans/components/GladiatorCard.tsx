@@ -18,15 +18,18 @@ import useStarclanStore from '../context/useStarclanStore';
 
 interface GladiatorCardProps {
   gladiator: ClientGladiator;
+  onRecruitSelected?: () => void;
 }
 
 //  ##MISSING update GladiatorCard to appear in a loading/processing state if the api is processing and dealing with the current gladiator
 
-export const GladiatorCard: React.FC<GladiatorCardProps> = ({ gladiator }) => {
+export const GladiatorCard: React.FC<GladiatorCardProps> = ({ gladiator, onRecruitSelected }) => {
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => setAnchorEl(event.currentTarget);
-  const handleMenuClose = () => setAnchorEl(null);
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  }
 
   const attemptPlayerAction = useStarclanStore((state) => state.attemptPlayerAction);
 
@@ -145,12 +148,17 @@ export const GladiatorCard: React.FC<GladiatorCardProps> = ({ gladiator }) => {
     >
      { gladiator.status !== 'ENSLAVED' && (
       <>
-        <MenuItem onClick={() => { attemptPlayerAction({ type: 'TRAIN_GLADIATOR', gladiatorName: gladiator.name  }); handleMenuClose(); }}>Train</MenuItem>
+        <MenuItem onClick={() => { attemptPlayerAction({ type: 'TRAIN_GLADIATOR', gladiatorName: gladiator.name  }); handleMenuClose();  }}>Train</MenuItem>
         <MenuItem onClick={() => { attemptPlayerAction({ type: 'REST_GLADIATOR', gladiatorName: gladiator.name  }); handleMenuClose(); }}>Rest</MenuItem>
         <MenuItem onClick={() => { attemptPlayerAction({ type: 'DROP_GLADIATOR', gladiatorName: gladiator.name  }); handleMenuClose(); }}>Drop</MenuItem> 
       </>
     )}
-     { gladiator.status === 'ENSLAVED' && <MenuItem onClick={() => { attemptPlayerAction({ type: 'RECRUIT_GLADIATOR', gladiatorName: gladiator.name  }); handleMenuClose(); }}>Recruit</MenuItem> }
+     { gladiator.status === 'ENSLAVED' && 
+      <MenuItem onClick={() => { 
+        attemptPlayerAction({ type: 'RECRUIT_GLADIATOR', gladiatorName: gladiator.name  }); 
+        handleMenuClose();     
+        onRecruitSelected?.();
+      }}>Recruit</MenuItem> }
    </Menu>
    </>
   );

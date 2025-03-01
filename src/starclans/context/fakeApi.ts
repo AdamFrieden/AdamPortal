@@ -13,11 +13,9 @@ export interface ApiResponse<T> {
 const STORAGE_KEY = 'starclanData';
 
 class FakeApi {
-  private gameState: GameState;
   private contentFactory: ContentFactory;
 
   constructor() {
-    this.gameState = this.loadGameState();
     this.contentFactory = new ContentFactory();
   }
 
@@ -64,7 +62,6 @@ class FakeApi {
       waiverWire: startingWaiverWire as Gladiator[]
     }
     this.saveGameState(newClanGameState);
-    this.gameState = newClanGameState;
 
     return {
       data: toClientGameState(newClanGameState),
@@ -83,9 +80,9 @@ class FakeApi {
     //   }
     // }
     
-    const nextState = GameEngine.timeTravel(this.gameState, timeToTravelMs, Date.now());
+    const persistedGameState = this.loadGameState();
+    const nextState = GameEngine.timeTravel(persistedGameState, timeToTravelMs, Date.now());
     this.saveGameState(nextState);
-    this.gameState = nextState;
 
     return {
       data: toClientGameState(nextState),
@@ -105,14 +102,13 @@ class FakeApi {
         success: false
       }
     }
-
+    const persistedGameState = this.loadGameState();
     //  now run server side logic
-    const gameStateNow = GameEngine.updateGameStateToNow(this.gameState, Date.now()); //  calculate next gamestate based on the current time
-    this.saveGameState(gameStateNow); //  persist the updated state
-    this.gameState = gameStateNow;
+    const nextGameState = GameEngine.updateGameStateToNow(persistedGameState, Date.now()); //  calculate next gamestate based on the current time
+    this.saveGameState(nextGameState); //  persist the updated state
 
     //  return a client state
-    const clientState = toClientGameState(gameStateNow);
+    const clientState = toClientGameState(nextGameState);
     return {
       data: clientState,
       status: 200,
@@ -130,9 +126,9 @@ class FakeApi {
       }
     }
 
-    const { state: nextState, actionSuccess } = GameEngine.attemptPlayerAction(this.gameState, Date.now(), playerAction);
+    const persistedGameState = this.loadGameState();
+    const { state: nextState, actionSuccess } = GameEngine.attemptPlayerAction(persistedGameState, Date.now(), playerAction);
     this.saveGameState(nextState);
-    this.gameState = nextState;
 
     const resultForClient = { state: toClientGameState(nextState), actionSuccess };
     return {

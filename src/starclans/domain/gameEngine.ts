@@ -7,8 +7,7 @@ import { PlayerAction, GameState, PlayerActionResult, ResearchTask, Gladiator, G
 export class GameEngine {
 
   public static updateGameStateToNow(state: GameState, now: number): GameState {
-
-    const totalNow = now + state.timeTravelMs;
+    const totalNow = now;
 
     // Call each system
     // updateResearch(state, now);

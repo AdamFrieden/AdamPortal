@@ -6,4 +6,5 @@
 - recruit new gladiator workflow
 - research 1 tech at a time workflow
 - scan for conflict, roster gladiator, resolve workflow
-
+- refresh on app open
+- show api processing on relevant gladiator cards

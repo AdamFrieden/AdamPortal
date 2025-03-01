@@ -16,7 +16,7 @@ interface RecruitGladiatorsDialogProps {
   open: boolean;
   onClose: () => void;
   gladiators: ClientGladiator[];
-  onRecruit: (g: ClientGladiator) => void;
+  onRecruit: () => void;
 }
 
 const Transition = React.forwardRef(function Transition(
@@ -32,6 +32,7 @@ export const RecruitGladiatorsDialog: React.FC<RecruitGladiatorsDialogProps> = (
   open,
   onClose,
   gladiators,
+  onRecruit
 }) => {
   return (
     <Dialog fullScreen open={open} onClose={onClose} maxWidth="md" fullWidth TransitionComponent={Transition}>
@@ -42,6 +43,7 @@ export const RecruitGladiatorsDialog: React.FC<RecruitGladiatorsDialogProps> = (
             <GladiatorCard
               key={glad.name}
               gladiator={glad}
+              onRecruitSelected={() => { onRecruit(); }}
             />
           ))}
         </Grid>

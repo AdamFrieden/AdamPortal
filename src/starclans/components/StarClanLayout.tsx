@@ -6,7 +6,7 @@ import StartNewClan from './StartNewClan';
 import DebugPanel from './DebugPanel';
 import { GladiatorGrid } from './GladiatorGrid';
 import TopTabBar from './TopTabBar';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { GladiatorCardSkeleton } from './GladiatorSkeletonCard';
 import { RecruitGladiatorsDialog } from './RecruitGladiatorDialogue';
 import { ContentFactory } from '../domain/contentFactory';
@@ -27,11 +27,27 @@ const StarClanLayout = () => {
   const exampleSlaverGladiators = contentFactory.getRandomGladiators(3);
   exampleSlaverGladiators.forEach((g) => {g.status = 'ENSLAVED'})
 
-
   const [dialogOpen, setDialogOpen] = useState(false);
   
+  //  Keep a ref that always mirrors the latest value of apiProcessing.
+  const apiProcessingRef = useRef(apiProcessing);
   useEffect(() => {
-    refreshGameState();
+    apiProcessingRef.current = apiProcessing;
+  }, [apiProcessing]);
+
+  
+  useEffect(() => {
+    // Attempt an immediate refresh if not currently processing.
+    if (!apiProcessingRef.current) {
+      refreshGameState();
+    }
+
+    const timer = setInterval(() => {
+      if (!apiProcessingRef.current) {
+        refreshGameState();
+      }
+    }, 5000)
+    return () => clearInterval(timer);
   }, []);
 
   return (
@@ -57,9 +73,10 @@ const StarClanLayout = () => {
                 <DebugPanel />
                 {roster && <GladiatorGrid gladiators={roster} emptySlots={availableSlots} onAdd={() => { setDialogOpen(!dialogOpen)}} />}
                 <RecruitGladiatorsDialog
-                open={dialogOpen}
-                onClose={() => setDialogOpen(false)}
-                gladiators={waiverWire} onRecruit={()=>{}} />
+                  open={dialogOpen}
+                  onClose={() => setDialogOpen(false)}
+                  gladiators={waiverWire} 
+                  onRecruit={()=> setDialogOpen(false)} />
               </Box>
             }
         </Box>

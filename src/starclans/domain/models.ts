@@ -88,24 +88,24 @@ export interface CancelResearchAction extends BasePlayerAction {
   researchId: string;
 }
 
-export interface DropGladiatorAction extends BasePlayerAction {
+interface PlayerGladiatorAction extends BasePlayerAction {
+  gladiatorName: string;
+}
+
+export interface DropGladiatorAction extends PlayerGladiatorAction {
   type: 'DROP_GLADIATOR'
-  gladiatorName: string;
 }
 
-export interface RestGladiatorAction extends BasePlayerAction {
+export interface RestGladiatorAction extends PlayerGladiatorAction {
   type: 'REST_GLADIATOR'
-  gladiatorName: string;
 }
 
-export interface TrainGladiatorAction extends BasePlayerAction {
+export interface TrainGladiatorAction extends PlayerGladiatorAction {
   type: 'TRAIN_GLADIATOR'
-  gladiatorName: string;
 }
 
-export interface RecruitGladiatorAction extends BasePlayerAction {
+export interface RecruitGladiatorAction extends PlayerGladiatorAction {
   type: 'RECRUIT_GLADIATOR'
-  gladiatorName: string;
 }
 
 export type PlayerAction = StartResearchAction 
