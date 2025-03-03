@@ -38,7 +38,7 @@ const StarClanLayout = () => {
   
   useEffect(() => {
     // Attempt an immediate refresh if not currently processing.
-    if (!apiProcessingRef.current && hasGameState) {
+    if (!apiProcessingRef.current) {
       refreshGameState();
     }
 

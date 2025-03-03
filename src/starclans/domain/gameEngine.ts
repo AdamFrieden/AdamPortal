@@ -86,13 +86,14 @@ export class GameEngine {
         const staminaModifier = g.status === 'RESTING' ? 0.0001 : -0.0001;
         const staminaChange = elapsedTime * staminaModifier;
         let finalStamina = g.stamina + staminaChange;
+
         if (finalStamina >= 100) {
           finalStamina = 100;
         }
         if (finalStamina <= 0) {
           finalStamina = 0;
         }
-        return { ...g, stamina: finalStamina }
+        return { ...g, stamina: finalStamina, lastRefresh: now }
     });
   }
 
