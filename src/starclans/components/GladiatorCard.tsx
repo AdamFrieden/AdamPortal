@@ -15,15 +15,21 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 import { ClientGladiator } from '../domain/models'; // adjust the import path as needed
 import useStarclanStore from '../context/useStarclanStore';
+import { ActionStateWrapper } from './ActionStateWrapper';
 
 interface GladiatorCardProps {
   gladiator: ClientGladiator;
   onRecruitSelected?: () => void;
+  recruitingSlot?: number | null;
 }
 
 //  ##MISSING update GladiatorCard to appear in a loading/processing state if the api is processing and dealing with the current gladiator
 
-export const GladiatorCard: React.FC<GladiatorCardProps> = ({ gladiator, onRecruitSelected }) => {
+export const GladiatorCard: React.FC<GladiatorCardProps> = ({ 
+  gladiator, 
+  onRecruitSelected,
+  recruitingSlot 
+}) => {
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => setAnchorEl(event.currentTarget);
@@ -32,6 +38,16 @@ export const GladiatorCard: React.FC<GladiatorCardProps> = ({ gladiator, onRecru
   }
 
   const attemptPlayerAction = useStarclanStore((state) => state.attemptPlayerAction);
+
+  const handleRecruit = () => {
+    attemptPlayerAction({ 
+      type: 'RECRUIT_GLADIATOR', 
+      gladiatorName: gladiator.name,
+      targetSlot: recruitingSlot ?? null // Convert undefined to null
+    });
+    handleMenuClose();
+    onRecruitSelected?.();
+  };
 
   function stringToColor(name: string): string {
     let hash = 0;
@@ -93,73 +109,72 @@ export const GladiatorCard: React.FC<GladiatorCardProps> = ({ gladiator, onRecru
   }
 
   return (
-    <>
-    <Card
-      sx={{
-        width: "17.5rem",
-        height: "24.5rem",
-        p: 1,
-        display: "flex",
-        flexDirection: "column",
-      }}
-
-      variant={gladiator.status === 'ENSLAVED' ? 'outlined' : undefined}
+    <ActionStateWrapper
+      actionType={gladiator.status === 'ENSLAVED' ? 'RECRUIT_GLADIATOR' : gladiator.status === 'TRAINING' ? 'TRAIN_GLADIATOR' : 'REST_GLADIATOR'}
+      targetId={`empty-slot-${recruitingSlot}`}
     >
-      <CardContent>
-      <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
-        <Box display="flex" alignItems="center">
-          <Avatar {...stringAvatar(gladiator.name)} aria-label={gladiator.name} />
-          <Typography sx={{ ml: 2 }}>
-            {gladiator.name}
-          </Typography>
-        </Box>
-        <IconButton aria-label="settings" onClick={handleMenuOpen}>
-          <MoreVertIcon />
-        </IconButton>
-      </Box>
-      <Typography variant="body2" color="text.secondary">
-        {gladiator.description}
-      </Typography>
-    </CardContent>
+      <Card
+        sx={{
+          width: "17.5rem",
+          height: "24.5rem",
+          p: 1,
+          display: "flex",
+          flexDirection: "column",
+        }}
 
-      {/* Bottom: Traits, Stamina, Estimated Power */}
-      <CardContent sx={{ mt: "auto" }}>
-        {/* Traits (Chips) */}
-        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5, mb: 3.5 }}>
-          {gladiator.knownTraits.map((trait, idx) => (
-            <Chip key={idx} label={trait} size="small" />
-          ))}
+        variant={gladiator.status === 'ENSLAVED' ? 'outlined' : undefined}
+      >
+        <CardContent>
+        <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
+          <Box display="flex" alignItems="center">
+            <Avatar {...stringAvatar(gladiator.name)} aria-label={gladiator.name} />
+            <Typography sx={{ ml: 2 }}>
+              {gladiator.name}
+            </Typography>
+          </Box>
+          <IconButton aria-label="settings" onClick={handleMenuOpen}>
+            <MoreVertIcon />
+          </IconButton>
         </Box>
-        
-        {gladiator.status !== 'ENSLAVED' && renderStaminaSection()}
-
-        {/* Estimated Power aligned to bottom-right */}
-        <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 3 }}>
-          <Typography variant="h6" color="success">
-            ~{gladiator.estimatedPower}
-          </Typography>
-        </Box>
+        <Typography variant="body2" color="text.secondary">
+          {gladiator.description}
+        </Typography>
       </CardContent>
-    </Card>
-    <Menu
-     anchorEl={anchorEl}
-     open={Boolean(anchorEl)}
-     onClose={handleMenuClose}
-    >
-     { gladiator.status !== 'ENSLAVED' && (
-      <>
-        <MenuItem onClick={() => { attemptPlayerAction({ type: 'TRAIN_GLADIATOR', gladiatorName: gladiator.name  }); handleMenuClose();  }}>Train</MenuItem>
-        <MenuItem onClick={() => { attemptPlayerAction({ type: 'REST_GLADIATOR', gladiatorName: gladiator.name  }); handleMenuClose(); }}>Rest</MenuItem>
-        <MenuItem onClick={() => { attemptPlayerAction({ type: 'DROP_GLADIATOR', gladiatorName: gladiator.name  }); handleMenuClose(); }}>Drop</MenuItem> 
-      </>
-    )}
-     { gladiator.status === 'ENSLAVED' && 
-      <MenuItem onClick={() => { 
-        attemptPlayerAction({ type: 'RECRUIT_GLADIATOR', gladiatorName: gladiator.name  }); 
-        handleMenuClose();     
-        onRecruitSelected?.();
-      }}>Recruit</MenuItem> }
-   </Menu>
-   </>
+
+        {/* Bottom: Traits, Stamina, Estimated Power */}
+        <CardContent sx={{ mt: "auto" }}>
+          {/* Traits (Chips) */}
+          <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5, mb: 3.5 }}>
+            {gladiator.knownTraits.map((trait, idx) => (
+              <Chip key={idx} label={trait} size="small" />
+            ))}
+          </Box>
+          
+          {gladiator.status !== 'ENSLAVED' && renderStaminaSection()}
+
+          {/* Estimated Power aligned to bottom-right */}
+          <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 3 }}>
+            <Typography variant="h6" color="success">
+              ~{gladiator.estimatedPower}
+            </Typography>
+          </Box>
+        </CardContent>
+      </Card>
+      <Menu
+       anchorEl={anchorEl}
+       open={Boolean(anchorEl)}
+       onClose={handleMenuClose}
+      >
+       { gladiator.status !== 'ENSLAVED' && (
+        <>
+          <MenuItem onClick={() => { attemptPlayerAction({ type: 'TRAIN_GLADIATOR', gladiatorName: gladiator.name  }); handleMenuClose();  }}>Train</MenuItem>
+          <MenuItem onClick={() => { attemptPlayerAction({ type: 'REST_GLADIATOR', gladiatorName: gladiator.name  }); handleMenuClose(); }}>Rest</MenuItem>
+          <MenuItem onClick={() => { attemptPlayerAction({ type: 'DROP_GLADIATOR', gladiatorName: gladiator.name  }); handleMenuClose(); }}>Drop</MenuItem> 
+        </>
+      )}
+       { gladiator.status === 'ENSLAVED' && 
+        <MenuItem onClick={handleRecruit}>Recruit</MenuItem> }
+     </Menu>
+    </ActionStateWrapper>
   );
 };

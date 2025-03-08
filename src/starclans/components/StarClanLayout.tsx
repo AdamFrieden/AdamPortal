@@ -21,6 +21,7 @@ const StarClanLayout = () => {
   const rosterCapacity = useStarclanStore((state) => state.gameState?.rosterCapacity) || 0;
   const availableSlots = Math.max(0, rosterCapacity - (roster?.length || 0));
   const waiverWire = useStarclanStore((state) => state.gameState?.waiverWire) || [];
+  const activeActions = useStarclanStore((state) => state.activeActions);
 
 
   const contentFactory = new ContentFactory()
@@ -28,7 +29,44 @@ const StarClanLayout = () => {
   exampleSlaverGladiators.forEach((g) => {g.status = 'ENSLAVED'})
 
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [recruitingSlot, setRecruitingSlot] = useState<number | null>(null);
   
+  const handleOpenRecruitDialog = (slotIndex: number) => {
+    setRecruitingSlot(slotIndex);
+    setDialogOpen(true);
+  };
+
+  const handleCloseRecruitDialog = () => {
+    setDialogOpen(false);
+    // Reset recruiting slot if there's no pending action
+    if (!activeActions.some(action => 
+      action.actionType === 'RECRUIT_GLADIATOR' && 
+      action.isProcessing &&
+      action.targetId === `empty-slot-${recruitingSlot}`
+    )) {
+      setRecruitingSlot(null);
+    }
+  };
+
+  const handleRecruitComplete = () => {
+    handleCloseRecruitDialog();
+  };
+
+  // Monitor active actions for failures
+  useEffect(() => {
+    if (recruitingSlot !== null) {
+      const recruitAction = activeActions.find(action => 
+        action.actionType === 'RECRUIT_GLADIATOR' && 
+        action.targetId === `empty-slot-${recruitingSlot}`
+      );
+
+      // If the action has an error or doesn't exist, reset the recruiting state
+      if (!recruitAction || (recruitAction && !recruitAction.isProcessing && recruitAction.error)) {
+        setRecruitingSlot(null);
+      }
+    }
+  }, [activeActions, recruitingSlot]);
+
   //  Keep a ref that always mirrors the latest value of apiProcessing.
   const apiProcessingRef = useRef(apiProcessing);
   useEffect(() => {
@@ -71,12 +109,20 @@ const StarClanLayout = () => {
               <Box id='dashContextBox' width='100%'>
                 <TopTabBar />
                 <DebugPanel />
-                {roster && <GladiatorGrid gladiators={roster} emptySlots={availableSlots} onAdd={() => { setDialogOpen(!dialogOpen)}} />}
+                {roster && (
+                  <GladiatorGrid 
+                    gladiators={roster} 
+                    emptySlots={availableSlots} 
+                    onAdd={handleOpenRecruitDialog}
+                  />
+                )}
                 <RecruitGladiatorsDialog
                   open={dialogOpen}
-                  onClose={() => setDialogOpen(false)}
+                  onClose={handleCloseRecruitDialog}
                   gladiators={waiverWire} 
-                  onRecruit={()=> setDialogOpen(false)} />
+                  onRecruit={handleRecruitComplete}
+                  recruitingSlot={recruitingSlot}
+                />
               </Box>
             }
         </Box>

@@ -10,6 +10,13 @@ import { PlayerAction, ClientGameState } from '../domain/models';
 
 export type GameSaveStatus = 'UNKNOWN' | 'NO_SAVE_FOUND' | 'SAVE_LOADED';
 
+interface ActionStatus {
+  isProcessing: boolean;
+  targetId?: string;
+  actionType: PlayerAction['type'];
+  error?: string;
+}
+
 export interface StarclanAppState {
   // UI and meta state
   isShowingDebugPanel: boolean;
@@ -18,6 +25,7 @@ export interface StarclanAppState {
   loadError: string | null;
   saveError: string | null;
   gameSaveStatus: GameSaveStatus;
+  activeActions: ActionStatus[];
 
   getStarDate: () => number;
 
@@ -29,6 +37,11 @@ export interface StarclanAppState {
   attemptPlayerAction: (gameAction: PlayerAction) => Promise<void>;
   refreshGameState: () => Promise<void>;
   startNewClan: (clanName: string) => Promise<void>;
+
+  // Action tracking
+  isActionProcessing: (actionType: string, targetId?: string) => boolean;
+  trackAction: (action: PlayerAction) => void;
+  clearAction: (actionType: string, targetId?: string) => void;
 
   // Actions
   showDebugPanel: (show: boolean) => void;
@@ -52,6 +65,7 @@ const useStarclanStore = create<StarclanAppState>()(
       saveError: null,
       gameState: null,
       gameSaveStatus: 'UNKNOWN',
+      activeActions: [],
 
       // -------------------------------------------
       // Helpers
@@ -60,6 +74,41 @@ const useStarclanStore = create<StarclanAppState>()(
         const gs = get().gameState;
         if (!gs) return 0;
         return gs.lastRefresh + gs.timeTravelMs;
+      },
+
+      // -------------------------------------------
+      // Action Tracking
+      // -------------------------------------------
+      isActionProcessing: (actionType: string, targetId?: string) => {
+        return get().activeActions.some(
+          action => action.actionType === actionType && 
+                   action.targetId === targetId && 
+                   action.isProcessing
+        );
+      },
+
+      trackAction: (action: PlayerAction) => {
+        set(state => {
+          const targetId = action.type === 'RECRUIT_GLADIATOR' 
+            ? `empty-slot-${action.targetSlot}`
+            : 'gladiatorName' in action 
+              ? action.gladiatorName 
+              : undefined;
+
+          state.activeActions.push({
+            actionType: action.type,
+            targetId,
+            isProcessing: true
+          });
+        });
+      },
+
+      clearAction: (actionType: string, targetId?: string) => {
+        set(state => {
+          state.activeActions = state.activeActions.filter(
+            action => !(action.actionType === actionType && action.targetId === targetId)
+          );
+        });
       },
 
       // -------------------------------------------
@@ -80,7 +129,6 @@ const useStarclanStore = create<StarclanAppState>()(
       //  fake the passage of time so we can iterate on the game quickly
       //  ##MISSING currently not doing anything when we get a fail api response
       timeTravel: async (timeMs: number) => {
-
         set((s) => { s.isApiProcessing = true; });
         const response = await apiService.timeTravel(timeMs);
         if (response.success) {
@@ -88,7 +136,6 @@ const useStarclanStore = create<StarclanAppState>()(
             s.gameState = response.data!;
            })
         }
-
         set((s) => { s.isApiProcessing = false; });
       },
 
@@ -96,14 +143,47 @@ const useStarclanStore = create<StarclanAppState>()(
       //  ##MISSING currently not doing anything with action result success/fail
       //  ##MISSING currently not doing anything when we get a fail api response
       attemptPlayerAction: async (playerAction: PlayerAction) => {
-        set((state) => { state.isApiProcessing = true; });
-        const response = await apiService.postPlayerAction(playerAction);
-        if (response.success) {
-          set((s) => { 
-            s.gameState = response.data!.state; 
-           })
+        set(state => { 
+          state.isApiProcessing = true;
+          state.trackAction(playerAction);
+        });
+
+        try {
+          const response = await apiService.postPlayerAction(playerAction);
+          if (response.success) {
+            set(state => { 
+              state.gameState = response.data!.state;
+              state.clearAction(
+                playerAction.type,
+                'gladiatorName' in playerAction ? playerAction.gladiatorName : undefined
+              );
+            });
+          } else {
+            set(state => {
+              const targetId = 'gladiatorName' in playerAction ? playerAction.gladiatorName : undefined;
+              const actionIndex = state.activeActions.findIndex(
+                a => a.actionType === playerAction.type && a.targetId === targetId
+              );
+              if (actionIndex !== -1) {
+                state.activeActions[actionIndex].error = 'Action failed';
+                state.activeActions[actionIndex].isProcessing = false;
+              }
+            });
+          }
+        } catch (error) {
+          set(state => {
+            const targetId = 'gladiatorName' in playerAction ? playerAction.gladiatorName : undefined;
+            const actionIndex = state.activeActions.findIndex(
+              a => a.actionType === playerAction.type && a.targetId === targetId
+            );
+            if (actionIndex !== -1) {
+              state.activeActions[actionIndex].error = error instanceof Error ? error.message : 'Unknown error';
+              state.activeActions[actionIndex].isProcessing = false;
+            }
+          });
+        } finally {
+          set(state => { state.isApiProcessing = false; });
         }
-        set((s) => { s.isApiProcessing = false; });
       },
 
       //  get latest game state from the api

@@ -105,7 +105,8 @@ export interface TrainGladiatorAction extends PlayerGladiatorAction {
 }
 
 export interface RecruitGladiatorAction extends PlayerGladiatorAction {
-  type: 'RECRUIT_GLADIATOR'
+  type: 'RECRUIT_GLADIATOR';
+  targetSlot: number | null;
 }
 
 export type PlayerAction = StartResearchAction 
