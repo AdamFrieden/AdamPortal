@@ -5,7 +5,7 @@ import Groups3Icon from '@mui/icons-material/Groups3';
 import BiotechIcon from '@mui/icons-material/Biotech';
 import PermScanWifiIcon from '@mui/icons-material/PermScanWifi';
 import React from "react";
-import useStarclanStore from "../context/useStarclanStore";
+import useStarclanUIStore from "../context/useStarclanUIStore";
 import StarClock from "./StarClock";
 
 export default function TopTabBar() {
@@ -15,7 +15,7 @@ export default function TopTabBar() {
       setTabValue(newTabValue);
   }
 
-  const isApiActive = useStarclanStore((state) => state.isApiProcessing);
+  const isApiActive = useStarclanUIStore((state) => state.isApiProcessing);
 
   return (
   <React.Fragment>

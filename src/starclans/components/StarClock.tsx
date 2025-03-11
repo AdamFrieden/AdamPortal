@@ -1,11 +1,11 @@
 import { Box, Typography } from '@mui/material';
 import { useEffect, useState } from 'react'
-import useStarclanStore from '../context/useStarclanStore';
+import useStarclanGameStore from '../context/useStarclanGameStore';
 
 export default function StarClock() {
   const [time, setTime] = useState<string>('');
   const [starTime, setStarTime] = useState<string>('');
-  const starDateRaw = useStarclanStore((state) => state.getStarDate());
+  const starDateRaw = useStarclanGameStore((state) => state.getStarDate());
 
   useEffect(() => {
 

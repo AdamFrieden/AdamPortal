@@ -1,7 +1,7 @@
 // components/StarClanLayout.tsx
-import { Box } from '@mui/material';
-import Grid from '@mui/material/Grid2';
-import useStarclanStore from '../context/useStarclanStore';
+import { Box, Container, Grid, Typography } from '@mui/material';
+import useStarclanGameStore from '../context/useStarclanGameStore';
+import useStarclanUIStore from '../context/useStarclanUIStore';
 import StartNewClan from './StartNewClan';
 import DebugPanel from './DebugPanel';
 import { GladiatorGrid } from './GladiatorGrid';
@@ -13,14 +13,14 @@ import { ContentFactory } from '../domain/contentFactory';
 
 const StarClanLayout = () => {
 
-  const gameSaveStatus = useStarclanStore((state) => state.gameSaveStatus);
-  const apiProcessing = useStarclanStore((state) => state.isApiProcessing);
-  const hasGameState = useStarclanStore((state) => !!state.gameState);
-  const refreshGameState = useStarclanStore((state) => state.refreshGameState);
-  const roster = useStarclanStore((state) => state.gameState?.roster);
-  const rosterCapacity = useStarclanStore((state) => state.gameState?.rosterCapacity) || 0;
+  const gameSaveStatus = useStarclanGameStore((state) => state.gameSaveStatus);
+  const apiProcessing = useStarclanUIStore((state) => state.isApiProcessing);
+  const hasGameState = useStarclanGameStore((state) => !!state.gameState);
+  const refreshGameState = useStarclanGameStore((state) => state.refreshGameState);
+  const roster = useStarclanGameStore((state) => state.gameState?.roster);
+  const rosterCapacity = useStarclanGameStore((state) => state.gameState?.rosterCapacity) || 0;
   const availableSlots = Math.max(0, rosterCapacity - (roster?.length || 0));
-  const waiverWire = useStarclanStore((state) => state.gameState?.waiverWire) || [];
+  const waiverWire = useStarclanGameStore((state) => state.gameState?.waiverWire) || [];
 
 
   const contentFactory = new ContentFactory()

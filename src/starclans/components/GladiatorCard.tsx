@@ -14,7 +14,7 @@ import {
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 import { ClientGladiator } from '../domain/models'; // adjust the import path as needed
-import useStarclanStore from '../context/useStarclanStore';
+import useStarclanGameStore from '../context/useStarclanGameStore';
 
 interface GladiatorCardProps {
   gladiator: ClientGladiator;
@@ -31,7 +31,7 @@ export const GladiatorCard: React.FC<GladiatorCardProps> = ({ gladiator, onRecru
     setAnchorEl(null);
   }
 
-  const attemptPlayerAction = useStarclanStore((state) => state.attemptPlayerAction);
+  const attemptPlayerAction = useStarclanGameStore((state) => state.attemptPlayerAction);
 
   function stringToColor(name: string): string {
     let hash = 0;
