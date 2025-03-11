@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
-import { ClientGladiator } from '../domain/models'; // adjust the import path as needed
+import { ACTION_TYPES, ClientGladiator } from '../domain/models'; // adjust the import path as needed
 import useStarclanGameStore from '../context/useStarclanGameStore';
 
 interface GladiatorCardProps {
@@ -148,9 +148,9 @@ export const GladiatorCard: React.FC<GladiatorCardProps> = ({ gladiator, onRecru
     >
      { gladiator.status !== 'ENSLAVED' && (
       <>
-        <MenuItem onClick={() => { attemptPlayerAction({ type: 'TRAIN_GLADIATOR', gladiatorName: gladiator.name  }); handleMenuClose();  }}>Train</MenuItem>
-        <MenuItem onClick={() => { attemptPlayerAction({ type: 'REST_GLADIATOR', gladiatorName: gladiator.name  }); handleMenuClose(); }}>Rest</MenuItem>
-        <MenuItem onClick={() => { attemptPlayerAction({ type: 'DROP_GLADIATOR', gladiatorName: gladiator.name  }); handleMenuClose(); }}>Drop</MenuItem> 
+        <MenuItem onClick={() => { attemptPlayerAction({ type: ACTION_TYPES.TRAIN_GLADIATOR, gladiatorName: gladiator.name  }); handleMenuClose();  }}>Train</MenuItem>
+        <MenuItem onClick={() => { attemptPlayerAction({ type: ACTION_TYPES.REST_GLADIATOR, gladiatorName: gladiator.name  }); handleMenuClose(); }}>Rest</MenuItem>
+        <MenuItem onClick={() => { attemptPlayerAction({ type: ACTION_TYPES.DROP_GLADIATOR, gladiatorName: gladiator.name  }); handleMenuClose(); }}>Drop</MenuItem> 
       </>
     )}
      { gladiator.status === 'ENSLAVED' && 
