@@ -41,7 +41,7 @@ export const RecruitGladiatorsDialog: React.FC<RecruitGladiatorsDialogProps> = (
         <Grid container spacing={2} justifyContent="center">
           {gladiators.map((glad) => (
             <GladiatorCard
-              key={glad.name}
+              key={glad.id}
               gladiator={glad}
               onRecruitSelected={() => { onRecruit(); }}
             />

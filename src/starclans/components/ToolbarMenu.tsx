@@ -6,16 +6,17 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import IconButton from '@mui/material/IconButton';
 import Settings from '@mui/icons-material/Settings';
 import Refresh from '@mui/icons-material/Refresh';
-import useStarclanStore from '../context/useStarclanStore';
+import useStarclanGameStore from '../context/useStarclanGameStore';
+import useStarclanUIStore from '../context/useStarclanUIStore';
 import { DarkModeOutlined, Delete, Info, LightMode } from '@mui/icons-material';
 import { useTheme } from '../../context/ThemeProvider';
 
 export default function ToolbarMenu() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const refreshData = useStarclanStore((state) => state.refreshGameState)
-  const deleteData = useStarclanStore((state) => state.deleteData);
-  const showDebugPanel = useStarclanStore((state) => state.showDebugPanel);
-  const isShowingDebugPanel = useStarclanStore((state) => state.isShowingDebugPanel);
+  const refreshData = useStarclanGameStore((state) => state.refreshGameState);
+  const deleteData = useStarclanGameStore((state) => state.deleteData);
+  const showDebugPanel = useStarclanUIStore((state) => state.showDebugPanel);
+  const isShowingDebugPanel = useStarclanUIStore((state) => state.isShowingDebugPanel);
   const { darkMode, toggleDarkMode } = useTheme();
 
   const open = Boolean(anchorEl);

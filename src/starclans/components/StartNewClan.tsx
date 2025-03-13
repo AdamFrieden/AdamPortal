@@ -1,10 +1,10 @@
 import { Box, Button, TextField } from "@mui/material";
-import useStarclanStore from "../context/useStarclanStore";
+import useStarclanGameStore from "../context/useStarclanGameStore";
 import { useState } from "react";
 
 export default function StartNewClan() {
 
-  const startNewClan = useStarclanStore((state) => state.startNewClan);
+  const startNewClan = useStarclanGameStore((state) => state.startNewClan);
   const [clanName, setClanName] = useState<string>('');
 
   const handleClanNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {

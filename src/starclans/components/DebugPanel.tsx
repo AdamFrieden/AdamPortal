@@ -1,14 +1,15 @@
 import { Box, TextField, Typography, Button } from "@mui/material";
 import { useState } from "react";
-import useStarclanStore from "../context/useStarclanStore";
+import useStarclanGameStore from "../context/useStarclanGameStore";
+import useStarclanUIStore from "../context/useStarclanUIStore";
 
 export default function DebugPanel() {
 
-  const timeTravelAction = useStarclanStore((s) => s.timeTravel);
-  const starDateRaw = useStarclanStore((state) => state.getStarDate());
+  const timeTravelAction = useStarclanGameStore((s) => s.timeTravel);
+  const starDateRaw = useStarclanGameStore((state) => state.getStarDate());
   const starDateFormatted = new Date(starDateRaw ?? 0).toISOString();
-  const [timeTravelValue, setTimeTravelValue] = useState<number>(3600);
-  const showDebugPanel = useStarclanStore((s) => s.isShowingDebugPanel);
+  const [timeTravelMs, setTimeTravelMs] = useState<number>(0);
+  const showDebugPanel = useStarclanUIStore((s) => s.isShowingDebugPanel);
 
   if (!showDebugPanel) {
     return (<></>);
@@ -25,12 +26,12 @@ export default function DebugPanel() {
         <TextField
           label="Seconds"
           type="numeric"
-          value={timeTravelValue}
+          value={timeTravelMs}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setTimeTravelValue(Number(e.target.value))
+            setTimeTravelMs(Number(e.target.value))
           }
         />
-        <Button variant="contained" onClick={() => { timeTravelAction(timeTravelValue * 1000); }}>
+        <Button variant="contained" onClick={() => { timeTravelAction(timeTravelMs * 1000); }}>
           Time Travel
         </Button>
       </Box>
