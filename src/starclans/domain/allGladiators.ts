@@ -21,6 +21,7 @@ import { Gladiator } from "./models";
 
 export const allGladiators: Gladiator[] = [
   {
+    id: '1',
     name: "Carius Thornpeak",
     stamina: 0,
     estimatedPower: 7,
@@ -33,6 +34,7 @@ export const allGladiators: Gladiator[] = [
     lastRefresh: 0,
   },
   {
+    id: '2',
     name: "Thaliana Volaris",
     stamina: 0,
     estimatedPower: 5,
@@ -45,6 +47,7 @@ export const allGladiators: Gladiator[] = [
     lastRefresh: 0,
   },
   {
+    id: '3',
     name: "Zenara Frostbreach",
     stamina: 0,
     estimatedPower: 8,
@@ -57,6 +60,7 @@ export const allGladiators: Gladiator[] = [
     lastRefresh: 0,
   },
   {
+    id: '4',
     name: "Veraxus Ironbrand",
     stamina: 0,
     estimatedPower: 20,
@@ -69,6 +73,7 @@ export const allGladiators: Gladiator[] = [
     lastRefresh: 0,
   },
   {
+    id: '5',
     name: "Othalia Embergrave",
     stamina: 0,
     estimatedPower: 5,
@@ -81,6 +86,7 @@ export const allGladiators: Gladiator[] = [
     lastRefresh: 0,
   },
   {
+    id: '6',
     name: "Carrelian Windreaver",
     stamina: 0,
     estimatedPower: 9,
@@ -93,6 +99,7 @@ export const allGladiators: Gladiator[] = [
     lastRefresh: 0,
   },
   {
+    id: '7',
     name: "Nerissa Ravenpeak",
     stamina: 0,
     estimatedPower: 10,
@@ -105,6 +112,7 @@ export const allGladiators: Gladiator[] = [
     lastRefresh: 0,
   },
   {
+    id: '8',
     name: "Varconius Blacktide",
     stamina: 0,
     estimatedPower: 25,
@@ -117,6 +125,7 @@ export const allGladiators: Gladiator[] = [
     lastRefresh: 0,
   },
   {
+    id: '9',
     name: "Galliana Flinthelm",
     stamina: 0,
     estimatedPower: 5,
@@ -129,6 +138,7 @@ export const allGladiators: Gladiator[] = [
     lastRefresh: 0,
   },
   {
+    id: '10',
     name: "Morvion Steelshard",
     stamina: 0,
     estimatedPower: 22,
@@ -143,6 +153,7 @@ export const allGladiators: Gladiator[] = [
 
   // 10
   {
+    id: '11',
     name: "Zellaris Moonthorn",
     stamina: 0,
     estimatedPower: 6,
@@ -155,6 +166,7 @@ export const allGladiators: Gladiator[] = [
     lastRefresh: 0,
   },
   {
+    id: '12',
     name: "Hadrian Voidscar",
     stamina: 0,
     estimatedPower: 10,
@@ -167,6 +179,7 @@ export const allGladiators: Gladiator[] = [
     lastRefresh: 0,
   },
   {
+    id: '12',
     name: "Tarena Dawnreaver",
     stamina: 0,
     estimatedPower: 14,
@@ -179,6 +192,7 @@ export const allGladiators: Gladiator[] = [
     lastRefresh: 0,
   },
   {
+    id: '13',
     name: "Xander Stormfist",
     stamina: 0,
     estimatedPower: 26,
@@ -191,6 +205,7 @@ export const allGladiators: Gladiator[] = [
     lastRefresh: 0,
   },
   {
+    id: '14',
     name: "Calyssa Emberthorn",
     stamina: 0,
     estimatedPower: 27,
@@ -203,6 +218,7 @@ export const allGladiators: Gladiator[] = [
     lastRefresh: 0,
   },
   {
+    id: '15',
     name: "Garius Hollowbane",
     stamina: 0,
     estimatedPower: 9,
@@ -215,6 +231,7 @@ export const allGladiators: Gladiator[] = [
     lastRefresh: 0,
   },
   {
+    id: '16',
     name: "Evaros Windstalker",
     stamina: 0,
     estimatedPower: 39,
@@ -227,6 +244,7 @@ export const allGladiators: Gladiator[] = [
     lastRefresh: 0,
   },
   {
+    id: '17',
     name: "Corvina Vexlight",
     stamina: 0,
     estimatedPower: 5,
@@ -239,6 +257,7 @@ export const allGladiators: Gladiator[] = [
     lastRefresh: 0,
   },
   {
+    id: '18',
     name: "Balric Dreadspire",
     stamina: 0,
     estimatedPower: 40,
@@ -251,6 +270,7 @@ export const allGladiators: Gladiator[] = [
     lastRefresh: 0,
   },
   {
+    id: '19',
     name: "Vitaria Stormclaw",
     stamina: 0,
     estimatedPower: 10,
@@ -265,6 +285,7 @@ export const allGladiators: Gladiator[] = [
 
   // 20
   {
+    id: '20',
     name: "Ulric Voidhowl",
     stamina: 0,
     estimatedPower: 15,
@@ -277,6 +298,7 @@ export const allGladiators: Gladiator[] = [
     lastRefresh: 0,
   },
   {
+    id: '21',
     name: "Mariana Ironwing",
     stamina: 0,
     estimatedPower: 35,
@@ -289,6 +311,7 @@ export const allGladiators: Gladiator[] = [
     lastRefresh: 0,
   },
   {
+    id: '21',
     name: "Lorian Quicksunder",
     stamina: 0,
     estimatedPower: 5,
@@ -301,6 +324,7 @@ export const allGladiators: Gladiator[] = [
     lastRefresh: 0,
   },
   {
+    id: '23',
     name: "Syrana Duskbane",
     stamina: 0,
     estimatedPower: 21,
@@ -313,6 +337,7 @@ export const allGladiators: Gladiator[] = [
     lastRefresh: 0,
   },
   {
+    id: '24',
     name: "Alistor Irongrip",
     stamina: 0,
     estimatedPower: 8,
@@ -325,6 +350,7 @@ export const allGladiators: Gladiator[] = [
     lastRefresh: 0,
   },
   {
+    id: '25',
     name: "Ferox Nightglade",
     stamina: 0,
     estimatedPower: 6,
@@ -337,6 +363,7 @@ export const allGladiators: Gladiator[] = [
     lastRefresh: 0,
   },
   {
+    id: '26',
     name: "Terriana Gravesong",
     stamina: 0,
     estimatedPower: 45,
@@ -349,6 +376,7 @@ export const allGladiators: Gladiator[] = [
     lastRefresh: 0,
   },
   {
+    id: '27',
     name: "Jothan Riftbane",
     stamina: 0,
     estimatedPower: 18,
@@ -361,6 +389,7 @@ export const allGladiators: Gladiator[] = [
     lastRefresh: 0,
   },
   {
+    id: '28',
     name: "Darius Valtross",
     stamina: 0,
     estimatedPower: 20,
@@ -373,6 +402,7 @@ export const allGladiators: Gladiator[] = [
     lastRefresh: 0,
   },
   {
+    id: '29',
     name: "Elysara Doomchaser",
     stamina: 0,
     estimatedPower: 36,
@@ -387,6 +417,7 @@ export const allGladiators: Gladiator[] = [
 
   // 30
   {
+    id: '30',
     name: "Astaria Shadewhisper",
     stamina: 0,
     estimatedPower: 7,
@@ -399,6 +430,7 @@ export const allGladiators: Gladiator[] = [
     lastRefresh: 0,
   },
   {
+    id: '31',
     name: "Malick Devourbane",
     stamina: 0,
     estimatedPower: 30,
@@ -411,6 +443,7 @@ export const allGladiators: Gladiator[] = [
     lastRefresh: 0,
   },
   {
+    id: '31',
     name: "Roderic Strikewind",
     stamina: 0,
     estimatedPower: 28,
@@ -423,6 +456,7 @@ export const allGladiators: Gladiator[] = [
     lastRefresh: 0,
   },
   {
+    id: '32',
     name: "Marvellus Direwake",
     stamina: 0,
     estimatedPower: 18,
@@ -435,6 +469,7 @@ export const allGladiators: Gladiator[] = [
     lastRefresh: 0,
   },
   {
+    id: '33',
     name: "Sylvara Thundertide",
     stamina: 0,
     estimatedPower: 45,
@@ -447,6 +482,7 @@ export const allGladiators: Gladiator[] = [
     lastRefresh: 0,
   },
   {
+    id: '34',
     name: "Jaravin Bladesong",
     stamina: 0,
     estimatedPower: 25,
@@ -459,6 +495,7 @@ export const allGladiators: Gladiator[] = [
     lastRefresh: 0,
   },
   {
+    id: '35',
     name: "Kelden Marrowfall",
     stamina: 0,
     estimatedPower: 9,
@@ -471,6 +508,7 @@ export const allGladiators: Gladiator[] = [
     lastRefresh: 0,
   },
   {
+    id: '36',
     name: "Lylanna Deepgloom",
     stamina: 0,
     estimatedPower: 12,
@@ -483,6 +521,7 @@ export const allGladiators: Gladiator[] = [
     lastRefresh: 0,
   },
   {
+    id: '37',
     name: "Oridian Scalefang",
     stamina: 0,
     estimatedPower: 35,
@@ -495,6 +534,7 @@ export const allGladiators: Gladiator[] = [
     lastRefresh: 0,
   },
   {
+    id: '38',
     name: "Syverus Thornwrath",
     stamina: 0,
     estimatedPower: 5,
@@ -509,6 +549,7 @@ export const allGladiators: Gladiator[] = [
 
   // 40
   {
+    id: '40',
     name: "Faelix Direveil",
     stamina: 0,
     estimatedPower: 20,
@@ -521,6 +562,7 @@ export const allGladiators: Gladiator[] = [
     lastRefresh: 0,
   },
   {
+    id: '41',
     name: "Cordelia Voidbloom",
     stamina: 0,
     estimatedPower: 15,
@@ -533,6 +575,7 @@ export const allGladiators: Gladiator[] = [
     lastRefresh: 0,
   },
   {
+    id: '42',
     name: "Horrin Bronzebearer",
     stamina: 0,
     estimatedPower: 50,
@@ -545,6 +588,7 @@ export const allGladiators: Gladiator[] = [
     lastRefresh: 0,
   },
   {
+    id: '43',
     name: "Vaeska Riftstalker",
     stamina: 0,
     estimatedPower: 25,
@@ -557,6 +601,7 @@ export const allGladiators: Gladiator[] = [
     lastRefresh: 0,
   },
   {
+    id: '44',
     name: "Dominus Coldhammer",
     stamina: 0,
     estimatedPower: 30,
@@ -569,6 +614,7 @@ export const allGladiators: Gladiator[] = [
     lastRefresh: 0,
   },
   {
+    id: '45',
     name: "Elyssia Stormchain",
     stamina: 0,
     estimatedPower: 9,
@@ -581,6 +627,7 @@ export const allGladiators: Gladiator[] = [
     lastRefresh: 0,
   },
   {
+    id: '46',
     name: "Meraxis Thornvale",
     stamina: 0,
     estimatedPower: 18,
@@ -593,6 +640,7 @@ export const allGladiators: Gladiator[] = [
     lastRefresh: 0,
   },
   {
+    id: '47',
     name: "Ilyona Graveflare",
     stamina: 0,
     estimatedPower: 42,
@@ -605,6 +653,7 @@ export const allGladiators: Gladiator[] = [
     lastRefresh: 0,
   },
   {
+    id: '48',
     name: "Kaelin Nightburn",
     stamina: 0,
     estimatedPower: 34,
@@ -617,6 +666,7 @@ export const allGladiators: Gladiator[] = [
     lastRefresh: 0,
   },
   {
+    id: '49',
     name: "Taronis Dreadmoor",
     stamina: 0,
     estimatedPower: 8,
@@ -631,6 +681,7 @@ export const allGladiators: Gladiator[] = [
 
   // 50
   {
+    id: '50',
     name: "Serevan Emberstride",
     stamina: 0,
     estimatedPower: 12,
@@ -643,6 +694,7 @@ export const allGladiators: Gladiator[] = [
     lastRefresh: 0,
   },
   {
+    id: '51',
     name: "Orlix Voidrender",
     stamina: 0,
     estimatedPower: 45,
@@ -655,6 +707,7 @@ export const allGladiators: Gladiator[] = [
     lastRefresh: 0,
   },
   {
+    id: '52',
     name: "Vallora Chainsong",
     stamina: 0,
     estimatedPower: 32,
@@ -667,6 +720,7 @@ export const allGladiators: Gladiator[] = [
     lastRefresh: 0,
   },
   {
+    id: '53',
     name: "Iskar Thundersoul",
     stamina: 0,
     estimatedPower: 35,
@@ -679,6 +733,7 @@ export const allGladiators: Gladiator[] = [
     lastRefresh: 0,
   },
   {
+    id: '54',
     name: "Galatea Duskshard",
     stamina: 0,
     estimatedPower: 28,
@@ -691,6 +746,7 @@ export const allGladiators: Gladiator[] = [
     lastRefresh: 0,
   },
   {
+    id: '55',
     name: "Rothair Bonecinder",
     stamina: 0,
     estimatedPower: 9,
@@ -703,6 +759,7 @@ export const allGladiators: Gladiator[] = [
     lastRefresh: 0,
   },
   {
+    id: '56',
     name: "Averis Dewrend",
     stamina: 0,
     estimatedPower: 5,
@@ -715,6 +772,7 @@ export const allGladiators: Gladiator[] = [
     lastRefresh: 0,
   },
   {
+    id: '57',
     name: "Loriana Scalebreak",
     stamina: 0,
     estimatedPower: 39,
@@ -727,6 +785,7 @@ export const allGladiators: Gladiator[] = [
     lastRefresh: 0,
   },
   {
+    id: '58',
     name: "Vorlan Gloomstride",
     stamina: 0,
     estimatedPower: 29,
@@ -739,6 +798,7 @@ export const allGladiators: Gladiator[] = [
     lastRefresh: 0,
   },
   {
+    id: '59',
     name: "Talia Grimcrest",
     stamina: 0,
     estimatedPower: 22,

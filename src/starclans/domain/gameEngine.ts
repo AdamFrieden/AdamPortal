@@ -1,6 +1,5 @@
-
 // src/domain/gameEngine.ts
-import { PlayerAction, GameState, PlayerActionResult, ResearchTask, Gladiator, GladiatorStatus, DropGladiatorAction, TrainGladiatorAction, RestGladiatorAction, RecruitGladiatorAction } from './models';
+import { PlayerAction, GameState, PlayerActionResult, ResearchTask, Gladiator, GladiatorStatus, DropGladiatorAction, TrainGladiatorAction, RestGladiatorAction, RecruitGladiatorAction, ACTION_TYPES } from './models';
 
 //  this should not maintain any state. use all pure functions that have no side effects.
 //  state changes are always returned as a  new state object without mutating inputs.
@@ -54,19 +53,19 @@ export class GameEngine {
       case 'CANCEL_RESEARCH':
         nextState = GameEngine.cancelResearch(nextState, action.researchId);
         break;
-      case 'DROP_GLADIATOR':
-        nextState = GameEngine.dropGladiator(nextState, (action as DropGladiatorAction).gladiatorName);
+      case ACTION_TYPES.DROP_GLADIATOR:
+        nextState = GameEngine.dropGladiator(nextState, (action as DropGladiatorAction).gladiatorId);
         break;
-      case 'TRAIN_GLADIATOR':
-        nextState = GameEngine.updateGladiatorStatus(nextState, (action as TrainGladiatorAction).gladiatorName, 'TRAINING');
+      case ACTION_TYPES.TRAIN_GLADIATOR:
+        nextState = GameEngine.updateGladiatorStatus(nextState, (action as TrainGladiatorAction).gladiatorId, 'TRAINING');
         break;
-      case 'REST_GLADIATOR':
-        nextState = GameEngine.updateGladiatorStatus(nextState, (action as RestGladiatorAction).gladiatorName, 'RESTING');
+      case ACTION_TYPES.REST_GLADIATOR:
+        nextState = GameEngine.updateGladiatorStatus(nextState, (action as RestGladiatorAction).gladiatorId, 'RESTING');
         break;
-      case 'RECRUIT_GLADIATOR':
-        const gladiatorName = (action as RecruitGladiatorAction).gladiatorName;
-        nextState = GameEngine.recruitGladiator(nextState, gladiatorName);
-        nextState = GameEngine.updateGladiatorStatus(nextState, gladiatorName, 'RESTING');
+      case ACTION_TYPES.RECRUIT_GLADIATOR:
+        const gladiatorId = (action as RecruitGladiatorAction).gladiatorId;
+        nextState = GameEngine.recruitGladiator(nextState, gladiatorId);
+        nextState = GameEngine.updateGladiatorStatus(nextState, gladiatorId, 'RESTING');
         break;
       default:
         // Optionally handle unexpected action types
@@ -137,34 +136,35 @@ export class GameEngine {
     };
   }
 
-  private static dropGladiator(state: GameState, gladiatorName: string): GameState {
-    const updatedGladiatorRoster = state.roster?.filter(g => g.name !== gladiatorName) ?? [];
+  private static dropGladiator(state: GameState, gladiatorId: string): GameState {
+    const updatedGladiatorRoster = state.roster?.filter(g => g.id !== gladiatorId) ?? [];
     return { ...state, roster: updatedGladiatorRoster };
   }
 
-  private static recruitGladiator(state: GameState, gladiatorName: string): GameState {
-    const gladiatorToRecruit = state.waiverWire.find(g => g.name === gladiatorName);
-    // only add a gladiator if there is capacity in the clan and the gladiator to recruit is on waivers
-    if (state.roster.length < state.rosterCapacity || !gladiatorToRecruit) {
-      // create a new collection of gladiators from the old roster and include the new gladiator
-      const updatedRoster = [...state.roster, gladiatorToRecruit!];
-      // remove the gladiator from the waiver wire
-      const updatedWaiverWire = state.waiverWire.filter(g => g.name !== gladiatorName);
-      // return a new gamestate without mutating the existing objects
-      return { ...state, roster: updatedRoster, waiverWire: updatedWaiverWire };
+  private static recruitGladiator(state: GameState, gladiatorId: string): GameState {
+    const gladiatorToRecruit = state.waiverWire.find(g => g.id === gladiatorId);
+    if (!gladiatorToRecruit) {
+      return state;
     }
-    return state;
-    //  ##MISSING how to notify that the validation/action failed?
+
+    const updatedRoster = [...(state.roster ?? []), gladiatorToRecruit];
+    const updatedWaiverWire = state.waiverWire.filter(g => g.id !== gladiatorId);
+
+    return {
+      ...state,
+      roster: updatedRoster,
+      waiverWire: updatedWaiverWire
+    };
   }
 
   private static updateGladiatorStatus(
     state: GameState,
-    gladiatorName: string,
+    gladiatorId: string,
     newStatus: GladiatorStatus
   ): GameState {
-    const updatedGladiatorRoster = state.roster?.map(g =>
-      g.name === gladiatorName ? { ...g, status: newStatus } : g
+    const updatedRoster = state.roster?.map(g =>
+      g.id === gladiatorId ? { ...g, status: newStatus } : g
     ) ?? [];
-    return { ...state, roster: updatedGladiatorRoster };
+    return { ...state, roster: updatedRoster };
   }
 }

@@ -1,5 +1,5 @@
 // components/StarClanLayout.tsx
-import { Box, Container, Grid, Typography } from '@mui/material';
+import { Box, Grid } from '@mui/material';
 import useStarclanGameStore from '../context/useStarclanGameStore';
 import useStarclanUIStore from '../context/useStarclanUIStore';
 import StartNewClan from './StartNewClan';

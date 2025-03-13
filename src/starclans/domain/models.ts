@@ -9,6 +9,7 @@ export interface ResearchTask {
 export type GladiatorStatus = 'RESTING' | 'TRAINING' | 'CONFLICT' | 'ENSLAVED';
 
 export interface Gladiator {
+  id: string;
   name: string;
   stamina: number;
   estimatedPower: number;
@@ -72,14 +73,24 @@ export interface PlayerActionResult<T extends GameState | ClientGameState> {
   actionSuccess: boolean;
 }
 
+  // Action types as const
+  export const ACTION_TYPES = {
+    START_RESEARCH: 'START_RESEARCH',
+    CANCEL_RESEARCH: 'CANCEL_RESEARCH',
+    DROP_GLADIATOR: 'DROP_GLADIATOR',
+    REST_GLADIATOR: 'REST_GLADIATOR',
+    TRAIN_GLADIATOR: 'TRAIN_GLADIATOR',
+    RECRUIT_GLADIATOR: 'RECRUIT_GLADIATOR',
+  } as const;
+
 //  keep player action extremely minimal - eventually pass these over the wire so they can be consumed by the real gameEngine in AWS.
 //  make sure nothing about the player action is authoritative. it should only convey intent. gameEngine should verify access and costs, etc.
 interface BasePlayerAction {
-  type: keyof typeof ACTION_TYPES;
+  type: string;
 }
 
 export interface StartResearchAction extends BasePlayerAction {
-  type: 'START_RESEARCH';
+  type: typeof ACTION_TYPES.START_RESEARCH;
   researchId: string;
 }
 
@@ -89,23 +100,23 @@ export interface CancelResearchAction extends BasePlayerAction {
 }
 
 interface PlayerGladiatorAction extends BasePlayerAction {
-  gladiatorName: string;
+  gladiatorId: string;
 }
 
 export interface DropGladiatorAction extends PlayerGladiatorAction {
-  type: 'DROP_GLADIATOR'
+  type: typeof ACTION_TYPES.DROP_GLADIATOR;
 }
 
 export interface RestGladiatorAction extends PlayerGladiatorAction {
-  type: 'REST_GLADIATOR'
+  type: typeof ACTION_TYPES.REST_GLADIATOR;
 }
 
 export interface TrainGladiatorAction extends PlayerGladiatorAction {
-  type: 'TRAIN_GLADIATOR'
+  type: typeof ACTION_TYPES.TRAIN_GLADIATOR;
 }
 
 export interface RecruitGladiatorAction extends PlayerGladiatorAction {
-  type: 'RECRUIT_GLADIATOR'
+  type: typeof ACTION_TYPES.RECRUIT_GLADIATOR;
 }
 
 export type PlayerAction = StartResearchAction 
@@ -116,12 +127,4 @@ export type PlayerAction = StartResearchAction
   | RecruitGladiatorAction
 
 
-  // Action types as const
-export const ACTION_TYPES = {
-  START_RESEARCH: 'START_RESEARCH',
-  CANCEL_RESEARCH: 'CANCEL_RESEARCH',
-  DROP_GLADIATOR: 'DROP_GLADIATOR',
-  REST_GLADIATOR: 'REST_GLADIATOR',
-  TRAIN_GLADIATOR: 'TRAIN_GLADIATOR',
-  RECRUIT_GLADIATOR: 'RECRUIT_GLADIATOR',
-} as const;
+

@@ -148,14 +148,14 @@ export const GladiatorCard: React.FC<GladiatorCardProps> = ({ gladiator, onRecru
     >
      { gladiator.status !== 'ENSLAVED' && (
       <>
-        <MenuItem onClick={() => { attemptPlayerAction({ type: ACTION_TYPES.TRAIN_GLADIATOR, gladiatorName: gladiator.name  }); handleMenuClose();  }}>Train</MenuItem>
-        <MenuItem onClick={() => { attemptPlayerAction({ type: ACTION_TYPES.REST_GLADIATOR, gladiatorName: gladiator.name  }); handleMenuClose(); }}>Rest</MenuItem>
-        <MenuItem onClick={() => { attemptPlayerAction({ type: ACTION_TYPES.DROP_GLADIATOR, gladiatorName: gladiator.name  }); handleMenuClose(); }}>Drop</MenuItem> 
+        <MenuItem onClick={() => { attemptPlayerAction({ type: ACTION_TYPES.TRAIN_GLADIATOR, gladiatorId: gladiator.id }); handleMenuClose(); }}>Train</MenuItem>
+        <MenuItem onClick={() => { attemptPlayerAction({ type: ACTION_TYPES.REST_GLADIATOR, gladiatorId: gladiator.id }); handleMenuClose(); }}>Rest</MenuItem>
+        <MenuItem onClick={() => { attemptPlayerAction({ type: ACTION_TYPES.DROP_GLADIATOR, gladiatorId: gladiator.id }); handleMenuClose(); }}>Drop</MenuItem>
       </>
     )}
      { gladiator.status === 'ENSLAVED' && 
       <MenuItem onClick={() => { 
-        attemptPlayerAction({ type: 'RECRUIT_GLADIATOR', gladiatorName: gladiator.name  }); 
+        attemptPlayerAction({ type: ACTION_TYPES.RECRUIT_GLADIATOR, gladiatorId: gladiator.id }); 
         handleMenuClose();     
         onRecruitSelected?.();
       }}>Recruit</MenuItem> }
