@@ -9,16 +9,19 @@ const DebugPanel = () => {
   const showDebugPanel = useStarclanUIStore((state) => state.showDebugPanel);
   const deleteData = useStarclanGameStore((state) => state.deleteData);
   const debugAddTimeOffset = useStarclanGameStore((state) => state.debugAddTimeOffset);
+  const debugTimeOffset = useStarclanGameStore((state) => state.gameState?.debugTimeOffset || 0);
   const [customMinutes, setCustomMinutes] = React.useState('5');
+  const starDateRaw = useStarclanGameStore((state) => state.gameState?.lastRefresh);
 
   if (!isShowingDebugPanel) {
-    return (
-      <Box textAlign="right" mb={1}>
-        <Button size="small" variant="outlined" onClick={() => showDebugPanel(true)}>
-          Debug
-        </Button>
-      </Box>
-    );
+    return (<></>);
+    // return (
+    //   <Box textAlign="right" mb={1}>
+    //     <Button size="small" variant="outlined" onClick={() => showDebugPanel(true)}>
+    //       Debug
+    //     </Button>
+    //   </Box>
+    // );
   }
 
   const handleCustomTimeSkip = () => {
@@ -30,6 +33,19 @@ const DebugPanel = () => {
 
   const handlePresetTimeSkip = (minutes: number) => {
     debugAddTimeOffset(minutes * 60 * 1000); // Convert minutes to milliseconds
+  };
+
+  const formatTimeOffset = (ms: number) => {
+    if (ms === 0) return "None";
+    
+    const hours = Math.floor(ms / (1000 * 60 * 60));
+    const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
+    
+    if (hours > 0) {
+      return `${hours}h ${minutes}m`;
+    } else {
+      return `${minutes}m`;
+    }
   };
 
   return (
@@ -75,7 +91,7 @@ const DebugPanel = () => {
               sx={{ width: 150, mr: 1 }}
             />
             <Button variant="contained" size="small" onClick={handleCustomTimeSkip}>
-              Skip
+              Skip Time
             </Button>
           </Box>
         </Box>
@@ -93,6 +109,11 @@ const DebugPanel = () => {
             Reset All Game Data
           </Button>
         </Box>
+
+        <Typography>Current Time: {new Date(starDateRaw ?? 0).toLocaleString()}</Typography>
+        <Typography color="text.secondary" sx={{ mt: 1 }}>
+          Time Skipped: {formatTimeOffset(debugTimeOffset)}
+        </Typography>
       </CardContent>
     </Card>
   );

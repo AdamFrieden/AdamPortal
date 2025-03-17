@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   Box, 
   Typography, 
@@ -31,7 +31,7 @@ const ScanView = () => {
   const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
   const [progress, setProgress] = useState<number>(0);
 
-  // Add this line in the component to get the debug offset
+  // Add this line in the component
   const debugTimeOffset = gameState?.debugTimeOffset || 0;
 
   // Calculate and update time remaining for in-progress scan
@@ -47,7 +47,7 @@ const ScanView = () => {
     const totalDuration = gameState.activeScan.durationMs;
 
     const updateTimer = () => {
-      // Apply the same time offset calculation here
+      // Apply the debug time offset when calculating time
       const effectiveNow = Date.now() + debugTimeOffset;
       const remaining = Math.max(0, endTime - effectiveNow);
       const elapsed = effectiveNow - startTime;

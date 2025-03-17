@@ -39,7 +39,7 @@ const useStarclanGameStore = create<StarclanGameState>()(
       getStarDate: () => {
         const gs = get().gameState;
         if (!gs) return 0;
-        return gs.lastRefresh + gs.timeTravelMs;
+        return gs.lastRefresh;
       },
 
       // Game Actions

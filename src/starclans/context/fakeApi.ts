@@ -56,11 +56,10 @@ class FakeApi {
       roster: startingGladiators as Gladiator[],
       researchTasks: [],
       lastRefresh: Date.now(),
-      timeTravelMs: 0,
+      debugTimeOffset: 0,
       resourcium: Math.random() * 100,
       rosterCapacity: 5,
-      waiverWire: startingWaiverWire as Gladiator[],
-      debugTimeOffset: 0
+      waiverWire: startingWaiverWire as Gladiator[]
     }
     this.saveGameState(newClanGameState);
 

@@ -1,5 +1,5 @@
 // src/domain/gameEngine.ts
-import { PlayerAction, GameState, PlayerActionResult, ResearchTask, Gladiator, GladiatorStatus, DropGladiatorAction, TrainGladiatorAction, RestGladiatorAction, RecruitGladiatorAction, ACTION_TYPES, NetworkScan, ScanStatus, ScanResult } from './models';
+import { PlayerAction, GameState, PlayerActionResult, ResearchTask, Gladiator, GladiatorStatus, DropGladiatorAction, TrainGladiatorAction, RestGladiatorAction, RecruitGladiatorAction, ACTION_TYPES, NetworkScan, ScanResult } from './models';
 
 //  this should not maintain any state. use all pure functions that have no side effects.
 //  state changes are always returned as a  new state object without mutating inputs.
