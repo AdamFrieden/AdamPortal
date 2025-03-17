@@ -17,7 +17,7 @@ export interface StarclanGameState {
   getStarDate: () => number;
 
   // Game Actions
-  timeTravel: (timeMs: number) => Promise<void>;
+  debugAddTimeOffset: (offsetMs: number) => Promise<void>;
   attemptPlayerAction: (gameAction: PlayerAction) => Promise<void>;
   refreshGameState: () => Promise<void>;
   startNewClan: (clanName: string) => Promise<void>;
@@ -55,9 +55,9 @@ const useStarclanGameStore = create<StarclanGameState>()(
         useStarclanUIStore.getState().setApiProcessing(false);
       },
 
-      timeTravel: async (timeMs: number) => {
+      debugAddTimeOffset: async (offsetMs: number) => {
         useStarclanUIStore.getState().setApiProcessing(true);
-        const response = await apiService.timeTravel(timeMs);
+        const response = await apiService.debugAddTimeOffset(offsetMs);
         if (response.success) {
           set((s) => {
             s.gameState = response.data!;

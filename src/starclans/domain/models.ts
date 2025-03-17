@@ -44,7 +44,8 @@ export interface Gladiator {
 export interface GameState {
   researchTasks?: ResearchTask[];
   lastRefresh: number;
-  timeTravelMs: number;
+  timeTravelMs: number; // We'll keep this for compatibility but won't use it
+  debugTimeOffset: number; // New field for our debug time offset
   clanName: string;
   resourcium: number;
   roster: Gladiator[];
@@ -82,6 +83,7 @@ export function emptyGameState(): GameState {
     researchTasks: [],
     resourcium: 0,
     timeTravelMs: 0,
+    debugTimeOffset: 0, // Initialize with zero offset
     lastRefresh: 0,
     rosterCapacity: 0,
     waiverWire: [],
