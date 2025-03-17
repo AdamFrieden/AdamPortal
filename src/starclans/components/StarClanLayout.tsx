@@ -1,31 +1,47 @@
 // components/StarClanLayout.tsx
-import { Box, Grid } from '@mui/material';
+import { Box } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 import useStarclanGameStore from '../context/useStarclanGameStore';
 import useStarclanUIStore from '../context/useStarclanUIStore';
 import StartNewClan from './StartNewClan';
 import DebugPanel from './DebugPanel';
-import { GladiatorGrid } from './GladiatorGrid';
 import TopTabBar from './TopTabBar';
 import { useState } from 'react';
 import { GladiatorCardSkeleton } from './GladiatorSkeletonCard';
-import { RecruitGladiatorsDialog } from './RecruitGladiatorDialogue';
 import { ContentFactory } from '../domain/contentFactory';
 import GameStateHeartbeat from './GameStateHeartbeat';
+import TechView from './TechView';
+import ScanView from './ScanView';
+import ClanView from './ClanView';
 
 const StarClanLayout = () => {
   const gameSaveStatus = useStarclanGameStore((state) => state.gameSaveStatus);
   const apiProcessing = useStarclanUIStore((state) => state.isApiProcessing);
   const hasGameState = useStarclanGameStore((state) => !!state.gameState);
-  const roster = useStarclanGameStore((state) => state.gameState?.roster);
   const rosterCapacity = useStarclanGameStore((state) => state.gameState?.rosterCapacity) || 0;
-  const availableSlots = Math.max(0, rosterCapacity - (roster?.length || 0));
-  const waiverWire = useStarclanGameStore((state) => state.gameState?.waiverWire) || [];
 
   const contentFactory = new ContentFactory()
   const exampleSlaverGladiators = contentFactory.getRandomGladiators(3);
   exampleSlaverGladiators.forEach((g) => {g.status = 'ENSLAVED'})
 
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedTab, setSelectedTab] = useState(0);
+
+  const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
+    setSelectedTab(newValue);
+  };
+
+  const renderCurrentView = () => {
+    switch (selectedTab) {
+      case 0:
+        return <ClanView />;
+      case 1:
+        return <TechView />;
+      case 2:
+        return <ScanView />;
+      default:
+        return null;
+    }
+  };
 
   return (
     <Box id='topLayoutBox' sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
@@ -37,7 +53,7 @@ const StarClanLayout = () => {
             )}
             {!hasGameState && gameSaveStatus === 'NO_SAVE_FOUND' && apiProcessing && (
               <Box id='dashContextBoxLoading' width='100%'>
-                <TopTabBar />
+                <TopTabBar selectedTab={selectedTab} onTabChange={handleTabChange} />
                 <Grid container spacing={2} sx={{ p: 2, justifyContent: 'center' }}>
                   {[...Array(rosterCapacity)].map(() => (
                     <GladiatorCardSkeleton />
@@ -47,14 +63,9 @@ const StarClanLayout = () => {
             )}
             {hasGameState && 
               <Box id='dashContextBox' width='100%'>
-                <TopTabBar />
+                <TopTabBar selectedTab={selectedTab} onTabChange={handleTabChange} />
                 <DebugPanel />
-                {roster && <GladiatorGrid gladiators={roster} emptySlots={availableSlots} onAdd={() => { setDialogOpen(!dialogOpen)}} />}
-                <RecruitGladiatorsDialog
-                  open={dialogOpen}
-                  onClose={() => setDialogOpen(false)}
-                  gladiators={waiverWire} 
-                  onRecruit={()=> setDialogOpen(false)} />
+                {renderCurrentView()}
               </Box>
             }
         </Box>
