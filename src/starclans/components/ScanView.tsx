@@ -199,7 +199,7 @@ const ScanView = () => {
             <Button 
               variant="contained" 
               onClick={handleStartScan}
-              disabled={isApiProcessing}
+              // disabled={isApiProcessing}
               startIcon={<RadarIcon />}
             >
               Start New Scan
