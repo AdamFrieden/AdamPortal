@@ -1,5 +1,5 @@
 // src/domain/gameEngine.ts
-import { PlayerAction, GameState, PlayerActionResult, ResearchTask, Gladiator, GladiatorStatus, DropGladiatorAction, TrainGladiatorAction, RestGladiatorAction, RecruitGladiatorAction, ACTION_TYPES } from './models';
+import { PlayerAction, GameState, PlayerActionResult, ResearchTask, Gladiator, GladiatorStatus, DropGladiatorAction, TrainGladiatorAction, RestGladiatorAction, RecruitGladiatorAction, ACTION_TYPES, NetworkScan, ScanStatus, ScanResult } from './models';
 
 //  this should not maintain any state. use all pure functions that have no side effects.
 //  state changes are always returned as a  new state object without mutating inputs.
@@ -15,11 +15,13 @@ export class GameEngine {
     // More systems: updateResources, etc.
     const updatedResearchTasks = GameEngine.updateResearchTasks(state.researchTasks, totalNow);
     const updatedGladiators = GameEngine.updateGladiators(state.roster, totalNow);
+    const updatedScan = GameEngine.updateActiveScan(state.activeScan, totalNow);
   
     const updatedState: GameState = {
       ...state,
       researchTasks: updatedResearchTasks,
       roster: updatedGladiators,
+      activeScan: updatedScan,
       lastRefresh: now
     };
     return updatedState;
@@ -67,6 +69,9 @@ export class GameEngine {
         nextState = GameEngine.recruitGladiator(nextState, gladiatorId);
         nextState = GameEngine.updateGladiatorStatus(nextState, gladiatorId, 'RESTING');
         break;
+      case ACTION_TYPES.START_SCAN:
+        nextState = GameEngine.startNetworkScan(nextState, now);
+        break;
       default:
         // Optionally handle unexpected action types
         break;
@@ -76,7 +81,70 @@ export class GameEngine {
     return { state: nextState, actionSuccess: true };
   }
 
+  private static updateActiveScan(scan: NetworkScan | undefined, now: number): NetworkScan | undefined {
+    if (!scan || scan.status !== 'IN_PROGRESS') {
+      return scan;
+    }
+    
+    const endTime = scan.startTime + scan.durationMs;
+    if (now >= endTime) {
+      // Scan is complete, generate results
+      const results = GameEngine.generateScanResults();
+      return {
+        ...scan,
+        status: 'COMPLETED',
+        results
+      };
+    }
+    
+    return scan;
+  }
 
+  // Generate random scan results
+  private static generateScanResults(): ScanResult[] {
+    const resultTypes = ['opportunity', 'threat', 'resource'];
+    const numResults = 1 + Math.floor(Math.random() * 3); // 1-3 results
+    
+    const results: ScanResult[] = [];
+    for (let i = 0; i < numResults; i++) {
+      const type = resultTypes[Math.floor(Math.random() * resultTypes.length)];
+      results.push({
+        id: crypto.randomUUID(),
+        type,
+        description: `Found a ${type} in the network.`,
+        reward: type === 'resource' ? `${Math.floor(Math.random() * 100)} resourcium` : undefined
+      });
+    }
+    
+    return results;
+  }
+
+  private static startNetworkScan(state: GameState, now: number): GameState {
+    // Check if there's already an active scan
+    if (state.activeScan && state.activeScan.status === 'IN_PROGRESS') {
+      return state; // Can't start a new scan while one is in progress
+    }
+    
+    // Create a new scan
+    const newScan: NetworkScan = {
+      id: crypto.randomUUID(),
+      startTime: now,
+      durationMs: 1000 * 60 * 5, // 5 minutes for testing (would be hours in real game)
+      status: 'IN_PROGRESS'
+    };
+    
+    // If there was a completed scan, move it to history
+    const scanHistory = [...(state.scanHistory || [])];
+    if (state.activeScan && state.activeScan.status === 'COMPLETED') {
+      scanHistory.push(state.activeScan);
+    }
+    
+    return {
+      ...state,
+      activeScan: newScan,
+      scanHistory
+    };
+  }
 
   private static updateGladiators(gladiators: Gladiator[], now: number): Gladiator[] {
     return gladiators.map(g => {
