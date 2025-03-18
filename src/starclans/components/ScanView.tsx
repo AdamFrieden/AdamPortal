@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   Box, 
   Typography, 
@@ -31,6 +31,9 @@ const ScanView = () => {
   const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
   const [progress, setProgress] = useState<number>(0);
 
+  // Add this line in the component
+  const debugTimeOffset = gameState?.debugTimeOffset || 0;
+
   // Calculate and update time remaining for in-progress scan
   useEffect(() => {
     if (!gameState?.activeScan || gameState.activeScan.status !== 'IN_PROGRESS') {
@@ -44,9 +47,10 @@ const ScanView = () => {
     const totalDuration = gameState.activeScan.durationMs;
 
     const updateTimer = () => {
-      const now = Date.now();
-      const remaining = Math.max(0, endTime - now);
-      const elapsed = now - startTime;
+      // Apply the debug time offset when calculating time
+      const effectiveNow = Date.now() + debugTimeOffset;
+      const remaining = Math.max(0, endTime - effectiveNow);
+      const elapsed = effectiveNow - startTime;
       const progressValue = Math.min(100, (elapsed / totalDuration) * 100);
       
       setTimeRemaining(remaining);
@@ -58,7 +62,7 @@ const ScanView = () => {
     };
 
     updateTimer();
-  }, [gameState?.activeScan]);
+  }, [gameState?.activeScan, debugTimeOffset]);
 
   const handleStartScan = () => {
     attemptPlayerAction({ type: ACTION_TYPES.START_SCAN });
@@ -195,7 +199,7 @@ const ScanView = () => {
             <Button 
               variant="contained" 
               onClick={handleStartScan}
-              disabled={isApiProcessing}
+              // disabled={isApiProcessing}
               startIcon={<RadarIcon />}
             >
               Start New Scan

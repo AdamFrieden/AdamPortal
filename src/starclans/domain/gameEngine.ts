@@ -1,39 +1,27 @@
 // src/domain/gameEngine.ts
-import { PlayerAction, GameState, PlayerActionResult, ResearchTask, Gladiator, GladiatorStatus, DropGladiatorAction, TrainGladiatorAction, RestGladiatorAction, RecruitGladiatorAction, ACTION_TYPES, NetworkScan, ScanStatus, ScanResult } from './models';
+import { PlayerAction, GameState, PlayerActionResult, ResearchTask, Gladiator, GladiatorStatus, DropGladiatorAction, TrainGladiatorAction, RestGladiatorAction, RecruitGladiatorAction, ACTION_TYPES, NetworkScan, ScanResult } from './models';
 
 //  this should not maintain any state. use all pure functions that have no side effects.
 //  state changes are always returned as a  new state object without mutating inputs.
 export class GameEngine {
 
   public static updateGameStateToNow(state: GameState, now: number): GameState {
-    const totalNow = now;
+    // Apply debug time offset to the "now" timestamp
+    const effectiveNow = now + (state.debugTimeOffset || 0);
 
-    // Call each system
-    // updateResearch(state, now);
-    // updateConstruction(state, now);
-    // updateGladiators(state, now);
-    // More systems: updateResources, etc.
-    const updatedResearchTasks = GameEngine.updateResearchTasks(state.researchTasks, totalNow);
-    const updatedGladiators = GameEngine.updateGladiators(state.roster, totalNow);
-    const updatedScan = GameEngine.updateActiveScan(state.activeScan, totalNow);
-  
+    // Call each system with the effective time
+    const updatedResearchTasks = GameEngine.updateResearchTasks(state.researchTasks, effectiveNow);
+    const updatedGladiators = GameEngine.updateGladiators(state.roster, effectiveNow);
+    const updatedScan = GameEngine.updateActiveScan(state.activeScan, effectiveNow);
+
     const updatedState: GameState = {
       ...state,
       researchTasks: updatedResearchTasks,
       roster: updatedGladiators,
       activeScan: updatedScan,
-      lastRefresh: now
+      lastRefresh: effectiveNow // Use the effective time for lastRefresh
     };
     return updatedState;
-  }
-
-  public static timeTravel(state: GameState, travelMs: number, now: number): GameState {
-
-    const totalTimeTravel = state.timeTravelMs + travelMs;
-    const timeTraveledState: GameState = { ...state, timeTravelMs: totalTimeTravel };
-    const refreshedState = GameEngine.updateGameStateToNow(timeTraveledState, now);
-
-    return refreshedState;
   }
 
   public static attemptPlayerAction(
@@ -125,11 +113,14 @@ export class GameEngine {
       return state; // Can't start a new scan while one is in progress
     }
     
-    // Create a new scan
+    // Get the effective time that accounts for debug offset
+    const effectiveNow = now + (state.debugTimeOffset || 0);
+    
+    // Create a new scan with the effective time
     const newScan: NetworkScan = {
       id: crypto.randomUUID(),
-      startTime: now,
-      durationMs: 1000 * 60 * 5, // 5 minutes for testing (would be hours in real game)
+      startTime: effectiveNow, // Use the effective time with offset
+      durationMs: 1000 * 60 * 5, // 5 minutes for testing
       status: 'IN_PROGRESS'
     };
     

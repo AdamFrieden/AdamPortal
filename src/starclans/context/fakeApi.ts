@@ -56,7 +56,7 @@ class FakeApi {
       roster: startingGladiators as Gladiator[],
       researchTasks: [],
       lastRefresh: Date.now(),
-      timeTravelMs: 0,
+      debugTimeOffset: 0,
       resourcium: Math.random() * 100,
       rosterCapacity: 5,
       waiverWire: startingWaiverWire as Gladiator[]
@@ -69,28 +69,6 @@ class FakeApi {
       success: true
     }
   }
-
-  public timeTravel = async (timeToTravelMs: number): Promise<ApiResponse<ClientGameState>> => {
-    // try {
-    //   await mockApiBehavior();
-    // } catch {
-    //   return {
-    //     status: 500,
-    //     success: false
-    //   }
-    // }
-    
-    const persistedGameState = this.loadGameState();
-    const nextState = GameEngine.timeTravel(persistedGameState, timeToTravelMs, Date.now());
-    this.saveGameState(nextState);
-
-    return {
-      data: toClientGameState(nextState),
-      status: 200,
-      success: true
-    }
-  }
-
 
   public getClientGameState = async (): Promise<ApiResponse<ClientGameState>> => {
     //  first fake some api behavior with a delay and possible failure
@@ -135,6 +113,40 @@ class FakeApi {
       data: resultForClient,
       status: 200,
       success: true
+    }
+  }
+
+  public debugAddTimeOffset = async (offsetMs: number): Promise<ApiResponse<ClientGameState>> => {
+    try {
+      const persistedGameState = this.loadGameState();
+      
+      // Add to existing offset (or initialize if it doesn't exist)
+      const currentOffset = persistedGameState.debugTimeOffset || 0;
+      const newOffset = currentOffset + offsetMs;
+      
+      // Update the game state with the new offset
+      const updatedState = {
+        ...persistedGameState,
+        debugTimeOffset: newOffset
+      };
+      
+      // Save the updated state with the new offset
+      this.saveGameState(updatedState);
+      
+      // Run the normal game state update process to apply the new offset
+      const nextGameState = GameEngine.updateGameStateToNow(updatedState, Date.now());
+      this.saveGameState(nextGameState);
+      
+      return {
+        data: toClientGameState(nextGameState),
+        status: 200,
+        success: true
+      };
+    } catch (error) {
+      return {
+        status: 500,
+        success: false
+      };
     }
   }
 }
