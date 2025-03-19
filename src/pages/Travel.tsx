@@ -37,29 +37,11 @@ const Travel: React.FC = () => {
   const [filteredTrips, setFilteredTrips] = useState<Trip[]>([]);
   // State to control search results visibility
   const [showSearchResults, setShowSearchResults] = useState(false);
-  // State to control search bar expansion
-  const [isSearchExpanded, setIsSearchExpanded] = useState(true);
+  // State to control complete visibility of the search box
+  const [isSearchVisible, setIsSearchVisible] = useState(false);
 
   // State to hold the GeoJSON data for countries
   const [countriesGeoJson, setCountriesGeoJson] = useState<any>(null);
-
-  // Auto-collapse search on small screens
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth < 600) {
-        setIsSearchExpanded(false);
-      }
-    };
-    
-    // Initial check
-    handleResize();
-    
-    // Add event listener
-    window.addEventListener('resize', handleResize);
-    
-    // Cleanup
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
 
   // Fetch GeoJSON data for world countries on mount
   useEffect(() => {
@@ -157,10 +139,10 @@ const Travel: React.FC = () => {
     // Then handle map navigation
     focusMapTrip(trip);
     
-    // Clear the search
+    // Clear the search and hide the search panel
     setSearchTerm('');
     setShowSearchResults(false);
-    setIsSearchExpanded(false); // Collapse search after selection
+    setIsSearchVisible(false); // Hide search panel completely
   };
 
   // Reset the map view to its starting location and zoom level
@@ -203,223 +185,240 @@ const Travel: React.FC = () => {
 
   return (
     <Container sx={{ py: 0, my: 0, height: 'calc(100vh - 80px)', display: 'flex', flexDirection: 'column' }}>
-      {/* Search Box */}
-      <Box 
-        data-search-box
-        sx={{ 
-          position: 'sticky', 
-          top: 0, 
-          zIndex: 1050, 
-          py: 1, 
-          width: '100%',
-          flexShrink: 0,
-          bgcolor: 'background.paper',
-          boxShadow: 1,
-          borderRadius: 1,
-          display: 'flex',
-          flexDirection: 'column'
-        }}
-      >
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', px: 1 }}>
-          {isSearchExpanded ? (
-            <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>Search Trips</Typography>
-          ) : (
-            <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
-              {searchTerm ? `Results for: ${searchTerm}` : 'Search Trips'}
-            </Typography>
-          )}
-          <IconButton 
-            size="small" 
-            onClick={() => setIsSearchExpanded(!isSearchExpanded)}
-            aria-label={isSearchExpanded ? "Collapse search" : "Expand search"}
-          >
-            {isSearchExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-          </IconButton>
-        </Box>
-        
-        <Collapse in={isSearchExpanded} timeout="auto">
-          <Box sx={{ pt: 1, px: 1 }}>
-            <TextField
-              fullWidth
-              placeholder="Search destinations or countries..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon />
-                  </InputAdornment>
-                ),
-                endAdornment: searchTerm && (
-                  <InputAdornment position="end">
-                    <Button 
-                      size="small" 
-                      onClick={() => setSearchTerm('')}
-                      sx={{ minWidth: 'unset', p: 0.5 }}
-                    >
-                      <CloseIcon fontSize="small" />
-                    </Button>
-                  </InputAdornment>
-                ),
-              }}
-              sx={{ mb: 1 }}
-            />
-            <Collapse in={showSearchResults && filteredTrips.length > 0}>
-              <Paper elevation={3} sx={{ maxHeight: '300px', overflow: 'auto', mt: 1, mb: 2 }}>
-                <List dense>
-                  {filteredTrips.map(trip => (
-                    <ListItem 
-                      key={trip.id}
-                      onClick={() => handleSearchResultClick(trip)}
-                      sx={{ 
-                        borderBottom: '1px solid rgba(0, 0, 0, 0.12)',
-                        '&:last-child': { borderBottom: 'none' },
-                        cursor: 'pointer'
-                      }}
-                    >
-                      <ListItemText
-                        primary={trip.destination}
-                        secondary={`${trip.country} - ${trip.date}`}
-                      />
-                    </ListItem>
-                  ))}
-                </List>
-              </Paper>
-            </Collapse>
-            {searchTerm && filteredTrips.length === 0 && showSearchResults && (
-              <Typography variant="body2" color="text.secondary" sx={{ mt: 1, mb: 2 }}>
-                No destinations found matching your search.
-              </Typography>
-            )}
-          </Box>
-        </Collapse>
-      </Box>
-      
-      {/* Map Section - Reduced height */}
-      <Box sx={{ flexShrink: 0 }}>
-        <Paper sx={{ py: 0, my: 1 }}>
+      {/* Main content container with conditional spacing based on search visibility */}
+      <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
+        {/* Search Box */}
+        <Collapse in={isSearchVisible} timeout="auto">
           <Box 
-            sx={{
-              position: 'relative', // Changed from sticky to relative
-              height: '30vh', // Reduced from 35vh
-              zIndex: 10,
-              py: 0,
+            data-search-box
+            sx={{ 
+              position: 'relative', 
+              zIndex: 1050, 
+              py: 1, 
+              width: '100%',
+              bgcolor: 'background.paper',
+              boxShadow: 1,
+              borderRadius: 1,
+              mb: 1
             }}
           >
-            <Button variant="contained" color="primary" onClick={handleResetMap}
-              sx={{ 
-                position: 'absolute',
-                top: 16,
-                right: 16,
-                zIndex: 1000,
-                width: '5vw',
-                minWidth: '5vw'
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', px: 1 }}>
+              {/* <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>Search Trips</Typography> */}
+              {/* <IconButton 
+                size="small" 
+                onClick={() => setIsSearchVisible(false)}
+                aria-label="Hide search"
+              >
+                <CloseIcon />
+              </IconButton> */}
+            </Box>
+            
+            <Box sx={{ pt: 1, px: 1 }}>
+              <TextField
+                fullWidth
+                placeholder="Search destinations or countries..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon />
+                    </InputAdornment>
+                  ),
+                  endAdornment: searchTerm && (
+                    <InputAdornment position="end">
+                      <Button 
+                        size="small" 
+                        onClick={() => setSearchTerm('')}
+                        sx={{ minWidth: 'unset', p: 0.5 }}
+                      >
+                        <CloseIcon fontSize="small" />
+                      </Button>
+                    </InputAdornment>
+                  ),
+                }}
+                sx={{ mb: 1 }}
+              />
+              <Collapse in={showSearchResults && filteredTrips.length > 0}>
+                <Paper elevation={3} sx={{ maxHeight: '300px', overflow: 'auto', mt: 1, mb: 2 }}>
+                  <List dense>
+                    {filteredTrips.map(trip => (
+                      <ListItem 
+                        key={trip.id}
+                        onClick={() => handleSearchResultClick(trip)}
+                        sx={{ 
+                          borderBottom: '1px solid rgba(0, 0, 0, 0.12)',
+                          '&:last-child': { borderBottom: 'none' },
+                          cursor: 'pointer'
+                        }}
+                      >
+                        <ListItemText
+                          primary={trip.destination}
+                          secondary={`${trip.country} - ${trip.date}`}
+                        />
+                      </ListItem>
+                    ))}
+                  </List>
+                </Paper>
+              </Collapse>
+              {searchTerm && filteredTrips.length === 0 && showSearchResults && (
+                <Typography variant="body2" color="text.secondary" sx={{ mt: 1, mb: 2 }}>
+                  No destinations found matching your search.
+                </Typography>
+              )}
+            </Box>
+          </Box>
+        </Collapse>
+        
+        {/* Map Section - Reduced height */}
+        <Box sx={{ flexShrink: 0 }}>
+          <Paper sx={{ py: 0, my: 1 }}>
+            <Box 
+              sx={{
+                position: 'relative',
+                height: '30vh',
+                zIndex: 10,
+                py: 0,
               }}
             >
-              X
-            </Button>
-            <MapContainer
-              center={mapCenter}
-              zoom={initialZoom}
-              scrollWheelZoom={false}
-              style={{ height: '100%', width: '100%' }}
-              ref={mapRef as any}
-            >
-              {/* GeoJSON layer for country boundaries with visited shading */}
-              {countriesGeoJson && (
-                <GeoJSON data={countriesGeoJson} style={geoJsonStyle} />
-              )}
-              <TileLayer
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                keepBuffer={4}
-              />
-              {trips.map((trip: Trip) => (
-                <Marker
-                  key={trip.id}
-                  position={trip.position}
-                  ref={(ref) => {
-                    markerRefs.current[trip.id] = ref;
-                  }}
-                  eventHandlers={{
-                    click: () => {
-                      handleMarkerClick(trip.id);
-                    },
-                  }}
-                >
-                <Popup>
-                  <Typography variant="subtitle1" sx={{ margin: 0 }}>
+              {/* Reset Map Button */}
+              <Button 
+                variant="contained" 
+                color="primary" 
+                onClick={handleResetMap}
+                sx={{ 
+                  position: 'absolute',
+                  top: 16,
+                  right: 16,
+                  zIndex: 1000,
+                  width: '5vw',
+                  minWidth: '5vw'
+                }}
+              >
+                X
+              </Button>
+              
+              {/* New Search Toggle Button */}
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={() => setIsSearchVisible(!isSearchVisible)}
+                sx={{
+                  position: 'absolute',
+                  top: 70, // Positioned below the reset button
+                  right: 16, // Aligned with reset button
+                  zIndex: 1000,
+                  minWidth: 'unset',
+                  width: 'auto',
+                  px: 1
+                }}
+              >
+                {isSearchVisible ? <CloseIcon /> : <SearchIcon />}
+              </Button>
+              
+              <MapContainer
+                center={mapCenter}
+                zoom={initialZoom}
+                scrollWheelZoom={false}
+                style={{ height: '100%', width: '100%' }}
+                ref={mapRef as any}
+              >
+                {/* GeoJSON layer for country boundaries with visited shading */}
+                {countriesGeoJson && (
+                  <GeoJSON data={countriesGeoJson} style={geoJsonStyle} />
+                )}
+                <TileLayer
+                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  keepBuffer={4}
+                />
+                {trips.map((trip: Trip) => (
+                  <Marker
+                    key={trip.id}
+                    position={trip.position}
+                    ref={(ref) => {
+                      markerRefs.current[trip.id] = ref;
+                    }}
+                    eventHandlers={{
+                      click: () => {
+                        handleMarkerClick(trip.id);
+                      },
+                    }}
+                  >
+                  <Popup>
+                    <Typography variant="subtitle1" sx={{ margin: 0 }}>
+                      {trip.destination}
+                    </Typography>
+
+                    {trip.photoUrls.length > 0 && (
+                      <Box>
+                        {trip.photoUrls.map((url, index) => (
+                          // Override default Typography margin here
+                          <Typography key={index} variant="body2" sx={{ margin: '0 !important', padding: 0 }}>
+                            <a href={url} target="_blank" rel="noopener noreferrer">
+                              Photos
+                            </a>
+                          </Typography>
+                        ))}
+                      </Box>
+                    )}
+                  </Popup>
+                  </Marker>
+                ))}
+              </MapContainer>
+            </Box>
+          </Paper>
+        </Box>
+        
+        {/* Timeline Section - Take remaining space */}
+        <Box 
+          data-timeline-container
+          sx={{ 
+            flexGrow: 1, 
+            overflow: 'auto',
+            my: 0,
+            display: 'flex',
+            flexDirection: 'column'
+          }}
+        >
+          <Timeline
+            sx={{
+              [`& .${timelineOppositeContentClasses.root}`]: {
+                flex: 0.2,
+              },
+              flexGrow: 1
+            }}
+            position="right">
+            {[...trips].reverse().map((trip) => (
+              <TimelineItem
+                key={trip.id}
+                id={`timeline-${trip.id}`}
+                onClick={() => handleTimelineClick(trip)}
+                sx={{
+                  cursor: 'pointer',
+                  backgroundColor: activeTripId === trip.id ? 'rgba(113, 168, 209, 0.2)' : 'inherit',
+                  borderRadius: 1,
+                  my: 1,
+                  '&:hover': { backgroundColor: 'rgba(200,200,200,0.2)' },
+                }}
+              >
+                <TimelineOppositeContent sx={{ flex: 0.3, m: 'auto 0' }} color="primary">
+                  {trip.date}
+                </TimelineOppositeContent>
+                <TimelineSeparator>
+                  <TimelineDot color="secondary" />
+                  <TimelineConnector />
+                </TimelineSeparator>
+                <TimelineContent sx={{ py: '10px', px: 2 }}>
+                  <Typography variant="h6" component="span">
                     {trip.destination}
                   </Typography>
-
-                  {trip.photoUrls.length > 0 && (
-                    <Box>
-                      {trip.photoUrls.map((url, index) => (
-                        // Override default Typography margin here
-                        <Typography key={index} variant="body2" sx={{ margin: '0 !important', padding: 0 }}>
-                          <a href={url} target="_blank" rel="noopener noreferrer">
-                            Photos
-                          </a>
-                        </Typography>
-                      ))}
-                    </Box>
-                  )}
-                </Popup>
-                </Marker>
-              ))}
-            </MapContainer>
-          </Box>
-        </Paper>
-      </Box>
-      
-      {/* Timeline Section - Take remaining space */}
-      <Box 
-        data-timeline-container
-        sx={{ 
-          flexGrow: 1, 
-          overflow: 'auto',
-          my: 0,
-          display: 'flex',
-          flexDirection: 'column'
-        }}
-      >
-        <Timeline
-          sx={{
-            [`& .${timelineOppositeContentClasses.root}`]: {
-              flex: 0.2,
-            },
-            flexGrow: 1
-          }}
-          position="right">
-          {[...trips].reverse().map((trip) => (
-            <TimelineItem
-              key={trip.id}
-              id={`timeline-${trip.id}`}
-              onClick={() => handleTimelineClick(trip)}
-              sx={{
-                cursor: 'pointer',
-                backgroundColor: activeTripId === trip.id ? 'rgba(113, 168, 209, 0.2)' : 'inherit',
-                borderRadius: 1,
-                my: 1,
-                '&:hover': { backgroundColor: 'rgba(200,200,200,0.2)' },
-              }}
-            >
-              <TimelineOppositeContent sx={{ flex: 0.3, m: 'auto 0' }} color="primary">
-                {trip.date}
-              </TimelineOppositeContent>
-              <TimelineSeparator>
-                <TimelineDot color="secondary" />
-                <TimelineConnector />
-              </TimelineSeparator>
-              <TimelineContent sx={{ py: '10px', px: 2 }}>
-                <Typography variant="h6" component="span">
-                  {trip.destination}
-                </Typography>
-                <Typography>{trip.description}</Typography>
-              </TimelineContent>
-            </TimelineItem>
-          ))}
-        </Timeline>
+                  <Typography>{trip.description}</Typography>
+                </TimelineContent>
+              </TimelineItem>
+            ))}
+          </Timeline>
+        </Box>
       </Box>
     </Container>
   );
