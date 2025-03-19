@@ -1,6 +1,8 @@
 // TravelPage.tsx
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { Box, Button, Container, Paper, Typography } from '@mui/material';
+import { Box, Button, Container, Paper, Typography, TextField, InputAdornment, List, ListItem, ListItemText, Collapse } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
+import CloseIcon from '@mui/icons-material/Close';
 import {
   Timeline,
   TimelineItem,
@@ -27,6 +29,12 @@ const Travel: React.FC = () => {
   const mapRef = useRef<LeafletMap | null>(null);
   // Ref to hold marker references, keyed by trip id
   const markerRefs = useRef<Record<number, LeafletMarker | null>>({});
+  // State for search input
+  const [searchTerm, setSearchTerm] = useState('');
+  // State for filtered trips based on search
+  const [filteredTrips, setFilteredTrips] = useState<Trip[]>([]);
+  // State to control search results visibility
+  const [showSearchResults, setShowSearchResults] = useState(false);
 
   // State to hold the GeoJSON data for countries
   const [countriesGeoJson, setCountriesGeoJson] = useState<any>(null);
@@ -39,8 +47,27 @@ const Travel: React.FC = () => {
       .catch((err) => console.error('Error fetching countries GeoJSON', err));
   }, []);
 
-  // Handler for when a marker is clicked: highlight the timeline entry.
-  const handleMarkerClick = (tripId: number) => {
+  // Effect for filtering trips based on search term
+  useEffect(() => {
+    if (!searchTerm.trim()) {
+      setFilteredTrips([]);
+      setShowSearchResults(false);
+      return;
+    }
+
+    const searchTermLower = searchTerm.toLowerCase();
+    const results = trips.filter(trip => 
+      trip.destination.toLowerCase().includes(searchTermLower) || 
+      trip.description.toLowerCase().includes(searchTermLower) ||
+      trip.country.toLowerCase().includes(searchTermLower)
+    );
+    
+    setFilteredTrips(results);
+    setShowSearchResults(true);
+  }, [searchTerm]);
+
+  // Common function to focus and highlight a trip in the timeline
+  const focusTimelineTrip = (tripId: number) => {
     setActiveTripId(tripId);
     const timelineElement = document.getElementById(`timeline-${tripId}`);
     if (timelineElement) {
@@ -48,23 +75,48 @@ const Travel: React.FC = () => {
     }
   };
 
-  // Handler for when a timeline entry is clicked: zoom in, center the map on the location, and open the marker popup.
-  const handleTimelineClick = (trip: Trip) => {
-    setActiveTripId(trip.id);
+  // Common function to navigate to a trip on the map
+  const focusMapTrip = (trip: Trip) => {
+    // Fly to the trip's position on the map
     if (mapRef.current) {
-
       const offsetLat = 3;
       // Cast to a number tuple
       const [lat, lng] = trip.position as [number, number];
       const newCenter: LatLngExpression = [lat + offsetLat, lng];
 
-      // Fly to the trip's position with a higher zoom (e.g., zoom level 8)
+      // Fly to the trip's position with a higher zoom
       mapRef.current.flyTo(newCenter, 4, { duration: 1.5 });
     }
+    
+    // Open the marker popup
     const marker = markerRefs.current[trip.id];
     if (marker) {
       marker.openPopup();
     }
+  };
+
+  // Handler for when a marker is clicked: highlight the timeline entry.
+  const handleMarkerClick = (tripId: number) => {
+    focusTimelineTrip(tripId);
+  };
+
+  // Handler for when a timeline entry is clicked: zoom in, center the map on the location, and open the marker popup.
+  const handleTimelineClick = (trip: Trip) => {
+    focusTimelineTrip(trip.id);
+    focusMapTrip(trip);
+  };
+
+  // Handler for when a search result is clicked
+  const handleSearchResultClick = (trip: Trip) => {
+    // First focus the timeline element
+    focusTimelineTrip(trip.id);
+    
+    // Then handle map navigation
+    focusMapTrip(trip);
+    
+    // Clear the search
+    setSearchTerm('');
+    setShowSearchResults(false);
   };
 
   // Reset the map view to its starting location and zoom level
@@ -107,6 +159,62 @@ const Travel: React.FC = () => {
 
   return (
       <Container sx={{ py: 0, my: 0 }}>
+        {/* Search Box */}
+        <Box sx={{ position: 'sticky', top: 0, zIndex: 1050, py: 2, width: '100%' }}>
+          <TextField
+            fullWidth
+            placeholder="Search destinations or countries..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+              endAdornment: searchTerm && (
+                <InputAdornment position="end">
+                  <Button 
+                    size="small" 
+                    onClick={() => setSearchTerm('')}
+                    sx={{ minWidth: 'unset', p: 0.5 }}
+                  >
+                    <CloseIcon fontSize="small" />
+                  </Button>
+                </InputAdornment>
+              ),
+            }}
+            sx={{ mb: 1 }}
+          />
+          <Collapse in={showSearchResults && filteredTrips.length > 0}>
+            <Paper elevation={3} sx={{ maxHeight: '300px', overflow: 'auto', mt: 1, mb: 2 }}>
+              <List dense>
+                {filteredTrips.map(trip => (
+                  <ListItem 
+                    key={trip.id}
+                    onClick={() => handleSearchResultClick(trip)}
+                    sx={{ 
+                      borderBottom: '1px solid rgba(0, 0, 0, 0.12)',
+                      '&:last-child': { borderBottom: 'none' },
+                      cursor: 'pointer'
+                    }}
+                  >
+                    <ListItemText
+                      primary={trip.destination}
+                      secondary={`${trip.country} - ${trip.date}`}
+                    />
+                  </ListItem>
+                ))}
+              </List>
+            </Paper>
+          </Collapse>
+          {searchTerm && filteredTrips.length === 0 && showSearchResults && (
+            <Typography variant="body2" color="text.secondary" sx={{ mt: 1, mb: 2 }}>
+              No destinations found matching your search.
+            </Typography>
+          )}
+        </Box>
+        
         {/* Map Section */}
         <Paper sx={{ py: 0, my: 0 }}>
         <Box 

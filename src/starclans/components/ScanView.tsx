@@ -21,13 +21,13 @@ import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import DiamondIcon from '@mui/icons-material/Diamond';
 
 import useStarclanGameStore from '../context/useStarclanGameStore';
-import useStarclanUIStore from '../context/useStarclanUIStore';
+// import useStarclanUIStore from '../context/useStarclanUIStore';
 import { ACTION_TYPES, ScanResult } from '../domain/models';
 
 const ScanView = () => {
   const gameState = useStarclanGameStore((state) => state.gameState);
   const attemptPlayerAction = useStarclanGameStore((state) => state.attemptPlayerAction);
-  const isApiProcessing = useStarclanUIStore((state) => state.isApiProcessing);
+  // const isApiProcessing = useStarclanUIStore((state) => state.isApiProcessing);
   const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
   const [progress, setProgress] = useState<number>(0);
 
