@@ -1,10 +1,9 @@
 // TravelPage.tsx
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { Box, Button, Container, Paper, Typography, TextField, InputAdornment, List, ListItem, ListItemText, Collapse, IconButton } from '@mui/material';
+import { Box, Button, Container, Paper, Typography, TextField, InputAdornment, List, ListItem, ListItemText, Collapse, IconButton, Tooltip } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import RefreshIcon from '@mui/icons-material/Refresh';
 import {
   Timeline,
   TimelineItem,
@@ -31,6 +30,8 @@ const Travel: React.FC = () => {
   const mapRef = useRef<LeafletMap | null>(null);
   // Ref to hold marker references, keyed by trip id
   const markerRefs = useRef<Record<number, LeafletMarker | null>>({});
+  // Ref for search input field
+  const searchInputRef = useRef<HTMLInputElement>(null);
   // State for search input
   const [searchTerm, setSearchTerm] = useState('');
   // State for filtered trips based on search
@@ -69,6 +70,16 @@ const Travel: React.FC = () => {
     setFilteredTrips(results);
     setShowSearchResults(true);
   }, [searchTerm]);
+
+  // Focus search input when search becomes visible
+  useEffect(() => {
+    if (isSearchVisible && searchInputRef.current) {
+      // Short timeout to ensure the collapse animation has started
+      setTimeout(() => {
+        searchInputRef.current?.focus();
+      }, 100);
+    }
+  }, [isSearchVisible]);
 
   // Common function to focus and highlight a trip in the timeline
   const focusTimelineTrip = (tripId: number) => {
@@ -202,17 +213,6 @@ const Travel: React.FC = () => {
               mb: 1
             }}
           >
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', px: 1 }}>
-              {/* <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>Search Trips</Typography> */}
-              {/* <IconButton 
-                size="small" 
-                onClick={() => setIsSearchVisible(false)}
-                aria-label="Hide search"
-              >
-                <CloseIcon />
-              </IconButton> */}
-            </Box>
-            
             <Box sx={{ pt: 1, px: 1 }}>
               <TextField
                 fullWidth
@@ -238,6 +238,7 @@ const Travel: React.FC = () => {
                   ),
                 }}
                 sx={{ mb: 1 }}
+                inputRef={searchInputRef}
               />
               <Collapse in={showSearchResults && filteredTrips.length > 0}>
                 <Paper elevation={3} sx={{ maxHeight: '300px', overflow: 'auto', mt: 1, mb: 2 }}>
@@ -281,40 +282,49 @@ const Travel: React.FC = () => {
                 py: 0,
               }}
             >
-              {/* Reset Map Button */}
-              <Button 
-                variant="contained" 
-                color="primary" 
-                onClick={handleResetMap}
-                sx={{ 
-                  position: 'absolute',
-                  top: 16,
-                  right: 16,
-                  zIndex: 1000,
-                  width: '5vw',
-                  minWidth: '5vw'
-                }}
-              >
-                X
-              </Button>
+              {/* Map Control Buttons - Consistent Styling */}
+              <Tooltip title="Reset map view">
+                <Button 
+                  variant="contained" 
+                  color="primary" 
+                  onClick={handleResetMap}
+                  aria-label="Reset map view"
+                  sx={{ 
+                    position: 'absolute',
+                    top: 16,
+                    right: 16,
+                    zIndex: 1000,
+                    minWidth: 40,
+                    width: 40,
+                    height: 40,
+                    p: 0
+                  }}
+                >
+                  <RefreshIcon />
+                </Button>
+              </Tooltip>
               
               {/* New Search Toggle Button */}
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={() => setIsSearchVisible(!isSearchVisible)}
-                sx={{
-                  position: 'absolute',
-                  top: 70, // Positioned below the reset button
-                  right: 16, // Aligned with reset button
-                  zIndex: 1000,
-                  minWidth: 'unset',
-                  width: 'auto',
-                  px: 1
-                }}
-              >
-                {isSearchVisible ? <CloseIcon /> : <SearchIcon />}
-              </Button>
+              <Tooltip title={isSearchVisible ? "Hide search" : "Search trips"}>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={() => setIsSearchVisible(!isSearchVisible)}
+                  aria-label={isSearchVisible ? "Hide search" : "Search trips"}
+                  sx={{
+                    position: 'absolute',
+                    top: 70, // Positioned below the reset button
+                    right: 16, // Aligned with reset button
+                    zIndex: 1000,
+                    minWidth: 40,
+                    width: 40,
+                    height: 40,
+                    p: 0
+                  }}
+                >
+                  {isSearchVisible ? <CloseIcon /> : <SearchIcon />}
+                </Button>
+              </Tooltip>
               
               <MapContainer
                 center={mapCenter}
