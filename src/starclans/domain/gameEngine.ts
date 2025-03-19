@@ -1,5 +1,19 @@
 // src/domain/gameEngine.ts
-import { PlayerAction, GameState, PlayerActionResult, ResearchTask, Gladiator, GladiatorStatus, DropGladiatorAction, TrainGladiatorAction, RestGladiatorAction, RecruitGladiatorAction, ACTION_TYPES, NetworkScan, ScanResult } from './models';
+import {
+  PlayerAction,
+  GameState,
+  PlayerActionResult,
+  ResearchTask,
+  Gladiator,
+  GladiatorStatus,
+  DropGladiatorAction,
+  TrainGladiatorAction,
+  RestGladiatorAction,
+  RecruitGladiatorAction,
+  ACTION_TYPES,
+  StellarScan,
+  ScanResult
+} from './models';
 
 //  this should not maintain any state. use all pure functions that have no side effects.
 //  state changes are always returned as a  new state object without mutating inputs.
@@ -58,7 +72,7 @@ export class GameEngine {
         nextState = GameEngine.updateGladiatorStatus(nextState, gladiatorId, 'RESTING');
         break;
       case ACTION_TYPES.START_SCAN:
-        nextState = GameEngine.startNetworkScan(nextState, now);
+        nextState = GameEngine.startStellarScan(nextState, now);
         break;
       default:
         // Optionally handle unexpected action types
@@ -69,7 +83,7 @@ export class GameEngine {
     return { state: nextState, actionSuccess: true };
   }
 
-  private static updateActiveScan(scan: NetworkScan | undefined, now: number): NetworkScan | undefined {
+  private static updateActiveScan(scan: StellarScan | undefined, now: number): StellarScan | undefined {
     if (!scan || scan.status !== 'IN_PROGRESS') {
       return scan;
     }
@@ -89,6 +103,7 @@ export class GameEngine {
   }
 
   // Generate random scan results
+  // eventually we want these scan results to be interactive and require gladiator engagement to 'use' once they've resolved
   private static generateScanResults(): ScanResult[] {
     const resultTypes = ['opportunity', 'threat', 'resource'];
     const numResults = 1 + Math.floor(Math.random() * 3); // 1-3 results
@@ -99,7 +114,7 @@ export class GameEngine {
       results.push({
         id: crypto.randomUUID(),
         type,
-        description: `Found a ${type} in the network.`,
+        description: `Found a ${type} in the stellar region.`,
         reward: type === 'resource' ? `${Math.floor(Math.random() * 100)} resourcium` : undefined
       });
     }
@@ -107,7 +122,7 @@ export class GameEngine {
     return results;
   }
 
-  private static startNetworkScan(state: GameState, now: number): GameState {
+  private static startStellarScan(state: GameState, now: number): GameState {
     // Check if there's already an active scan
     if (state.activeScan && state.activeScan.status === 'IN_PROGRESS') {
       return state; // Can't start a new scan while one is in progress
@@ -117,7 +132,7 @@ export class GameEngine {
     const effectiveNow = now + (state.debugTimeOffset || 0);
     
     // Create a new scan with the effective time
-    const newScan: NetworkScan = {
+    const newScan: StellarScan = {
       id: crypto.randomUUID(),
       startTime: effectiveNow, // Use the effective time with offset
       durationMs: 1000 * 60 * 5, // 5 minutes for testing

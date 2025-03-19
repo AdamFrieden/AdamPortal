@@ -135,19 +135,19 @@ const ScanView = () => {
         <Box sx={{ textAlign: 'center', my: 6 }}>
           <RadarIcon sx={{ fontSize: 60, color: 'primary.main', mb: 2 }} />
           <Typography variant="h6" mb={2}>
-            Network Scanner Ready
+            Stellar Scanner Ready
           </Typography>
           <Typography variant="body1" mb={4} color="text.secondary">
-            Scan the network to discover opportunities, threats, and resources.
+            Scan the stellar region to discover opportunities, threats, and resources.
           </Typography>
           <Button 
             variant="contained" 
             size="large"
             onClick={handleStartScan}
-            disabled={isApiProcessing || !gameState}
+            // disabled={isApiProcessing || !gameState}
             startIcon={<RadarIcon />}
           >
-            Start Network Scan
+            Start Stellar Scan
           </Button>
         </Box>
       );
@@ -180,7 +180,7 @@ const ScanView = () => {
             />
           </Box>
           <Alert severity="info" sx={{ mt: 4, maxWidth: 600, mx: 'auto' }}>
-            Your scanners are searching the network. Check back later to see what they find.
+            Your scanners are searching the stellar region. Check back later to see what they find.
           </Alert>
         </Box>
       );
@@ -214,7 +214,7 @@ const ScanView = () => {
 
   return (
     <Box sx={{ p: 3, maxWidth: 900, mx: 'auto' }}>
-      <Typography variant="h4" gutterBottom>Network Scanner</Typography>
+      <Typography variant="h4" gutterBottom>Stellar Scanner</Typography>
       <Typography variant="body1" color="text.secondary" paragraph>
         Use the scanner to detect opportunities and threats in the surrounding space.
       </Typography>
