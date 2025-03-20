@@ -1,6 +1,6 @@
 // TravelPage.tsx
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { Box, Button, Container, Paper, Typography, TextField, InputAdornment, List, ListItem, ListItemText, Collapse, IconButton, Tooltip } from '@mui/material';
+import { Box, Button, Container, Paper, Typography, TextField, InputAdornment, List, ListItem, ListItemText, Collapse, Tooltip } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
 import RefreshIcon from '@mui/icons-material/Refresh';
