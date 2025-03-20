@@ -18,7 +18,7 @@ export interface ScanResult {
   reward?: string;
 }
 
-export interface NetworkScan {
+export interface StellarScan {
   id: string;
   startTime: number;
   durationMs: number;
@@ -50,8 +50,8 @@ export interface GameState {
   roster: Gladiator[];
   rosterCapacity: number;
   waiverWire: Gladiator[];
-  activeScan?: NetworkScan; // Add active scan to the game state
-  scanHistory?: NetworkScan[]; // Add scan history
+  activeScan?: StellarScan; // Add active scan to the game state
+  scanHistory?: StellarScan[]; // Add scan history
   //  need some 'waiver wire' collection for available gladiators
 }
 
@@ -61,12 +61,18 @@ export type ClientGameState = Omit<GameState, 'roster'> & {
 
 export type ClientGladiator = Omit<Gladiator, 'truePower' | 'hiddenTraits'>
 
+// translate full Gladiator objects used by the gameEngine to a ClientGladiator object used by the UI
+// make sure to hide truePower and hiddenTraits from the client
 export function toClientGladiator(gladiator: Gladiator): ClientGladiator {
   // Use object destructuring to remove 'truePower'
   const { truePower, hiddenTraits, ...clientGladiator } = gladiator;
   return clientGladiator;
 }
 
+
+
+// function for translating a full GameState used by the gameEngine into a ClientGameState used by the UI
+// this separation serves to only expose certain aspects of the game to the frontend
 export function toClientGameState(state: GameState): ClientGameState {
   return {
     // Spread the original state but override 'gladiators'
@@ -102,7 +108,7 @@ export interface PlayerActionResult<T extends GameState | ClientGameState> {
     REST_GLADIATOR: 'REST_GLADIATOR',
     TRAIN_GLADIATOR: 'TRAIN_GLADIATOR',
     RECRUIT_GLADIATOR: 'RECRUIT_GLADIATOR',
-    START_SCAN: 'START_SCAN', // Add scan action type
+    START_SCAN: 'START_SCAN', // Initiate a stellar scan
   } as const;
 
 //  keep player action extremely minimal - eventually pass these over the wire so they can be consumed by the real gameEngine in AWS.
@@ -141,7 +147,7 @@ export interface RecruitGladiatorAction extends PlayerGladiatorAction {
   type: typeof ACTION_TYPES.RECRUIT_GLADIATOR;
 }
 
-export interface StartScanAction extends BasePlayerAction {
+export interface StartStellarScanAction extends BasePlayerAction {
   type: typeof ACTION_TYPES.START_SCAN;
 }
 
@@ -151,7 +157,7 @@ export type PlayerAction = StartResearchAction
   | RestGladiatorAction 
   | TrainGladiatorAction
   | RecruitGladiatorAction
-  | StartScanAction
+  | StartStellarScanAction
 
 
 
