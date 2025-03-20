@@ -24,7 +24,6 @@ interface MapSectionProps {
 
 const MapSection: React.FC<MapSectionProps> = ({
   trips,
-  activeTripId,
   visitedCountries,
   mapRef,
   markerRefs,

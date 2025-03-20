@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { TravelData, Trip } from '../../TravelData';
+import { TravelData } from '../../TravelData';
 
 export function useTripData() {
   // Get all trips from the data
