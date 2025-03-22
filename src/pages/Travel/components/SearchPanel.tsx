@@ -27,7 +27,6 @@ interface SearchPanelProps {
 
 const SearchPanel: React.FC<SearchPanelProps> = ({ 
   isVisible, 
-  trips, 
   searchTerm,
   setSearchTerm,
   filteredTrips,

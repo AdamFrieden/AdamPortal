@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Container, Box } from '@mui/material';
 import { Trip } from '../TravelData';
 import { useMapNavigation } from './hooks/useMapNavigation';
@@ -7,6 +7,7 @@ import { useTripData } from './hooks/useTripData';
 import SearchPanel from './components/SearchPanel';
 import MapSection from './components/MapSection';
 import TripTimeline from './components/TripTimeline';
+import { useTimelineNavigation } from './hooks/useTimelineNavigation';
 
 const Travel: React.FC = () => {
   // Get trip data
@@ -36,6 +37,9 @@ const Travel: React.FC = () => {
     clearSearch 
   } = useSearchFeature(trips);
   
+  // Timeline navigation functionality
+  const { focusTimelineTrip } = useTimelineNavigation();
+  
   // Handler for timeline item clicks
   const handleTripClick = useCallback((trip: Trip) => {
     setActiveTripId(trip.id);
@@ -45,11 +49,13 @@ const Travel: React.FC = () => {
   // Handler for marker clicks
   const handleMarkerClick = useCallback((tripId: number) => {
     setActiveTripId(tripId);
-  }, []);
+    focusTimelineTrip(tripId);
+  }, [focusTimelineTrip]);
   
   // Handler for search result clicks
   const handleSearchResultClick = useCallback((trip: Trip) => {
     handleTripClick(trip);
+    focusTimelineTrip(trip.id);
     clearSearch();
   }, [handleTripClick, clearSearch]);
   
