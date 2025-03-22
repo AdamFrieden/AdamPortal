@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { 
   Box, 
   TextField, 
@@ -14,22 +14,37 @@ import {
 import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
 import { Trip } from '../../TravelData';
-import { useSearchFeature } from '../hooks/useSearchFeature';
 
 interface SearchPanelProps {
   isVisible: boolean;
   trips: Trip[];
+  searchTerm: string;
+  setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
+  filteredTrips: Trip[];
+  showSearchResults: boolean;
   onResultClick: (trip: Trip) => void;
 }
 
-const SearchPanel: React.FC<SearchPanelProps> = ({ isVisible, trips, onResultClick }) => {
-  const { 
-    searchInputRef,
-    searchTerm, 
-    setSearchTerm, 
-    filteredTrips, 
-    showSearchResults
-  } = useSearchFeature(trips);
+const SearchPanel: React.FC<SearchPanelProps> = ({ 
+  isVisible, 
+  trips, 
+  searchTerm,
+  setSearchTerm,
+  filteredTrips,
+  showSearchResults,
+  onResultClick 
+}) => {
+  // Create a ref for the input field
+  const inputRef = useRef<HTMLInputElement>(null);
+  
+  // Focus the input when panel becomes visible
+  useEffect(() => {
+    if (isVisible && inputRef.current) {
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 100);
+    }
+  }, [isVisible]);
 
   return (
     <Collapse in={isVisible} timeout="auto">
@@ -70,7 +85,7 @@ const SearchPanel: React.FC<SearchPanelProps> = ({ isVisible, trips, onResultCli
               ),
             }}
             sx={{ mb: 1 }}
-            inputRef={searchInputRef}
+            inputRef={inputRef}
           />
           <Collapse in={showSearchResults && filteredTrips.length > 0}>
             <Paper elevation={3} sx={{ maxHeight: '300px', overflow: 'auto', mt: 1, mb: 2 }}>

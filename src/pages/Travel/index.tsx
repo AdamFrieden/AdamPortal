@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { Container, Box } from '@mui/material';
 import { Trip } from '../TravelData';
 import { useMapNavigation } from './hooks/useMapNavigation';
@@ -27,8 +27,12 @@ const Travel: React.FC = () => {
   
   // Search functionality
   const { 
-    isSearchVisible, 
-    toggleSearchVisibility, 
+    searchTerm, 
+    setSearchTerm, 
+    filteredTrips, 
+    showSearchResults,
+    isSearchVisible,
+    toggleSearchVisibility,
     clearSearch 
   } = useSearchFeature(trips);
   
@@ -69,9 +73,13 @@ const Travel: React.FC = () => {
         height: '100%'  // Ensure this takes full height 
       }}>
         <SearchPanel 
-          isVisible={isSearchVisible} 
+          isVisible={isSearchVisible}
           trips={trips}
-          onResultClick={handleSearchResultClick} 
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          filteredTrips={filteredTrips}
+          showSearchResults={showSearchResults}
+          onResultClick={handleSearchResultClick}
         />
         
         <MapSection 

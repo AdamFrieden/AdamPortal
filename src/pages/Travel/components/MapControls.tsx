@@ -18,7 +18,7 @@ const MapControls: React.FC<MapControlsProps> = ({
   return (
     <>
       {/* Reset Map Button */}
-      <Tooltip title="Reset map view">
+      <Tooltip title="Reset map view" placement="left">
         <Button 
           variant="contained" 
           color="primary" 
@@ -40,7 +40,7 @@ const MapControls: React.FC<MapControlsProps> = ({
       </Tooltip>
       
       {/* Search Toggle Button */}
-      <Tooltip title={isSearchVisible ? "Hide search" : "Search trips"}>
+      <Tooltip title={isSearchVisible ? "Hide search" : "Search trips"} placement="left">
         <Button
           variant="contained"
           color="secondary"
