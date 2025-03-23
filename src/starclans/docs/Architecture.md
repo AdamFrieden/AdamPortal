@@ -3,12 +3,12 @@
 ## 1. Architectural Overview
 
 ### Core Design Philosophy
-StarClans is designed as a single-player game with client-side simulation, built with the architecture to eventually support server-side authority. The game uses a time-based progression system where game state evolves based on elapsed real-world time.
+StarClans is designed as a single-player game with client-side simulation, built with the architecture to eventually support server-side authority and multi-player features. The game uses a time-based progression system where game state evolves based on elapsed real-world time.
 
 ### High-level Structure
 - **Domain Layer**: Contains the game logic, models, and pure functions that define how the game state changes
 - **API Layer**: Simulates a real backend service with artificial latency and occasional failures
-- **State Management**: Zustand stores that separate game state from UI state
+- **State Management**: Zustand stores that separate game state from UI state and allow state management across the app
 - **Component Layer**: React components that render the game UI based on the current state
 
 ## 2. Key Architectural Components
@@ -34,6 +34,8 @@ The FakeApi service simulates a real-world API with:
 
 All game state changes must flow through this layer, maintaining a clean architecture that can later be connected to a real backend.
 
+Only part of game state is exposed to the front-end client UI. Certain information is hidden for game specific mechanics (hidden information) as well as to prevent client-side hacking of sensitive values.
+
 ### State Management (Zustand)
 State is managed through two separate Zustand stores:
 
@@ -42,18 +44,15 @@ State is managed through two separate Zustand stores:
 - Handles interactions with the API layer
 - Provides methods for game actions (training gladiators, research, etc.)
 - Computes derived game state values
-- Maintains game save status
 
 #### useStarclanUIStore
 - Manages UI-specific state (loading indicators, panel visibility)
 - Handles error messages and UI feedback
 - Keeps UI concerns separate from game logic
-- Controls debug features and panels
 
 ### State Access Pattern
 Components interact with state using these patterns:
 - **Selective Subscription**: Components access state via Zustand store selectors, subscribing only to specific pieces of state they need
-- **Inline Selectors**: Selectors are defined inline within components using the store's selector pattern for better code locality
 - **Minimal Re-renders**: By subscribing to only the needed state, components minimize unnecessary re-renders
 - **Direct Action Access**: Action methods are accessed directly from the store, not passed down through props
 - **Shared State**: Multiple components can access the same state without prop drilling
@@ -85,7 +84,7 @@ const GameView = () => {
 5. API calls GameEngine to compute new state
 6. GameEngine applies action and returns new immutable state
 7. API persists new state to localStorage
-8. API returns new client state to the store
+8. API translate game state to client game state and returns it to the store
 9. Store updates its state, triggering UI re-renders
 
 ### State Refresh Cycle
@@ -143,15 +142,7 @@ The separation between GameState and ClientGameState is a fundamental architectu
 - Player actions are validated before being applied
 - Debug time offsets allow for testing time-based mechanics
 
-## 5. Content Generation
-
-### ContentFactory
-- Provides procedurally generated game content
-- Creates random gladiators with balanced attributes
-- Future expansion point for more diverse content generation
-- Isolates content creation logic from game mechanics
-
-## 6. Development Tools
+## 5. Development Tools
 
 ### Debug Panel
 - Allows manipulation of game time for testing
@@ -164,7 +155,7 @@ The separation between GameState and ClientGameState is a fundamental architectu
 - Useful for testing long-running processes like research
 - Maintains game balance by affecting all time-based systems consistently
 
-## 7. Migration Path to Production
+## 6. Migration Path to Production
 
 ### Replacing Fake API
 To transition to a real backend:
@@ -173,20 +164,14 @@ To transition to a real backend:
 3. Add proper authentication and security
 4. Replace FakeApi implementation while maintaining the same interface
 
-### Additional Production Considerations
-- Server-side validation to prevent cheating
-- Anti-tamper measures for client-side code
-- Optimistic UI updates with server verification
-- Proper error handling for network failures
-
-## 8. Folder Structure
+## 7. Folder Structure
 
 - **/domain**: Game logic, models, and state transition rules
 - **/components**: React UI components
 - **/context**: Zustand stores and API service
 - **/docs**: Documentation including this architecture overview
 
-## 9. Key Development Principles
+## 8. Key Development Principles
 
 ### Maintain Pure Functions
 - GameEngine methods should remain pure and side-effect free
@@ -203,7 +188,7 @@ To transition to a real backend:
 - Mock API responses for component testing
 - Use debug tools to test time-based mechanics
 
-## 10. Future Expansion Considerations
+## 9. Future Expansion Considerations
 
 - Multiplayer interactions
 - Persistent server-side state
