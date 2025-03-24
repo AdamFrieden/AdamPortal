@@ -12,7 +12,8 @@ import {
   RecruitGladiatorAction,
   ACTION_TYPES,
   StellarScan,
-  ScanResult
+  ScanResult,
+  AssignGladiatorsAction
 } from './models';
 
 //  this should not maintain any state. use all pure functions that have no side effects.
@@ -73,6 +74,10 @@ export class GameEngine {
         break;
       case ACTION_TYPES.START_SCAN:
         nextState = GameEngine.startStellarScan(nextState, now);
+        break;
+      case ACTION_TYPES.ASSIGN_GLADIATORS:
+        const assignAction = action as AssignGladiatorsAction;
+        nextState = GameEngine.assignGladiatorsToEvent(nextState, assignAction.eventId, assignAction.gladiatorIds, now);
         break;
       default:
         // Optionally handle unexpected action types
@@ -240,5 +245,74 @@ export class GameEngine {
       g.id === gladiatorId ? { ...g, status: newStatus } : g
     ) ?? [];
     return { ...state, roster: updatedRoster };
+  }
+
+  private static assignGladiatorsToEvent(
+    state: GameState,
+    eventId: string,
+    gladiatorIds: string[],
+    now: number
+  ): GameState {
+    // First, find the event in the active scan or scan history
+    let event: ScanResult | undefined;
+    let eventFound = false;
+    
+    // Check active scan
+    if (state.activeScan?.results) {
+      event = state.activeScan.results.find(r => r.id === eventId);
+      if (event) {
+        eventFound = true;
+      }
+    }
+    
+    // Check scan history if not found in active scan
+    if (!eventFound && state.scanHistory) {
+      for (const scan of state.scanHistory) {
+        if (scan.results) {
+          event = scan.results.find(r => r.id === eventId);
+          if (event) {
+            eventFound = true;
+            break;
+          }
+        }
+      }
+    }
+    
+    // If event not found, return state unchanged
+    if (!eventFound) {
+      return state;
+    }
+    
+    // Update gladiators in the roster to CONFLICT status
+    const updatedRoster = state.roster.map(gladiator => {
+      if (gladiatorIds.includes(gladiator.id)) {
+        return {
+          ...gladiator,
+          status: 'CONFLICT' as GladiatorStatus,
+          lastRefresh: now
+        };
+      }
+      return gladiator;
+    });
+    
+    // For now, just update the roster with the new statuses
+    // In a real implementation, you would add more game logic here:
+    // - Record the assignment in the state
+    // - Start a timer for the event resolution
+    // - Add rewards calculation
+    // - etc.
+    
+    return {
+      ...state,
+      roster: updatedRoster,
+      // In a full implementation, you could add:
+      // activeEvents: [...(state.activeEvents || []), { 
+      //   eventId, 
+      //   gladiatorIds,
+      //   startTime: now,
+      //   duration: calculateEventDuration(event),
+      //   status: 'IN_PROGRESS'
+      // }]
+    };
   }
 }

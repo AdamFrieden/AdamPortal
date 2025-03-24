@@ -109,6 +109,7 @@ export interface PlayerActionResult<T extends GameState | ClientGameState> {
     TRAIN_GLADIATOR: 'TRAIN_GLADIATOR',
     RECRUIT_GLADIATOR: 'RECRUIT_GLADIATOR',
     START_SCAN: 'START_SCAN', // Initiate a stellar scan
+    ASSIGN_GLADIATORS: 'ASSIGN_GLADIATORS', // Assign gladiators to an event
   } as const;
 
 //  keep player action extremely minimal - eventually pass these over the wire so they can be consumed by the real gameEngine in AWS.
@@ -151,6 +152,12 @@ export interface StartStellarScanAction extends BasePlayerAction {
   type: typeof ACTION_TYPES.START_SCAN;
 }
 
+export interface AssignGladiatorsAction extends BasePlayerAction {
+  type: typeof ACTION_TYPES.ASSIGN_GLADIATORS;
+  eventId: string;
+  gladiatorIds: string[];
+}
+
 export type PlayerAction = StartResearchAction 
   | CancelResearchAction 
   | DropGladiatorAction 
@@ -158,6 +165,7 @@ export type PlayerAction = StartResearchAction
   | TrainGladiatorAction
   | RecruitGladiatorAction
   | StartStellarScanAction
+  | AssignGladiatorsAction
 
 
 

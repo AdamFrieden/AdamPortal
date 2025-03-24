@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { 
   Box, 
   Typography, 
@@ -13,7 +13,11 @@ import {
   LinearProgress,
   Alert,
   Paper,
-  Grid
+  Grid,
+  Dialog,
+  DialogContent,
+  useMediaQuery,
+  Theme
 } from '@mui/material';
 import RadarIcon from '@mui/icons-material/Radar';
 import WarningIcon from '@mui/icons-material/Warning';
@@ -21,18 +25,40 @@ import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import DiamondIcon from '@mui/icons-material/Diamond';
 
 import useStarclanGameStore from '../context/useStarclanGameStore';
-// import useStarclanUIStore from '../context/useStarclanUIStore';
+import useStarclanUIStore from '../context/useStarclanUIStore';
 import { ACTION_TYPES, ScanResult } from '../domain/models';
+import RosterPanel from './roster/RosterPanel';
+
+// Constants
+const EVENT_SLOTS = {
+  opportunity: 2,
+  threat: 3,
+  resource: 1
+};
+
+// Stable selectors
+const selectGameState = (state: ReturnType<typeof useStarclanGameStore.getState>) => state.gameState;
+const selectIsApiProcessing = (state: ReturnType<typeof useStarclanUIStore.getState>) => state.isApiProcessing;
+const selectAttemptPlayerAction = (state: ReturnType<typeof useStarclanGameStore.getState>) => state.attemptPlayerAction;
 
 const ScanView = () => {
-  const gameState = useStarclanGameStore((state) => state.gameState);
-  const attemptPlayerAction = useStarclanGameStore((state) => state.attemptPlayerAction);
-  // const isApiProcessing = useStarclanUIStore((state) => state.isApiProcessing);
+  // Use stable selectors
+  const gameState = useStarclanGameStore(selectGameState);
+  const attemptPlayerAction = useStarclanGameStore(selectAttemptPlayerAction);
+  const isApiProcessing = useStarclanUIStore(selectIsApiProcessing);
+  
   const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
   const [progress, setProgress] = useState<number>(0);
+  const [selectedEvent, setSelectedEvent] = useState<ScanResult | null>(null);
+  
+  // Memoize the media query result
+  const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'), {
+    noSsr: true,
+    defaultMatches: false
+  });
 
-  // Add this line in the component
-  const debugTimeOffset = gameState?.debugTimeOffset || 0;
+  // Memoize the debug time offset
+  const debugTimeOffset = useMemo(() => gameState?.debugTimeOffset || 0, [gameState?.debugTimeOffset]);
 
   // Calculate and update time remaining for in-progress scan
   useEffect(() => {
@@ -97,12 +123,47 @@ const ScanView = () => {
     }
   };
 
+  // Handle selecting an event with useCallback
+  const handleSelectEvent = useCallback((event: ScanResult) => {
+    setSelectedEvent(event);
+  }, []);
+
+  // Handle roster confirmation with useCallback
+  const handleRosterConfirm = useCallback((gladiatorIds: string[]) => {
+    if (selectedEvent) {
+      attemptPlayerAction({ 
+        type: ACTION_TYPES.ASSIGN_GLADIATORS, 
+        eventId: selectedEvent.id, 
+        gladiatorIds 
+      });
+      setSelectedEvent(null);
+    }
+  }, [selectedEvent, attemptPlayerAction]);
+
+  // Handle cancel roster selection
+  const handleCancelRosterSelection = useCallback(() => {
+    setSelectedEvent(null);
+  }, []);
+
   const renderScanResults = (results: ScanResult[]) => {
     return (
       <Grid container spacing={2}>
         {results.map((result) => (
-          <Grid item xs={12} key={result.id}>
-            <Paper elevation={2} sx={{ p: 2 }}>
+          <Grid item xs={12} md={6} lg={4} key={result.id}>
+            <Paper 
+              elevation={2} 
+              sx={{ 
+                p: 2, 
+                height: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                '&:hover': {
+                  boxShadow: 3,
+                  cursor: 'pointer'
+                }
+              }}
+              onClick={() => handleSelectEvent(result)}
+            >
               <Box display="flex" alignItems="center" gap={1} mb={1}>
                 {getResultIcon(result.type)}
                 <Typography variant="h6" color={
@@ -113,7 +174,7 @@ const ScanView = () => {
                   {result.type.charAt(0).toUpperCase() + result.type.slice(1)}
                 </Typography>
               </Box>
-              <Typography variant="body1">{result.description}</Typography>
+              <Typography variant="body1" sx={{ flex: 1 }}>{result.description}</Typography>
               {result.reward && (
                 <Box mt={2} p={1} bgcolor="background.paper" borderRadius={1}>
                   <Typography variant="body2" color="success.main" fontWeight="bold">
@@ -121,6 +182,15 @@ const ScanView = () => {
                   </Typography>
                 </Box>
               )}
+              <Box mt={2} display="flex" justifyContent="flex-end">
+                <Button 
+                  variant="contained" 
+                  size="small"
+                  disabled={isApiProcessing}
+                >
+                  Assign Gladiators
+                </Button>
+              </Box>
             </Paper>
           </Grid>
         ))}
@@ -144,7 +214,7 @@ const ScanView = () => {
             variant="contained" 
             size="large"
             onClick={handleStartScan}
-            // disabled={isApiProcessing || !gameState}
+            disabled={isApiProcessing || !gameState}
             startIcon={<RadarIcon />}
           >
             Start Stellar Scan
@@ -199,7 +269,7 @@ const ScanView = () => {
             <Button 
               variant="contained" 
               onClick={handleStartScan}
-              // disabled={isApiProcessing}
+              disabled={isApiProcessing}
               startIcon={<RadarIcon />}
             >
               Start New Scan
@@ -213,7 +283,7 @@ const ScanView = () => {
   };
 
   return (
-    <Box sx={{ p: 3, maxWidth: 900, mx: 'auto' }}>
+    <Box sx={{ p: 3, maxWidth: 1200, mx: 'auto' }}>
       <Typography variant="h4" gutterBottom>Stellar Scanner</Typography>
       <Typography variant="body1" color="text.secondary" paragraph>
         Use the scanner to detect opportunities and threats in the surrounding space.
@@ -253,6 +323,27 @@ const ScanView = () => {
             ))}
           </List>
         </Box>
+      )}
+
+      {/* Roster Assignment Dialog */}
+      {selectedEvent && (
+        <Dialog 
+          open={true} 
+          onClose={handleCancelRosterSelection}
+          maxWidth="lg"
+          fullWidth
+          fullScreen={isMobile}
+        >
+          <DialogContent sx={{ p: 0 }}>
+            <RosterPanel 
+              key={selectedEvent.id}
+              event={selectedEvent} 
+              requiredSlots={EVENT_SLOTS[selectedEvent.type as keyof typeof EVENT_SLOTS] || 2}
+              onRosterConfirm={handleRosterConfirm}
+              onCancel={handleCancelRosterSelection}
+            />
+          </DialogContent>
+        </Dialog>
       )}
     </Box>
   );
