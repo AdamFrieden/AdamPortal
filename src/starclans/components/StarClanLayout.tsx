@@ -13,8 +13,14 @@ import GameStateHeartbeat from './GameStateHeartbeat';
 import TechView from './TechView';
 import ScanView from './ScanView';
 import ClanView from './ClanView';
+import { ThemeProvider } from '../../context/ThemeProvider';
+import { ReactNode } from 'react';
 
-const StarClanLayout = () => {
+interface StarClanLayoutProps {
+  children?: ReactNode;
+}
+
+const StarClanLayout = ({ children }: StarClanLayoutProps) => {
   const gameSaveStatus = useStarclanGameStore((state) => state.gameSaveStatus);
   const apiProcessing = useStarclanUIStore((state) => state.isApiProcessing);
   const hasGameState = useStarclanGameStore((state) => !!state.gameState);
@@ -44,33 +50,35 @@ const StarClanLayout = () => {
   };
 
   return (
-    <Box id='topLayoutBox' sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
-      <GameStateHeartbeat />
-      <Box sx={{ display: 'flex', flexGrow: 1, overflow: 'auto' }}>
-        <Box component="main" sx={{ p: 0, maxWidth: '100vw', margin: '0 auto', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            {(gameSaveStatus === 'NO_SAVE_FOUND' || !hasGameState) && !apiProcessing && (
-              <StartNewClan />
-            )}
-            {!hasGameState && gameSaveStatus === 'NO_SAVE_FOUND' && apiProcessing && (
-              <Box id='dashContextBoxLoading' width='100%'>
-                <TopTabBar selectedTab={selectedTab} onTabChange={handleTabChange} />
-                <Grid container spacing={2} sx={{ p: 2, justifyContent: 'center' }}>
-                  {[...Array(rosterCapacity)].map(() => (
-                    <GladiatorCardSkeleton />
-                  ))}
-                </Grid>
-              </Box>
-            )}
-            {hasGameState && 
-              <Box id='dashContextBox' width='100%'>
-                <TopTabBar selectedTab={selectedTab} onTabChange={handleTabChange} />
-                <DebugPanel />
-                {renderCurrentView()}
-              </Box>
-            }
+    <ThemeProvider defaultDarkMode={true}>
+      <Box id='topLayoutBox' sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+        <GameStateHeartbeat />
+        <Box sx={{ display: 'flex', flexGrow: 1, overflow: 'auto' }}>
+          <Box component="main" sx={{ p: 0, maxWidth: '100vw', margin: '0 auto', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              {(gameSaveStatus === 'NO_SAVE_FOUND' || !hasGameState) && !apiProcessing && (
+                <StartNewClan />
+              )}
+              {!hasGameState && gameSaveStatus === 'NO_SAVE_FOUND' && apiProcessing && (
+                <Box id='dashContextBoxLoading' width='100%'>
+                  <TopTabBar selectedTab={selectedTab} onTabChange={handleTabChange} />
+                  <Grid container spacing={2} sx={{ p: 2, justifyContent: 'center' }}>
+                    {[...Array(rosterCapacity)].map(() => (
+                      <GladiatorCardSkeleton />
+                    ))}
+                  </Grid>
+                </Box>
+              )}
+              {hasGameState && 
+                <Box id='dashContextBox' width='100%'>
+                  <TopTabBar selectedTab={selectedTab} onTabChange={handleTabChange} />
+                  <DebugPanel />
+                  {renderCurrentView()}
+                </Box>
+              }
+          </Box>
         </Box>
       </Box>
-    </Box>
+    </ThemeProvider>
   );
 };
 

@@ -30,8 +30,11 @@ const App = () => {
             <Route path="/versecommanderdemo" element={<div />} />
           </Route>
 
-          <Route path="/starclandemo" element={<StarClanLayout />} />
-          <Route path="/starclansdemo" element={<StarClanLayout />} />
+          {/* StarClans demo routes with dark theme */}
+          <Route element={<StarClanLayout />}>
+            <Route path="/starclandemo" />
+            <Route path="/starclansdemo" />
+          </Route>
         </Routes>
       </Router>
     </ThemeProvider>
