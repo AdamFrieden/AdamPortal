@@ -14,13 +14,8 @@ import TechView from './TechView';
 import ScanView from './ScanView';
 import ClanView from './ClanView';
 import { ThemeProvider } from '../../context/ThemeProvider';
-import { ReactNode } from 'react';
 
-interface StarClanLayoutProps {
-  children?: ReactNode;
-}
-
-const StarClanLayout = ({ children }: StarClanLayoutProps) => {
+const StarClanLayout = () => {
   const gameSaveStatus = useStarclanGameStore((state) => state.gameSaveStatus);
   const apiProcessing = useStarclanUIStore((state) => state.isApiProcessing);
   const hasGameState = useStarclanGameStore((state) => !!state.gameState);
