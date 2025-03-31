@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { ClientGladiator } from '../domain/models';
 import { CircularProgress, Box, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import GladiatorAvatar from './GladiatorAvatar';
 
 // Styled Components
 const Container = styled.div`
@@ -106,7 +107,6 @@ const GladiatorSlotStyled = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: space-between;
     gap: 1rem;
 
     .nameContainer {
@@ -125,13 +125,19 @@ const GladiatorSlotStyled = styled.div`
             font-size: 0.875rem;
         }
     }
+
+    .projectedValue {
+        font-weight: bold;
+        font-size: 2rem;
+        padding-right: 0rem;
+    }
 `;
 
-const Stats = styled.div`
-    display: flex;
-    gap: 1rem;
-    color: #888;
-`;
+// const Stats = styled.div`
+//     display: flex;
+//     gap: 1rem;
+//     color: #888;
+// `;
 
 const Footer = styled.div`
     display: flex;
@@ -162,38 +168,19 @@ const EmptySlot: React.FC<{ onSelect: () => void, isOpponent?: boolean }> = ({ o
     </EmptySlotStyled>
 );
 
-const GladiatorSlot: React.FC<{ gladiator: ClientGladiator }> = ({ gladiator }) => (
-    <GladiatorSlotStyled>
-        <div className="nameContainer">
-            <h3>{gladiator.name}</h3>
-            <span className="secondaryLabel">{gladiator.estimatedPower}</span>
-        </div>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Box sx={{ position: 'relative', display: 'inline-flex' }}>
-                <CircularProgress 
-                    variant="determinate" 
-                    value={gladiator.stamina} 
-                    size={50}
-                    thickness={4}
-                    sx={{ color: '#4a5568' }}
-                />
-                <Box
-                    sx={{
-                        top: 0,
-                        left: 0,
-                        bottom: 0,
-                        right: 0,
-                        position: 'absolute',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                    }}
-                >
-                    <span style={{ color: '#fff', fontWeight: 'bold' }}>
-                        {gladiator.estimatedPower}
-                    </span>
-                </Box>
-            </Box>
+const GladiatorSlot: React.FC<{ gladiator: ClientGladiator }> = ({ gladiator }) => {
+    const projectedPower = Math.round(gladiator.estimatedPower * gladiator.stamina * 0.01);
+    
+    return (
+        <GladiatorSlotStyled>
+            <GladiatorAvatar stamina={gladiator.stamina} size={72} />
+            <div className="nameContainer">
+                <h3>M.Titus</h3>
+                <span className="secondaryLabel">{gladiator.estimatedPower}</span>
+            </div>
+            <span className="projectedValue">
+                {projectedPower}
+            </span>
             <IconButton 
                 size="small" 
                 onClick={() => console.log('Remove gladiator:', gladiator.id)}
@@ -201,9 +188,9 @@ const GladiatorSlot: React.FC<{ gladiator: ClientGladiator }> = ({ gladiator }) 
             >
                 <CloseIcon fontSize="small" />
             </IconButton>
-        </Box>
-    </GladiatorSlotStyled>
-);
+        </GladiatorSlotStyled>
+    );
+};
 
 const ConflictAssignment: React.FC = () => {
     // Demo data

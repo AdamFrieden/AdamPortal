@@ -59,7 +59,22 @@ OUTPUT IN THE FOLLOWING FORMAT:
         "description": "string"
       }
     ],
-    "descriptor": "string"
+    "description": "string"
   },
   ...
- 
+
+ ## Example Prompt for Generating Avatars
+
+ Generate a series of minimalist sci-fi profile portraits suitable for avatar icons in a modern UI (like MUI). Each character should be shown from the neck up, centered, and designed for clarity at small sizes. Use a dark, gritty background with subtle neon accents. Characters include futuristic gladiators and space barbarians—distinct through helmets, masks, or cybernetic features. Keep the color palette minimal (grayscale with occasional electric blue, red, or orange highlights). Style should be crisp and stylized, not photorealistic, with clear silhouettes that read well in small circular frames.
+
+     Create a 2x2 grid of futuristic avatar portraits, showing four gritty gladiators. Each portrait is a close-up of the character’s head and shoulders. Use a dark sci-fi/fantasy theme with retro lighting, neon accents, and a minimal grainy style.
+
+    Generate based on these character descriptions:
+
+        A brutish cyborg with orange-glowing eyes, half-metal jaw, and battle scars.
+
+        A treefolk assassin with bark-covered features and glowing blue leaves in her hood.
+
+        A reptilian gladiator with magma scales and a molten eye, wearing ceremonial armor.
+
+       A sleek female StarClans scout with a chromed helmet visor and glowing data lines on her collar.
