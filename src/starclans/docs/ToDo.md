@@ -8,3 +8,6 @@
 - scan for conflict, roster gladiator, resolve workflow
 - refresh on app open
 - show api processing on relevant gladiator cards
+- make gladiator cards clickable instead of ... dropdown option
+- alt gladiator card that is a 'row' / horizontal view appropriate for a mobile list
+- 
