@@ -3,7 +3,7 @@ import { Box, Typography, Button, Card, CardContent, Stack, Divider, TextField }
 import useStarclanGameStore from '../context/useStarclanGameStore';
 import useStarclanUIStore from '../context/useStarclanUIStore';
 import FastForwardIcon from '@mui/icons-material/FastForward';
-
+import ConflictAssignment from './ConflictAssignment';
 const DebugPanel = () => {
   const isShowingDebugPanel = useStarclanUIStore((state) => state.isShowingDebugPanel);
   const showDebugPanel = useStarclanUIStore((state) => state.showDebugPanel);
@@ -96,6 +96,16 @@ const DebugPanel = () => {
           </Box>
         </Box>
         
+        <Divider sx={{ my: 2 }} />
+        
+        {/* Conflict Assignment Demo */}
+        <Box mb={3}>
+          <Typography variant="subtitle1" gutterBottom>
+            Conflict Assignment Demo
+          </Typography>
+          <ConflictAssignment />
+        </Box>
+
         <Divider sx={{ my: 2 }} />
         
         {/* Reset Game Data */}

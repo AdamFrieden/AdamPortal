@@ -15,6 +15,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 import { ACTION_TYPES, ClientGladiator } from '../domain/models'; // adjust the import path as needed
 import useStarclanGameStore from '../context/useStarclanGameStore';
+import GladiatorAvatar from './GladiatorAvatar';
 
 interface GladiatorCardProps {
   gladiator: ClientGladiator;
@@ -108,7 +109,11 @@ export const GladiatorCard: React.FC<GladiatorCardProps> = ({ gladiator, onRecru
       <CardContent>
       <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
         <Box display="flex" alignItems="center">
-          <Avatar {...stringAvatar(gladiator.name)} aria-label={gladiator.name} />
+          <GladiatorAvatar 
+            gladiatorId={gladiator.id}
+            stamina={gladiator.status !== 'ENSLAVED' ? gladiator.stamina : undefined} 
+            size={40} // Smaller size to fit the card header
+          />
           <Typography sx={{ ml: 2 }}>
             {gladiator.name}
           </Typography>
