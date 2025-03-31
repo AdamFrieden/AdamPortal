@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { ClientGladiator } from '../domain/models';
-import { CircularProgress, Box, IconButton } from '@mui/material';
+import { IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import GladiatorAvatar from './GladiatorAvatar';
 

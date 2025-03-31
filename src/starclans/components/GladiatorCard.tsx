@@ -6,7 +6,6 @@ import {
   LinearProgress,
   Chip,
   Box,
-  Avatar,
   IconButton,
   Menu,
   MenuItem
@@ -34,28 +33,28 @@ export const GladiatorCard: React.FC<GladiatorCardProps> = ({ gladiator, onRecru
 
   const attemptPlayerAction = useStarclanGameStore((state) => state.attemptPlayerAction);
 
-  function stringToColor(name: string): string {
-    let hash = 0;
-    for (let i = 0; i < name.length; i++) {
-      hash = name.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    let color = '#';
-    for (let i = 0; i < 3; i++) {
-      const value = (hash >> (i * 8)) & 0xff;
-      color += ('00' + value.toString(16)).slice(-2);
-    }
-    return color;
-  }
+  // function stringToColor(name: string): string {
+  //   let hash = 0;
+  //   for (let i = 0; i < name.length; i++) {
+  //     hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  //   }
+  //   let color = '#';
+  //   for (let i = 0; i < 3; i++) {
+  //     const value = (hash >> (i * 8)) & 0xff;
+  //     color += ('00' + value.toString(16)).slice(-2);
+  //   }
+  //   return color;
+  // }
   
-  function stringAvatar(name: string) {
-    const nameParts = name.split(' ');
-    return {
-      sx: {
-        bgcolor: stringToColor(name),
-      },
-      children: `${nameParts[0][0]}${nameParts[1][0]}`,
-    };
-  }
+  // function stringAvatar(name: string) {
+  //   const nameParts = name.split(' ');
+  //   return {
+  //     sx: {
+  //       bgcolor: stringToColor(name),
+  //     },
+  //     children: `${nameParts[0][0]}${nameParts[1][0]}`,
+  //   };
+  // }
 
   function renderStaminaSection() {
     return (
@@ -109,10 +108,10 @@ export const GladiatorCard: React.FC<GladiatorCardProps> = ({ gladiator, onRecru
       <CardContent>
       <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
         <Box display="flex" alignItems="center">
-          <GladiatorAvatar 
+          <GladiatorAvatar
             gladiatorId={gladiator.id}
             stamina={gladiator.status !== 'ENSLAVED' ? gladiator.stamina : undefined} 
-            size={40} // Smaller size to fit the card header
+            size={64} // Smaller size to fit the card header
           />
           <Typography sx={{ ml: 2 }}>
             {gladiator.name}
