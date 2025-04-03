@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { ClientGladiator } from '../domain/models';
-import { IconButton } from '@mui/material';
+import { IconButton, Button } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import GladiatorAvatar from './GladiatorAvatar';
+import useStarclanGameStore from '../context/useStarclanGameStore';
+import GladiatorRow from './GladiatorRow';
 
 // Styled Components
 const Container = styled.div`
@@ -99,46 +101,6 @@ const EmptySlotContent = styled.div`
     }
 `;
 
-const GladiatorSlotStyled = styled.div`
-    padding: 1rem;
-    background: #2a2a2a;
-    border-radius: 6px;
-    min-height: 80px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 1rem;
-
-    .nameContainer {
-        display: flex;
-        flex-direction: column;
-        gap: 0.25rem;
-        flex: 1;
-
-        h3 {
-            margin: 0;
-            color: #fff;
-        }
-
-        .secondaryLabel {
-            color: #888;
-            font-size: 0.875rem;
-        }
-    }
-
-    .projectedValue {
-        font-weight: bold;
-        font-size: 2rem;
-        padding-right: 0rem;
-    }
-`;
-
-// const Stats = styled.div`
-//     display: flex;
-//     gap: 1rem;
-//     color: #888;
-// `;
-
 const Footer = styled.div`
     display: flex;
     justify-content: center;
@@ -159,6 +121,11 @@ const ConfirmButton = styled.button`
     }
 `;
 
+// Add new styled component for the roster button
+const RosterButton = styled(Button)`
+    margin-bottom: 1rem;
+`;
+
 // Component definitions
 const EmptySlot: React.FC<{ onSelect: () => void, isOpponent?: boolean }> = ({ onSelect, isOpponent }) => (
     <EmptySlotStyled onClick={onSelect}>
@@ -168,44 +135,28 @@ const EmptySlot: React.FC<{ onSelect: () => void, isOpponent?: boolean }> = ({ o
     </EmptySlotStyled>
 );
 
-const GladiatorSlot: React.FC<{ gladiator: ClientGladiator }> = ({ gladiator }) => {
-    const projectedPower = Math.round(gladiator.estimatedPower * gladiator.stamina * 0.01);
-    
-    return (
-        <GladiatorSlotStyled>
-            <GladiatorAvatar stamina={gladiator.stamina} size={72} />
-            <div className="nameContainer">
-                <h3>M.Titus</h3>
-                <span className="secondaryLabel">{gladiator.estimatedPower}</span>
-            </div>
-            <span className="projectedValue">
-                {projectedPower}
-            </span>
-            <IconButton 
-                size="small" 
-                onClick={() => console.log('Remove gladiator:', gladiator.id)}
-                sx={{ color: '#666' }}
-            >
-                <CloseIcon fontSize="small" />
-            </IconButton>
-        </GladiatorSlotStyled>
-    );
-};
-
 const ConflictAssignment: React.FC = () => {
-    // Demo data
-    const demoGladiator: ClientGladiator = {
-        id: '1',
-        name: 'Marcus',
-        estimatedPower: 100,
-        stamina: 85,
-        status: 'RESTING',
-        knownTraits: ['Strong'],
-        description: 'A mighty warrior',
-        lastRefresh: Date.now()
+    const gameState = useStarclanGameStore(state => state.gameState);
+    const [assignedGladiators, setAssignedGladiators] = useState<ClientGladiator[]>([]);
+
+    const addFromRoster = () => {
+        if (!gameState?.roster) return;
+        
+        // Get up to 3 available gladiators from the roster
+        const availableGladiators = gameState.roster.filter(g => 
+            g.status === 'RESTING' && !assignedGladiators.find(ag => ag.id === g.id)
+        ).slice(0, 3);
+
+        setAssignedGladiators([...assignedGladiators, ...availableGladiators]);
     };
 
-    const totalPower = 100;
+    const removeGladiator = (gladiatorId: string) => {
+        setAssignedGladiators(assignedGladiators.filter(g => g.id !== gladiatorId));
+    };
+
+    const totalPower = assignedGladiators.reduce((sum, glad) => 
+        sum + Math.round(glad.estimatedPower * glad.stamina * 0.01), 0
+    );
 
     return (
         <Container>
@@ -221,10 +172,24 @@ const ConflictAssignment: React.FC = () => {
             <ColumnsContainer>
                 <Column>
                     <h2>Your Gladiators</h2>
+                    <RosterButton 
+                        variant="contained" 
+                        onClick={addFromRoster}
+                        disabled={!gameState?.roster?.length}
+                    >
+                        Add from Roster
+                    </RosterButton>
                     <Slots>
-                        <GladiatorSlot gladiator={demoGladiator} />
-                        <EmptySlot onSelect={() => console.log('Select gladiator')} />
-                        <EmptySlot onSelect={() => console.log('Select gladiator')} />
+                        {assignedGladiators.map(gladiator => (
+                            <GladiatorRow 
+                                key={gladiator.id} 
+                                gladiator={gladiator} 
+                                onRemove={removeGladiator}
+                            />
+                        ))}
+                        {[...Array(3 - assignedGladiators.length)].map((_, i) => (
+                            <EmptySlot key={i} onSelect={() => {}} />
+                        ))}
                     </Slots>
                 </Column>
                 
