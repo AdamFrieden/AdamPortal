@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { ClientGladiator } from '../domain/models';
-import { IconButton, Button } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import GladiatorAvatar from './GladiatorAvatar';
 import useStarclanGameStore from '../context/useStarclanGameStore';
 import GladiatorRow from './GladiatorRow';
+import { ContentFactory } from '../domain/contentFactory';
+import { getRandomInt } from '../context/helpers';
+import { Button } from '@mui/material';
 
 // Styled Components
 const Container = styled.div`
@@ -126,6 +126,26 @@ const RosterButton = styled(Button)`
     margin-bottom: 1rem;
 `;
 
+// Add a new styled component for the column header
+const ColumnHeader = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #333;
+
+    h2 {
+        color: #888;
+        font-size: 1.2rem;
+        margin: 0;
+    }
+
+    .powerValue {
+        color: #888;
+        font-size: 1.2rem;
+    }
+`;
+
 // Component definitions
 const EmptySlot: React.FC<{ onSelect: () => void, isOpponent?: boolean }> = ({ onSelect, isOpponent }) => (
     <EmptySlotStyled onClick={onSelect}>
@@ -136,8 +156,19 @@ const EmptySlot: React.FC<{ onSelect: () => void, isOpponent?: boolean }> = ({ o
 );
 
 const ConflictAssignment: React.FC = () => {
+    const contentFactory = new ContentFactory();
     const gameState = useStarclanGameStore(state => state.gameState);
     const [assignedGladiators, setAssignedGladiators] = useState<ClientGladiator[]>([]);
+    const [opponentGladiators, setOpponentGladiators] = useState<ClientGladiator[]>([]);
+
+    const populateOpponentGladiators = () => {
+        // Get 2-4 random enemy gladiators from the content factory
+        const enemyCount = getRandomInt(2, 4);
+        const enemies = contentFactory.getRandomEnemyGladiators(enemyCount);
+        
+        // Update the opponent gladiators state
+        setOpponentGladiators(enemies);
+    }
 
     const addFromRoster = () => {
         if (!gameState?.roster) return;
@@ -158,6 +189,10 @@ const ConflictAssignment: React.FC = () => {
         sum + Math.round(glad.estimatedPower * glad.stamina * 0.01), 0
     );
 
+    const totalOpponentPower = opponentGladiators.reduce((sum, glad) => 
+        sum + Math.round(glad.estimatedPower * glad.stamina * 0.01), 0
+    );
+
     return (
         <Container>
             <Header>
@@ -166,12 +201,19 @@ const ConflictAssignment: React.FC = () => {
                         <label>Total Power:</label>
                         <span>{totalPower}</span>
                     </Stat>
+                    <Stat>
+                        <label>Opponent Power:</label>
+                        <span>{totalOpponentPower}</span>
+                    </Stat>
                 </Totals>
             </Header>
             
             <ColumnsContainer>
                 <Column>
-                    <h2>Your Gladiators</h2>
+                    <ColumnHeader>
+                        <h2>Your Gladiators</h2>
+                        <span className="powerValue">{totalPower}</span>
+                    </ColumnHeader>
                     <RosterButton 
                         variant="contained" 
                         onClick={addFromRoster}
@@ -179,6 +221,7 @@ const ConflictAssignment: React.FC = () => {
                     >
                         Add from Roster
                     </RosterButton>
+                    
                     <Slots>
                         {assignedGladiators.map(gladiator => (
                             <GladiatorRow 
@@ -194,11 +237,27 @@ const ConflictAssignment: React.FC = () => {
                 </Column>
                 
                 <Column>
-                    <h2>Opponents</h2>
+                    <ColumnHeader>
+                        <h2>Opponents</h2>
+                        <span className="powerValue">{totalOpponentPower}</span>
+                    </ColumnHeader>
+                    <RosterButton 
+                        variant="contained" 
+                        onClick={populateOpponentGladiators}
+                    >
+                        Add Enemies
+                    </RosterButton>
                     <Slots>
-                        <EmptySlot onSelect={() => console.log('Select opponent')} isOpponent />
-                        <EmptySlot onSelect={() => console.log('Select opponent')} isOpponent />
-                        <EmptySlot onSelect={() => console.log('Select opponent')} isOpponent />
+                        {opponentGladiators.map(gladiator => (
+                            <GladiatorRow 
+                                key={gladiator.id} 
+                                gladiator={gladiator} 
+                                onRemove={removeGladiator}
+                            />
+                        ))}
+                        {/* {[...Array(4 - opponentGladiators.length)].map((_, i) => (
+                            <EmptySlot key={i} onSelect={() => console.log('Select opponent')} isOpponent />
+                        ))} */}
                     </Slots>
                 </Column>
             </ColumnsContainer>

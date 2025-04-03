@@ -49,7 +49,7 @@ const GladiatorRow: React.FC<GladiatorRowProps> = ({ gladiator, onRemove }) => {
     
     return (
         <GladiatorRowStyled>
-            <GladiatorAvatar stamina={gladiator.stamina} size={72} />
+            <GladiatorAvatar stamina={gladiator.stamina} size={72} gladiatorId={gladiator.id} />
             <div className="nameContainer">
                 <h3>{gladiator.name}</h3>
                 <span className="secondaryLabel">Power: {gladiator.estimatedPower}</span>
