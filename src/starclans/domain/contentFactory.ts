@@ -1,6 +1,7 @@
-import { Gladiator } from "./models";
+import { Gladiator, BattleConfig, BattleResult, ClientGladiator, toClientGladiator } from "./models";
 import { allGladiators } from "./allGladiators";
 import { enemyGladiators } from "./enemyGladiators";
+import { getRandomInt } from "../context/helpers";
 
 export class ContentFactory {
   private pool: Gladiator[];
@@ -70,5 +71,114 @@ export class ContentFactory {
         gladiators.push(this.getRandomEnemyGladiator());
     }
     return gladiators;
+  }
+
+  /**
+   * Creates a battle configuration based on the scan result type
+   * @param scanResultType The type of scan result that triggered this battle
+   * @returns A BattleConfig object with appropriate parameters
+   */
+  public createBattleConfig(scanResultType: string): BattleConfig {
+    const id = crypto.randomUUID();
+    
+    // Different battle configurations based on scan result type
+    switch (scanResultType) {
+      case 'threat':
+        return {
+          id,
+          name: 'Eliminate Threat',
+          description: 'A dangerous threat has been detected. Send your gladiators to eliminate it.',
+          maxPlayerSlots: 3,
+          minOpponentCount: 2,
+          maxOpponentCount: 4,
+          durationMs: 1000 * 60 * 5, // 5 minutes
+          potentialRewards: {
+            resourcium: getRandomInt(50, 150)
+          }
+        };
+      case 'opportunity':
+        return {
+          id,
+          name: 'Seize Opportunity',
+          description: 'A valuable opportunity has been discovered. Send your gladiators to capitalize on it.',
+          maxPlayerSlots: 2,
+          minOpponentCount: 1,
+          maxOpponentCount: 3,
+          durationMs: 1000 * 60 * 3, // 3 minutes
+          potentialRewards: {
+            resourcium: getRandomInt(30, 100)
+          }
+        };
+      case 'resource':
+        return {
+          id,
+          name: 'Secure Resources',
+          description: 'Valuable resources have been located. Send your gladiators to secure them.',
+          maxPlayerSlots: 4,
+          minOpponentCount: 3,
+          maxOpponentCount: 5,
+          durationMs: 1000 * 60 * 7, // 7 minutes
+          potentialRewards: {
+            resourcium: getRandomInt(100, 300)
+          }
+        };
+      default:
+        // Default battle configuration
+        return {
+          id,
+          name: 'Battle',
+          description: 'A battle has been initiated.',
+          maxPlayerSlots: 3,
+          minOpponentCount: 2,
+          maxOpponentCount: 4,
+          durationMs: 1000 * 60 * 5, // 5 minutes
+          potentialRewards: {
+            resourcium: getRandomInt(50, 150)
+          }
+        };
+    }
+  }
+
+  /**
+   * Creates a new battle result based on a battle config and selected gladiators
+   * @param config The battle configuration
+   * @param playerGladiators The gladiators selected by the player
+   * @returns A BattleResult object
+   */
+  public createBattleResult(
+    config: BattleConfig, 
+    playerGladiators: ClientGladiator[]
+  ): BattleResult {
+    const id = crypto.randomUUID();
+    const now = Date.now();
+    
+    // Generate opponent gladiators based on the config
+    const opponentCount = getRandomInt(config.minOpponentCount, config.maxOpponentCount);
+    const opponentGladiators = this.getRandomEnemyGladiators(opponentCount)
+      .map(toClientGladiator);
+    
+    // Calculate total power
+    const playerPower = playerGladiators.reduce(
+      (sum, glad) => sum + Math.round(glad.estimatedPower * glad.stamina * 0.01), 
+      0
+    );
+    
+    const opponentPower = opponentGladiators.reduce(
+      (sum, glad) => sum + Math.round(glad.estimatedPower * glad.stamina * 0.01), 
+      0
+    );
+    
+    return {
+      id,
+      configId: config.id,
+      startTime: now,
+      durationMs: config.durationMs,
+      status: 'NOT_STARTED',
+      playerGladiators,
+      opponentGladiators,
+      playerPower,
+      opponentPower,
+      outcome: 'DRAW' // Will be determined when battle completes
+    };
   }
 }

@@ -8,6 +8,9 @@ export interface ResearchTask {
 
 export type GladiatorStatus = 'RESTING' | 'TRAINING' | 'CONFLICT' | 'ENSLAVED';
 
+// Add battle types
+export type BattleStatus = 'NOT_STARTED' | 'IN_PROGRESS' | 'COMPLETED';
+
 // Add scan types
 export type ScanStatus = 'NOT_STARTED' | 'IN_PROGRESS' | 'COMPLETED';
 
@@ -52,6 +55,8 @@ export interface GameState {
   waiverWire: Gladiator[];
   activeScan?: StellarScan; // Add active scan to the game state
   scanHistory?: StellarScan[]; // Add scan history
+  activeBattles?: BattleResult[]; // Support multiple active battles
+  battleHistory?: BattleResult[]; // Store completed battles
   //  need some 'waiver wire' collection for available gladiators
 }
 
@@ -68,7 +73,6 @@ export function toClientGladiator(gladiator: Gladiator): ClientGladiator {
   const { truePower, hiddenTraits, ...clientGladiator } = gladiator;
   return clientGladiator;
 }
-
 
 
 // function for translating a full GameState used by the gameEngine into a ClientGameState used by the UI
@@ -91,7 +95,9 @@ export function emptyGameState(): GameState {
     lastRefresh: 0,
     rosterCapacity: 0,
     waiverWire: [],
-    scanHistory: []
+    scanHistory: [],
+    activeBattles: [],
+    battleHistory: []
   }
 }
 
@@ -109,6 +115,8 @@ export interface PlayerActionResult<T extends GameState | ClientGameState> {
     TRAIN_GLADIATOR: 'TRAIN_GLADIATOR',
     RECRUIT_GLADIATOR: 'RECRUIT_GLADIATOR',
     START_SCAN: 'START_SCAN', // Initiate a stellar scan
+    START_BATTLE: 'START_BATTLE', // Start a new battle
+    CANCEL_BATTLE: 'CANCEL_BATTLE', // Cancel a battle before it starts
   } as const;
 
 //  keep player action extremely minimal - eventually pass these over the wire so they can be consumed by the real gameEngine in AWS.
@@ -151,6 +159,17 @@ export interface StartStellarScanAction extends BasePlayerAction {
   type: typeof ACTION_TYPES.START_SCAN;
 }
 
+export interface StartBattleAction extends BasePlayerAction {
+  type: typeof ACTION_TYPES.START_BATTLE;
+  battleId: string;
+  playerGladiatorIds: string[];
+}
+
+export interface CancelBattleAction extends BasePlayerAction {
+  type: typeof ACTION_TYPES.CANCEL_BATTLE;
+  battleId: string;
+}
+
 export type PlayerAction = StartResearchAction 
   | CancelResearchAction 
   | DropGladiatorAction 
@@ -158,6 +177,41 @@ export type PlayerAction = StartResearchAction
   | TrainGladiatorAction
   | RecruitGladiatorAction
   | StartStellarScanAction
+  | StartBattleAction
+  | CancelBattleAction
+
+export interface BattleConfig {
+  id: string;
+  name: string;
+  description: string;
+  maxPlayerSlots: number;
+  minOpponentCount: number;
+  maxOpponentCount: number;
+  durationMs: number;
+  potentialRewards: {
+    resourcium?: number;
+    // Add other potential rewards
+  };
+  // This could be expanded to include other battle parameters
+  // like difficulty, special rules, etc.
+}
+
+export interface BattleResult {
+  id: string;
+  configId: string; // Reference to the original battle config
+  startTime: number;
+  durationMs: number;
+  status: BattleStatus;
+  playerGladiators: ClientGladiator[];
+  opponentGladiators: ClientGladiator[];
+  playerPower: number;
+  opponentPower: number;
+  outcome: 'VICTORY' | 'DEFEAT' | 'DRAW';
+  rewards?: {
+    resourcium?: number;
+    // Add other potential rewards
+  };
+}
 
 
 

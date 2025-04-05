@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { ClientGladiator } from '../domain/models';
+import { ClientGladiator, BattleResult, ACTION_TYPES } from '../domain/models';
 import useStarclanGameStore from '../context/useStarclanGameStore';
 import GladiatorRow from './GladiatorRow';
 import { ContentFactory } from '../domain/contentFactory';
@@ -155,11 +155,44 @@ const EmptySlot: React.FC<{ onSelect: () => void, isOpponent?: boolean }> = ({ o
     </EmptySlotStyled>
 );
 
-const ConflictAssignment: React.FC = () => {
+interface ConflictAssignmentProps {
+    battleId: string;
+    onClose?: () => void;
+}
+
+const ConflictAssignment: React.FC<ConflictAssignmentProps> = ({ battleId, onClose }) => {
     const contentFactory = new ContentFactory();
     const gameState = useStarclanGameStore(state => state.gameState);
+    const attemptPlayerAction = useStarclanGameStore(state => state.attemptPlayerAction);
+    
     const [assignedGladiators, setAssignedGladiators] = useState<ClientGladiator[]>([]);
     const [opponentGladiators, setOpponentGladiators] = useState<ClientGladiator[]>([]);
+    const [battle, setBattle] = useState<BattleResult | null>(null);
+    const [maxPlayerSlots, setMaxPlayerSlots] = useState(3);
+
+    // Find the battle in the active battles
+    useEffect(() => {
+        if (gameState?.activeBattles) {
+            const foundBattle = gameState.activeBattles.find(b => b.id === battleId);
+            if (foundBattle) {
+                setBattle(foundBattle);
+                
+                // If the battle already has player gladiators, set them
+                if (foundBattle.playerGladiators && foundBattle.playerGladiators.length > 0) {
+                    setAssignedGladiators(foundBattle.playerGladiators);
+                }
+                
+                // If the battle already has opponent gladiators, set them
+                if (foundBattle.opponentGladiators && foundBattle.opponentGladiators.length > 0) {
+                    setOpponentGladiators(foundBattle.opponentGladiators);
+                }
+                
+                // Set max player slots based on battle config
+                // This would normally come from the battle config, but for now we'll use a default
+                setMaxPlayerSlots(3);
+            }
+        }
+    }, [gameState?.activeBattles, battleId]);
 
     const populateOpponentGladiators = () => {
         // Get 2-4 random enemy gladiators from the content factory
@@ -173,12 +206,16 @@ const ConflictAssignment: React.FC = () => {
     const addFromRoster = () => {
         if (!gameState?.roster) return;
         
-        // Get up to 3 available gladiators from the roster
+        // Get available gladiators from the roster
         const availableGladiators = gameState.roster.filter(g => 
             g.status === 'RESTING' && !assignedGladiators.find(ag => ag.id === g.id)
-        ).slice(0, 3);
-
-        setAssignedGladiators([...assignedGladiators, ...availableGladiators]);
+        );
+        
+        // Only add up to the max slots
+        const slotsRemaining = maxPlayerSlots - assignedGladiators.length;
+        const gladiatorsToAdd = availableGladiators.slice(0, slotsRemaining);
+        
+        setAssignedGladiators([...assignedGladiators, ...gladiatorsToAdd]);
     };
 
     const removeGladiator = (gladiatorId: string) => {
@@ -192,6 +229,55 @@ const ConflictAssignment: React.FC = () => {
     const totalOpponentPower = opponentGladiators.reduce((sum, glad) => 
         sum + Math.round(glad.estimatedPower * glad.stamina * 0.01), 0
     );
+
+    const startBattle = () => {
+        if (assignedGladiators.length === 0 || opponentGladiators.length === 0) {
+            console.log("Need both player and opponent gladiators to start a battle");
+            return;
+        }
+
+        // Dispatch action to start the battle
+        attemptPlayerAction({
+            type: ACTION_TYPES.START_BATTLE,
+            battleId,
+            playerGladiatorIds: assignedGladiators.map(g => g.id)
+        });
+        
+        // If onClose is provided, call it
+        if (onClose) {
+            onClose();
+        }
+    };
+
+    const cancelBattle = () => {
+        // Dispatch action to cancel the battle
+        attemptPlayerAction({
+            type: ACTION_TYPES.CANCEL_BATTLE,
+            battleId
+        });
+        
+        // If onClose is provided, call it
+        if (onClose) {
+            onClose();
+        }
+    };
+
+    // If battle is already in progress or completed, show a message
+    if (battle && (battle.status === 'IN_PROGRESS' || battle.status === 'COMPLETED')) {
+        return (
+            <Container>
+                <Header>
+                    <h2>{battle.status === 'IN_PROGRESS' ? 'Battle in Progress' : 'Battle Completed'}</h2>
+                    <p>This battle is {battle.status === 'IN_PROGRESS' ? 'currently in progress' : 'already completed'}.</p>
+                </Header>
+                <Footer>
+                    <ConfirmButton onClick={onClose}>
+                        Close
+                    </ConfirmButton>
+                </Footer>
+            </Container>
+        );
+    }
 
     return (
         <Container>
@@ -217,7 +303,7 @@ const ConflictAssignment: React.FC = () => {
                     <RosterButton 
                         variant="contained" 
                         onClick={addFromRoster}
-                        disabled={!gameState?.roster?.length}
+                        disabled={!gameState?.roster?.length || assignedGladiators.length >= maxPlayerSlots}
                     >
                         Add from Roster
                     </RosterButton>
@@ -230,7 +316,7 @@ const ConflictAssignment: React.FC = () => {
                                 onRemove={removeGladiator}
                             />
                         ))}
-                        {[...Array(3 - assignedGladiators.length)].map((_, i) => (
+                        {[...Array(maxPlayerSlots - assignedGladiators.length)].map((_, i) => (
                             <EmptySlot key={i} onSelect={() => {}} />
                         ))}
                     </Slots>
@@ -252,19 +338,22 @@ const ConflictAssignment: React.FC = () => {
                             <GladiatorRow 
                                 key={gladiator.id} 
                                 gladiator={gladiator} 
-                                onRemove={removeGladiator}
+                                onRemove={() => {}}
                             />
                         ))}
-                        {/* {[...Array(4 - opponentGladiators.length)].map((_, i) => (
-                            <EmptySlot key={i} onSelect={() => console.log('Select opponent')} isOpponent />
-                        ))} */}
+                        {[...Array(4 - opponentGladiators.length)].map((_, i) => (
+                            <EmptySlot key={i} onSelect={() => {}} isOpponent />
+                        ))}
                     </Slots>
                 </Column>
             </ColumnsContainer>
 
             <Footer>
-                <ConfirmButton onClick={() => console.log('Confirm assignments')}>
-                    Confirm Assignment
+                <ConfirmButton onClick={startBattle} disabled={assignedGladiators.length === 0 || opponentGladiators.length === 0}>
+                    Start Battle
+                </ConfirmButton>
+                <ConfirmButton onClick={cancelBattle} style={{ marginLeft: '1rem', background: '#6b2a2a' }}>
+                    Cancel
                 </ConfirmButton>
             </Footer>
         </Container>

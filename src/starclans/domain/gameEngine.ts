@@ -12,7 +12,11 @@ import {
   RecruitGladiatorAction,
   ACTION_TYPES,
   StellarScan,
-  ScanResult
+  ScanResult,
+  BattleResult,
+  BattleStatus,
+  StartBattleAction,
+  CancelBattleAction
 } from './models';
 
 //  this should not maintain any state. use all pure functions that have no side effects.
@@ -27,12 +31,28 @@ export class GameEngine {
     const updatedResearchTasks = GameEngine.updateResearchTasks(state.researchTasks, effectiveNow);
     const updatedGladiators = GameEngine.updateGladiators(state.roster, effectiveNow);
     const updatedScan = GameEngine.updateActiveScan(state.activeScan, effectiveNow);
+    const updatedBattles = GameEngine.updateActiveBattles(state.activeBattles, effectiveNow);
+
+    // If any battles just completed, add them to history
+    let battleHistory = [...(state.battleHistory || [])];
+    if (updatedBattles) {
+      const completedBattles = updatedBattles.filter(battle => 
+        battle.status === 'COMPLETED' && 
+        (!state.activeBattles || !state.activeBattles.find(b => b.id === battle.id && b.status === 'COMPLETED'))
+      );
+      
+      if (completedBattles.length > 0) {
+        battleHistory = [...battleHistory, ...completedBattles];
+      }
+    }
 
     const updatedState: GameState = {
       ...state,
       researchTasks: updatedResearchTasks,
       roster: updatedGladiators,
       activeScan: updatedScan,
+      activeBattles: updatedBattles,
+      battleHistory,
       lastRefresh: effectiveNow // Use the effective time for lastRefresh
     };
     return updatedState;
@@ -73,6 +93,12 @@ export class GameEngine {
         break;
       case ACTION_TYPES.START_SCAN:
         nextState = GameEngine.startStellarScan(nextState, now);
+        break;
+      case ACTION_TYPES.START_BATTLE:
+        nextState = GameEngine.startBattle(nextState, (action as StartBattleAction).battleId, (action as StartBattleAction).playerGladiatorIds);
+        break;
+      case ACTION_TYPES.CANCEL_BATTLE:
+        nextState = GameEngine.cancelBattle(nextState, (action as CancelBattleAction).battleId);
         break;
       default:
         // Optionally handle unexpected action types
@@ -132,6 +158,7 @@ export class GameEngine {
     const effectiveNow = now + (state.debugTimeOffset || 0);
     
     // Create a new scan with the effective time
+    // TODO probably want some factory for creating new scans - maybe pull into contentFactory?
     const newScan: StellarScan = {
       id: crypto.randomUUID(),
       startTime: effectiveNow, // Use the effective time with offset
@@ -240,5 +267,158 @@ export class GameEngine {
       g.id === gladiatorId ? { ...g, status: newStatus } : g
     ) ?? [];
     return { ...state, roster: updatedRoster };
+  }
+
+  /**
+   * Updates all active battles to the current time
+   * @param battles The list of active battles
+   * @param now The current time
+   * @returns Updated list of battles
+   */
+  private static updateActiveBattles(battles: BattleResult[] | undefined, now: number): BattleResult[] | undefined {
+    if (!battles || battles.length === 0) {
+      return battles;
+    }
+
+    return battles.map(battle => {
+      // If battle is already completed, return as is
+      if (battle.status === 'COMPLETED') {
+        return battle;
+      }
+
+      // If battle is not started yet, return as is
+      if (battle.status === 'NOT_STARTED') {
+        return battle;
+      }
+
+      // Check if battle is complete
+      const endTime = battle.startTime + battle.durationMs;
+      if (now >= endTime) {
+        // Battle is complete, determine outcome
+        const outcome = GameEngine.determineBattleOutcome(battle);
+        const rewards = GameEngine.calculateBattleRewards(battle, outcome);
+        
+        return {
+          ...battle,
+          status: 'COMPLETED',
+          outcome,
+          rewards
+        };
+      }
+      
+      // Battle is still in progress
+      return battle;
+    });
+  }
+
+  /**
+   * Determines the outcome of a battle based on player and opponent power
+   * @param battle The battle to determine the outcome for
+   * @returns The battle outcome
+   */
+  private static determineBattleOutcome(battle: BattleResult): 'VICTORY' | 'DEFEAT' | 'DRAW' {
+    // Simple power comparison for now
+    if (battle.playerPower > battle.opponentPower * 1.1) {
+      return 'VICTORY';
+    } else if (battle.opponentPower > battle.playerPower * 1.1) {
+      return 'DEFEAT';
+    } else {
+      return 'DRAW';
+    }
+  }
+
+  /**
+   * Calculates rewards for a completed battle
+   * @param battle The completed battle
+   * @param outcome The battle outcome
+   * @returns The calculated rewards
+   */
+  private static calculateBattleRewards(battle: BattleResult, outcome: 'VICTORY' | 'DEFEAT' | 'DRAW'): { resourcium?: number } {
+    // Simple reward calculation based on outcome
+    switch (outcome) {
+      case 'VICTORY':
+        return { resourcium: Math.floor(battle.opponentPower * 0.5) };
+      case 'DRAW':
+        return { resourcium: Math.floor(battle.opponentPower * 0.2) };
+      case 'DEFEAT':
+        return { resourcium: Math.floor(battle.opponentPower * 0.1) };
+    }
+  }
+
+  /**
+   * Starts a battle with the selected gladiators
+   * @param state The current game state
+   * @param battleId The ID of the battle to start
+   * @param playerGladiatorIds The IDs of the gladiators to use in the battle
+   * @returns Updated game state
+   */
+  private static startBattle(state: GameState, battleId: string, playerGladiatorIds: string[]): GameState {
+    // Find the battle in the active battles
+    const activeBattles = [...(state.activeBattles || [])];
+    const battleIndex = activeBattles.findIndex(b => b.id === battleId);
+    
+    if (battleIndex === -1) {
+      return state; // Battle not found
+    }
+    
+    const battle = activeBattles[battleIndex];
+    
+    // Check if battle is already started or completed
+    if (battle.status !== 'NOT_STARTED') {
+      return state;
+    }
+    
+    // Update gladiator statuses to CONFLICT
+    const updatedRoster = state.roster.map(gladiator => {
+      if (playerGladiatorIds.includes(gladiator.id)) {
+        return { ...gladiator, status: 'CONFLICT' as GladiatorStatus };
+      }
+      return gladiator;
+    });
+    
+    // Update battle status to IN_PROGRESS
+    const updatedBattle = {
+      ...battle,
+      status: 'IN_PROGRESS' as BattleStatus
+    };
+    
+    activeBattles[battleIndex] = updatedBattle;
+    
+    return {
+      ...state,
+      roster: updatedRoster,
+      activeBattles
+    };
+  }
+
+  /**
+   * Cancels a battle before it starts
+   * @param state The current game state
+   * @param battleId The ID of the battle to cancel
+   * @returns Updated game state
+   */
+  private static cancelBattle(state: GameState, battleId: string): GameState {
+    // Find the battle in the active battles
+    const activeBattles = [...(state.activeBattles || [])];
+    const battleIndex = activeBattles.findIndex(b => b.id === battleId);
+    
+    if (battleIndex === -1) {
+      return state; // Battle not found
+    }
+    
+    const battle = activeBattles[battleIndex];
+    
+    // Check if battle is already started or completed
+    if (battle.status !== 'NOT_STARTED') {
+      return state;
+    }
+    
+    // Remove the battle from active battles
+    activeBattles.splice(battleIndex, 1);
+    
+    return {
+      ...state,
+      activeBattles
+    };
   }
 }
