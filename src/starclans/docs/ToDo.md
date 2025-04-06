@@ -27,6 +27,16 @@ Click on gladiator cards and go to a profile view that shows previous battles an
 - enemies should be part of the object defining conflict assignment parameters
 - can I use a simple series of choices in my prompt to add significant randomization?
 "Consider the following persona axes when coming up with the core inspiration and tone of the gladiator:
-A - color, emotion, family, purpose, technology  
+A - color, emotion, Lineage, purpose, technology  
 B - poetic, grim, altruistic, competitive, chaotic, lawful  
 C - sneaky, tanky, glass cannon, strong, wildcard, leader"
+
+
+## Technical Brainstorming
+- do i need to breakup ClientGameState so that different api endpoints fetch different chunks of it?
+    - maybe its not realistic to be fetching the entire state each ping?
+
+- need to be able to run gameEngine 'to next stop time' so I can resolve things as they happen, rather than the entire chunk of time at once
+    - can I pull out some interface for 'resolvesAt' date that I can always run the engine to?
+
+    

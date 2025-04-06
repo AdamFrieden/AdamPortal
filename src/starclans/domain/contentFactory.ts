@@ -1,4 +1,4 @@
-import { Gladiator } from "./models";
+import { Battle, Gladiator } from "./models";
 import { allGladiators } from "./allGladiators";
 import { enemyGladiators } from "./enemyGladiators";
 
@@ -70,5 +70,25 @@ export class ContentFactory {
         gladiators.push(this.getRandomEnemyGladiator());
     }
     return gladiators;
+  }
+
+  public getRandomBattle(): Battle {
+    const id = crypto.randomUUID();
+    const randomHours = Math.floor(Math.random() * 5) + 1;
+    const randomResourcium = Math.floor(Math.random() * 1000) + 1000;
+    const randomPlayerGladiatorSlots = Math.floor(Math.random() * 3) + 1;
+    const randomEnemyGladiatorSlots = Math.floor(Math.random() * 3) + 1;
+
+    return {
+      id,
+      name: `Battle ${id}`,
+      description: `Battle ${id} description`,
+      startTime: Date.now() + (randomHours * 60 * 60 * 1000),
+      playerGladiators: [],
+      enemyGladiators: this.getRandomEnemyGladiators(randomEnemyGladiatorSlots),
+      status: 'NOT_STARTED',
+      resourcium: randomResourcium,
+      playerGladiatorSlots: randomPlayerGladiatorSlots,
+    }
   }
 }

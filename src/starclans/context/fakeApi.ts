@@ -1,8 +1,7 @@
 // src/api/fakeApi.ts
 
-import { ContentFactory } from "../domain/contentFactory";
-import { GameEngine } from "../domain/gameEngine";
-import { ClientGameState, PlayerAction, GameState, PlayerActionResult, toClientGameState, emptyGameState, Gladiator } from "../domain/models";
+import { GameRunService, IGameRunService } from "../domain/gameRunService";
+import { ClientGameState, PlayerAction, PlayerActionResult, toClientGameState } from "../domain/models";
 
 export interface ApiResponse<T> {
   status: number;
@@ -10,30 +9,19 @@ export interface ApiResponse<T> {
   data?: T;
 }
 
-const STORAGE_KEY = 'starclanData';
+export interface IApiService {
+  startNewClan(clanName: string): Promise<ApiResponse<ClientGameState>>;
+  getClientGameState(): Promise<ApiResponse<ClientGameState>>;
+  deleteGameState(): Promise<ApiResponse<void>>;
+  postPlayerAction(playerAction: PlayerAction): Promise<ApiResponse<PlayerActionResult<ClientGameState>>>;
+  debugAddTimeOffset(offsetMs: number): Promise<ApiResponse<ClientGameState>>;
+}
 
-class FakeApi {
-  private contentFactory: ContentFactory;
+class FakeApi implements IApiService {
 
-  constructor() {
-    this.contentFactory = new ContentFactory();
-  }
-
-  private saveGameState(state: GameState): void {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  }
-  
-  private loadGameState(): GameState {
-    const data = localStorage.getItem(STORAGE_KEY);
-    if (!data || data.trim() === '') {
-      return emptyGameState();
-    }
-    return JSON.parse(data) as GameState;
-  }
-
-  //  Utility function to delete state from local storage for testing
-  public deleteGameState(): void {
-    localStorage.removeItem(STORAGE_KEY);
+  private gameRunService: IGameRunService;
+  constructor(gameRunService?: IGameRunService) {
+    this.gameRunService = gameRunService || new GameRunService();
   }
 
   //  careful this will overwrite existing clan data
@@ -47,21 +35,7 @@ class FakeApi {
       }
     }
 
-    const now = Date.now();
-    const startingGladiators = this.contentFactory.getRandomGladiators(3).map((g) => { return { ...g, stamina: 0, status: 'RESTING', lastRefresh: now }});
-    const startingWaiverWire = this.contentFactory.getRandomGladiators(3).map((g) => { return { ...g, stamina: 0, status: 'ENSLAVED', lastRefresh: now }});
-
-    const newClanGameState: GameState = {
-      clanName: clanName,
-      roster: startingGladiators as Gladiator[],
-      researchTasks: [],
-      lastRefresh: Date.now(),
-      debugTimeOffset: 0,
-      resourcium: Math.random() * 100,
-      rosterCapacity: 5,
-      waiverWire: startingWaiverWire as Gladiator[]
-    }
-    this.saveGameState(newClanGameState);
+    const newClanGameState = this.gameRunService.startNewClan(clanName);
 
     return {
       data: toClientGameState(newClanGameState),
@@ -80,15 +54,19 @@ class FakeApi {
         success: false
       }
     }
-    const persistedGameState = this.loadGameState();
-    //  now run server side logic
-    const nextGameState = GameEngine.updateGameStateToNow(persistedGameState, Date.now()); //  calculate next gamestate based on the current time
-    this.saveGameState(nextGameState); //  persist the updated state
 
-    //  return a client state
-    const clientState = toClientGameState(nextGameState);
+    const currentGameState = this.gameRunService.getGameState();
+   
     return {
-      data: clientState,
+      data: toClientGameState(currentGameState),
+      status: 200,
+      success: true
+    }
+  }
+
+  public deleteGameState = async (): Promise<ApiResponse<void>> => {
+    this.gameRunService.deleteGameState();
+    return {
       status: 200,
       success: true
     }
@@ -104,11 +82,9 @@ class FakeApi {
       }
     }
 
-    const persistedGameState = this.loadGameState();
-    const { state: nextState, actionSuccess } = GameEngine.attemptPlayerAction(persistedGameState, Date.now(), playerAction);
-    this.saveGameState(nextState);
+    const result = this.gameRunService.tryPlayerAction(playerAction);
 
-    const resultForClient = { state: toClientGameState(nextState), actionSuccess };
+    const resultForClient = { state: toClientGameState(result.state), actionSuccess: result.actionSuccess };
     return {
       data: resultForClient,
       status: 200,
@@ -118,25 +94,7 @@ class FakeApi {
 
   public debugAddTimeOffset = async (offsetMs: number): Promise<ApiResponse<ClientGameState>> => {
     try {
-      const persistedGameState = this.loadGameState();
-      
-      // Add to existing offset (or initialize if it doesn't exist)
-      const currentOffset = persistedGameState.debugTimeOffset || 0;
-      const newOffset = currentOffset + offsetMs;
-      
-      // Update the game state with the new offset
-      const updatedState = {
-        ...persistedGameState,
-        debugTimeOffset: newOffset
-      };
-      
-      // Save the updated state with the new offset
-      this.saveGameState(updatedState);
-      
-      // Run the normal game state update process to apply the new offset
-      const nextGameState = GameEngine.updateGameStateToNow(updatedState, Date.now());
-      this.saveGameState(nextGameState);
-      
+      const nextGameState = this.gameRunService.addDebugTimeOffset(offsetMs);
       return {
         data: toClientGameState(nextGameState),
         status: 200,
@@ -163,5 +121,5 @@ const mockApiBehavior = async (): Promise<void> => {
   }
 };
 
-const apiService = new FakeApi();
+const apiService: IApiService = new FakeApi();
 export default apiService;

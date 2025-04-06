@@ -159,5 +159,25 @@ export type PlayerAction = StartResearchAction
   | RecruitGladiatorAction
   | StartStellarScanAction
 
+export interface Battle {
+  // label
+  id: string;
+  name: string;
+  description: string;
 
+  // state
+  startTime: number;
+  playerGladiators: ClientGladiator[];
+  enemyGladiators: ClientGladiator[];
+  status: BattleStatus;
 
+  // rewards
+  resourcium: number;
+
+  // constraints
+  playerGladiatorSlots: number;
+}
+
+export type BattleStatus = 'NOT_STARTED' 
+  | 'ENGAGED'     //  player has saved gladiators to the battle but it hasn't started yet
+  | 'COMPLETED';  //  battle has been resolved with whatever gladiators were in slots / saved
