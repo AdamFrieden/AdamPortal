@@ -1,6 +1,6 @@
 import { ContentFactory } from "./contentFactory";
 import { GameEngine } from "./gameEngine";
-import { emptyGameState, GameState, Gladiator, PlayerAction, PlayerActionResult } from "./models";
+import { emptyGameState, GameState, Gladiator, IContentFactory, IGameContext, PlayerAction, PlayerActionResult } from "./models";
 
 export interface IGameRunService {
     deleteGameState(): void;
@@ -10,12 +10,18 @@ export interface IGameRunService {
     addDebugTimeOffset(offsetMs: number): GameState;
 }
 
+// pull out IGameContext and IContentFactory
+// pass context into gameEngine calls
+// context will contain contentFactory, playerConfig, logging
+
 export class GameRunService implements IGameRunService {
-    private contentFactory: ContentFactory;
+    private gameContext: IGameContext;
     private STORAGE_KEY = 'starclanData';
 
-    constructor() {
-        this.contentFactory = new ContentFactory();
+    constructor(contentFactory?: IContentFactory) {
+        this.gameContext = {
+            contentFactory: contentFactory || new ContentFactory()
+        };
     }
 
     public deleteGameState(): void {
@@ -26,13 +32,13 @@ export class GameRunService implements IGameRunService {
         const persistedGameState = this.loadGameState();
 
         //  now run server side logic
-        const nextGameState = GameEngine.updateGameStateToNow(persistedGameState, Date.now()); //  calculate next gamestate based on the current time
+        const nextGameState = GameEngine.updateGameStateToNow(persistedGameState, Date.now(), this.gameContext);
 
         // instead we might want to do something like this:
         // while (!finishedUpdating) {
         //      const nextEventCompleteTime = GameEngine.getNextEventCompleteTime(persistedGameState);
         //      const jumpToTime = Math.min(nextEventCompleteTime, Date.now());
-        //      const nextGameState = GameEngine.updateGameStateToNow(persistedGameState, jumpToTime); //  calculate next gamestate based on the current time
+        //      const nextGameState = GameEngine.updateGameStateToNow(persistedGameState, jumpToTime, this.gameContext);
         //      persistedGameState = nextGameState;
         //      finishedUpdating = jumpToTime >= Date.now();
         // }
@@ -44,15 +50,15 @@ export class GameRunService implements IGameRunService {
 
     public tryPlayerAction(playerAction: PlayerAction): PlayerActionResult<GameState> {
         const persistedGameState = this.loadGameState();
-        const { state: nextState, actionSuccess } = GameEngine.attemptPlayerAction(persistedGameState, Date.now(), playerAction);
+        const { state: nextState, actionSuccess } = GameEngine.attemptPlayerAction(persistedGameState, Date.now(), playerAction, this.gameContext);
         this.saveGameState(nextState);
         return { state: nextState, actionSuccess };
     }
 
     public startNewClan(clanName: string): GameState {
         const now = Date.now();
-        const startingGladiators = this.contentFactory.getRandomGladiators(3).map((g) => { return { ...g, stamina: 0, status: 'RESTING', lastRefresh: now }});
-        const startingWaiverWire = this.contentFactory.getRandomGladiators(3).map((g) => { return { ...g, stamina: 0, status: 'ENSLAVED', lastRefresh: now }});
+        const startingGladiators = this.gameContext.contentFactory.getRandomGladiators(3).map((g) => { return { ...g, stamina: 0, status: 'RESTING', lastRefresh: now }});
+        const startingWaiverWire = this.gameContext.contentFactory.getRandomGladiators(3).map((g) => { return { ...g, stamina: 0, status: 'ENSLAVED', lastRefresh: now }});
     
         const newClanGameState: GameState = {
           clanName: clanName,
@@ -71,7 +77,7 @@ export class GameRunService implements IGameRunService {
     public addDebugTimeOffset(offsetMs: number): GameState {
         const persistedGameState = this.loadGameState();
       
-      // Add to existing offset (or initialize if it doesn't exist)
+        // Add to existing offset (or initialize if it doesn't exist)
         const currentOffset = persistedGameState.debugTimeOffset || 0;
         const newOffset = currentOffset + offsetMs;
         
@@ -85,7 +91,7 @@ export class GameRunService implements IGameRunService {
         this.saveGameState(updatedState);
         
         // Run the normal game state update process to apply the new offset
-        const nextGameState = GameEngine.updateGameStateToNow(updatedState, Date.now());
+        const nextGameState = GameEngine.updateGameStateToNow(updatedState, Date.now(), this.gameContext);
         this.saveGameState(nextGameState);
 
         return nextGameState;

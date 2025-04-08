@@ -39,4 +39,6 @@ C - sneaky, tanky, glass cannon, strong, wildcard, leader"
 - need to be able to run gameEngine 'to next stop time' so I can resolve things as they happen, rather than the entire chunk of time at once
     - can I pull out some interface for 'resolvesAt' date that I can always run the engine to?
 
-    
+- need some event system so my gameEngine can return events that occurred since the last update
+
+- contentFactory probably needs access to gamestate so we can use it to determine results (ex tech might make scan results better)

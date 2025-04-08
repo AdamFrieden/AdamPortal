@@ -1,8 +1,8 @@
-import { Battle, Gladiator } from "./models";
+import { Battle, Gladiator, IContentFactory, ScanResult } from "./models";
 import { allGladiators } from "./allGladiators";
 import { enemyGladiators } from "./enemyGladiators";
 
-export class ContentFactory {
+export class ContentFactory implements IContentFactory {
   private pool: Gladiator[];
   private enemyPool: Gladiator[];
 
@@ -10,6 +10,22 @@ export class ContentFactory {
     // Make a local copy so we can remove gladiators from it without affecting the original array
     this.pool = [...allGladiators];
     this.enemyPool = [...enemyGladiators];
+  }
+  getRandomScanResult(): ScanResult {
+    const resultTypes = ['opportunity', 'threat', 'resource'];
+    const numResults = 1 + Math.floor(Math.random() * 3); // 1-3 results
+    
+    const results: ScanResult[] = [];
+    for (let i = 0; i < numResults; i++) {
+      const type = resultTypes[Math.floor(Math.random() * resultTypes.length)];
+      results.push({
+      id: crypto.randomUUID(),
+      type,
+      description: `Found a ${type} in the stellar region.`,
+      reward: type === 'resource' ? `${Math.floor(Math.random() * 100)} resourcium` : undefined
+    });
+    }
+    return results[0];
   }
 
   /**

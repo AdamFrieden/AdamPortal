@@ -23,7 +23,7 @@ export interface StellarScan {
   startTime: number;
   durationMs: number;
   status: ScanStatus;
-  results?: ScanResult[];
+  result?: ScanResult;
 }
 
 export interface Gladiator {
@@ -181,3 +181,21 @@ export interface Battle {
 export type BattleStatus = 'NOT_STARTED' 
   | 'ENGAGED'     //  player has saved gladiators to the battle but it hasn't started yet
   | 'COMPLETED';  //  battle has been resolved with whatever gladiators were in slots / saved
+
+
+export interface IContentFactory {
+  getRandomGladiator(): Gladiator;
+  getRandomGladiators(count: number): Gladiator[];
+  getRandomEnemyGladiator(): Gladiator;
+  getRandomEnemyGladiators(count: number): Gladiator[];
+  getRandomBattle(): Battle;
+  getRandomScanResult(): ScanResult;
+}
+
+export interface IGameContext {
+  contentFactory: IContentFactory;
+  // playerConfig: IPlayerConfig;
+  // logger?: ILoggingService;
+}
+
+

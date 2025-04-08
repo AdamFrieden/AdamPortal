@@ -12,21 +12,53 @@ import {
   RecruitGladiatorAction,
   ACTION_TYPES,
   StellarScan,
-  ScanResult
+  ScanResult,
+  IGameContext
 } from './models';
+
+
+
 
 //  this should not maintain any state. use all pure functions that have no side effects.
 //  state changes are always returned as a  new state object without mutating inputs.
 export class GameEngine {
 
-  public static updateGameStateToNow(state: GameState, now: number): GameState {
+  // Find the next event completion time from research tasks and stellar scans
+  // refactor this so there is a common interface for all events? 
+  public static getNextEventCompleteTime(state: GameState): number {
+    const now = Date.now() + (state.debugTimeOffset || 0);
+    let nextEventTime = Number.MAX_SAFE_INTEGER; // Start with maximum time
+    
+    // Check research tasks
+    state.researchTasks?.forEach(task => {
+      if (!task.completed) {
+        const taskCompletionTime = task.startTime + task.durationMs;
+        if (taskCompletionTime > now && taskCompletionTime < nextEventTime) {
+          nextEventTime = taskCompletionTime;
+        }
+      }
+    });
+    
+    // Check active scan
+    if (state.activeScan?.status === 'IN_PROGRESS') {
+      const scanCompletionTime = state.activeScan.startTime + state.activeScan.durationMs;
+      if (scanCompletionTime > now && scanCompletionTime < nextEventTime) {
+        nextEventTime = scanCompletionTime;
+      }
+    }
+    
+    // If no events are scheduled, just return current time
+    return nextEventTime === Number.MAX_SAFE_INTEGER ? now : nextEventTime;
+  }
+
+  public static updateGameStateToNow(state: GameState, now: number, context?: IGameContext): GameState {
     // Apply debug time offset to the "now" timestamp
     const effectiveNow = now + (state.debugTimeOffset || 0);
 
     // Call each system with the effective time
     const updatedResearchTasks = GameEngine.updateResearchTasks(state.researchTasks, effectiveNow);
     const updatedGladiators = GameEngine.updateGladiators(state.roster, effectiveNow);
-    const updatedScan = GameEngine.updateActiveScan(state.activeScan, effectiveNow);
+    const updatedScan = GameEngine.updateActiveScan(state.activeScan, effectiveNow, context);
 
     const updatedState: GameState = {
       ...state,
@@ -38,15 +70,19 @@ export class GameEngine {
     return updatedState;
   }
 
+  // public static pushGameStateToTime(state: GameState, now: number): { gameState: GameState, contentClaims: ContentClaims[] } {
+  // }
+
   public static attemptPlayerAction(
-  state: GameState, 
+    state: GameState, 
     now: number, 
-    action: PlayerAction
+    action: PlayerAction,
+    context?: IGameContext
   ): PlayerActionResult<GameState> {
 
     // First, update the state using refreshGameState
-    let nextState = GameEngine.updateGameStateToNow(state, now);
-
+    let nextState = GameEngine.updateGameStateToNow(state, now, context);
+    
     //  ##MISSING add some validation
   
     // Call the correct helper based on the action type
@@ -83,7 +119,7 @@ export class GameEngine {
     return { state: nextState, actionSuccess: true };
   }
 
-  private static updateActiveScan(scan: StellarScan | undefined, now: number): StellarScan | undefined {
+  private static updateActiveScan(scan: StellarScan | undefined, now: number, context: IGameContext): StellarScan | undefined {
     if (!scan || scan.status !== 'IN_PROGRESS') {
       return scan;
     }
@@ -91,35 +127,15 @@ export class GameEngine {
     const endTime = scan.startTime + scan.durationMs;
     if (now >= endTime) {
       // Scan is complete, generate results
-      const results = GameEngine.generateScanResults();
+      const result = context.contentFactory.getRandomScanResult();
       return {
         ...scan,
         status: 'COMPLETED',
-        results
+        result
       };
     }
     
     return scan;
-  }
-
-  // Generate random scan results
-  // eventually we want these scan results to be interactive and require gladiator engagement to 'use' once they've resolved
-  private static generateScanResults(): ScanResult[] {
-    const resultTypes = ['opportunity', 'threat', 'resource'];
-    const numResults = 1 + Math.floor(Math.random() * 3); // 1-3 results
-    
-    const results: ScanResult[] = [];
-    for (let i = 0; i < numResults; i++) {
-      const type = resultTypes[Math.floor(Math.random() * resultTypes.length)];
-      results.push({
-        id: crypto.randomUUID(),
-        type,
-        description: `Found a ${type} in the stellar region.`,
-        reward: type === 'resource' ? `${Math.floor(Math.random() * 100)} resourcium` : undefined
-      });
-    }
-    
-    return results;
   }
 
   private static startStellarScan(state: GameState, now: number): GameState {
