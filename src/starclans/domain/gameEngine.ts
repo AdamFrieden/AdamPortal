@@ -20,6 +20,13 @@ import {
 export class GameEngine {
 
   public static updateGameStateToNow(state: GameState, now: number): GameState {
+
+    //  we don't expect any content requests to be present in the state when we update it
+    //  throw an error if we find any
+    if (state.contentRequests && state.contentRequests.length > 0) {
+      throw new Error('Content requests found in state when updating to now');
+    }
+
     // Apply debug time offset to the "now" timestamp
     const effectiveNow = now + (state.debugTimeOffset || 0);
 

@@ -52,33 +52,7 @@ export interface GameState {
   waiverWire: Gladiator[];
   activeScan?: StellarScan; // Add active scan to the game state
   scanHistory?: StellarScan[]; // Add scan history
-  //  need some 'waiver wire' collection for available gladiators
-}
-
-export type ClientGameState = Omit<GameState, 'roster'> & {
-  roster: ClientGladiator[];
-}
-
-export type ClientGladiator = Omit<Gladiator, 'truePower' | 'hiddenTraits'>
-
-// translate full Gladiator objects used by the gameEngine to a ClientGladiator object used by the UI
-// make sure to hide truePower and hiddenTraits from the client
-export function toClientGladiator(gladiator: Gladiator): ClientGladiator {
-  // Use object destructuring to remove 'truePower'
-  const { truePower, hiddenTraits, ...clientGladiator } = gladiator;
-  return clientGladiator;
-}
-
-
-
-// function for translating a full GameState used by the gameEngine into a ClientGameState used by the UI
-// this separation serves to only expose certain aspects of the game to the frontend
-export function toClientGameState(state: GameState): ClientGameState {
-  return {
-    // Spread the original state but override 'gladiators'
-    ...state,
-    roster: state.roster.map(toClientGladiator),
-  };
+  contentRequests?: ContentRequest[];
 }
 
 export function emptyGameState(): GameState {
@@ -95,21 +69,45 @@ export function emptyGameState(): GameState {
   }
 }
 
+export type ClientGameState = Omit<GameState, 'roster'> & {
+  roster: ClientGladiator[];
+}
+
+export type ClientGladiator = Omit<Gladiator, 'truePower' | 'hiddenTraits'>
+
+// translate full Gladiator objects used by the gameEngine to a ClientGladiator object used by the UI
+// make sure to hide truePower and hiddenTraits from the client
+export function toClientGladiator(gladiator: Gladiator): ClientGladiator {
+  // Use object destructuring to remove 'truePower'
+  const { truePower, hiddenTraits, ...clientGladiator } = gladiator;
+  return clientGladiator;
+}
+
+// function for translating a full GameState used by the gameEngine into a ClientGameState used by the UI
+// this separation serves to only expose certain aspects of the game to the frontend
+export function toClientGameState(state: GameState): ClientGameState {
+  return {
+    // Spread the original state but override 'gladiators'
+    ...state,
+    roster: state.roster.map(toClientGladiator),
+  };
+}
+
 export interface PlayerActionResult<T extends GameState | ClientGameState> {
   state: T
   actionSuccess: boolean;
 }
 
-  // Action types as const
-  export const ACTION_TYPES = {
-    START_RESEARCH: 'START_RESEARCH',
-    CANCEL_RESEARCH: 'CANCEL_RESEARCH',
-    DROP_GLADIATOR: 'DROP_GLADIATOR',
-    REST_GLADIATOR: 'REST_GLADIATOR',
-    TRAIN_GLADIATOR: 'TRAIN_GLADIATOR',
-    RECRUIT_GLADIATOR: 'RECRUIT_GLADIATOR',
-    START_SCAN: 'START_SCAN', // Initiate a stellar scan
-  } as const;
+// Action types as const
+export const ACTION_TYPES = {
+  START_RESEARCH: 'START_RESEARCH',
+  CANCEL_RESEARCH: 'CANCEL_RESEARCH',
+  DROP_GLADIATOR: 'DROP_GLADIATOR',
+  REST_GLADIATOR: 'REST_GLADIATOR',
+  TRAIN_GLADIATOR: 'TRAIN_GLADIATOR',
+  RECRUIT_GLADIATOR: 'RECRUIT_GLADIATOR',
+  START_SCAN: 'START_SCAN', // Initiate a stellar scan
+} as const;
 
 //  keep player action extremely minimal - eventually pass these over the wire so they can be consumed by the real gameEngine in AWS.
 //  make sure nothing about the player action is authoritative. it should only convey intent. gameEngine should verify access and costs, etc.
@@ -176,6 +174,11 @@ export interface Battle {
 
   // constraints
   playerGladiatorSlots: number;
+}
+
+export interface ContentRequest {
+  contentType: string;
+  parameters: Record<string, any>;
 }
 
 export type BattleStatus = 'NOT_STARTED' 

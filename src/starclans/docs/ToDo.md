@@ -31,6 +31,9 @@ A - color, emotion, Lineage, purpose, technology
 B - poetic, grim, altruistic, competitive, chaotic, lawful  
 C - sneaky, tanky, glass cannon, strong, wildcard, leader"
 
+If we end up with a design where multiple battles can be done at different times, we want to avoid a situation where a players feels they need to:
+    - figure out if a gladiator will be available after a battle for another battle
+    - login in some tight window to assign that gladiator to another battle after their first battle ends
 
 ## Technical Brainstorming
 - do i need to breakup ClientGameState so that different api endpoints fetch different chunks of it?
@@ -38,5 +41,11 @@ C - sneaky, tanky, glass cannon, strong, wildcard, leader"
 
 - need to be able to run gameEngine 'to next stop time' so I can resolve things as they happen, rather than the entire chunk of time at once
     - can I pull out some interface for 'resolvesAt' date that I can always run the engine to?
+
+Consider using EventBridge, Lambda, and SQS in order to resolve many battles at a specific time
+- this could also be used for 'multi-step' battles if I eventually want to go that route
+
+Other things that can be resolved 'whenever' (like gladiator stamina recovery) can be done on a 'dumb' schedule + whenver the player pings the API (we would also conduct this update before resolving a battle)
+
 
     

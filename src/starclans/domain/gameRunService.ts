@@ -2,15 +2,15 @@ import { ContentFactory } from "./contentFactory";
 import { GameEngine } from "./gameEngine";
 import { emptyGameState, GameState, Gladiator, PlayerAction, PlayerActionResult } from "./models";
 
-export interface IGameRunService {
-    deleteGameState(): void;
-    getGameState(): GameState;
-    tryPlayerAction(playerAction: PlayerAction): PlayerActionResult<GameState>;
-    startNewClan(clanName: string): GameState;
-    addDebugTimeOffset(offsetMs: number): GameState;
-}
+// export interface IGameRunService {
+//     deleteGameState(): void;
+//     // getGameState(): GameState;
+//     tryPlayerAction(playerAction: PlayerAction): PlayerActionResult<GameState>;
+//     startNewClan(clanName: string): GameState;
+//     addDebugTimeOffset(offsetMs: number): GameState;
+// }
 
-export class GameRunService implements IGameRunService {
+export class GameRunService {
     private contentFactory: ContentFactory;
     private STORAGE_KEY = 'starclanData';
 
@@ -22,25 +22,32 @@ export class GameRunService implements IGameRunService {
         localStorage.removeItem(this.STORAGE_KEY);
     }
 
-    public getGameState(): GameState {
+    public updateGameStateToNow(): GameState {
         const persistedGameState = this.loadGameState();
-
-        //  now run server side logic
-        const nextGameState = GameEngine.updateGameStateToNow(persistedGameState, Date.now()); //  calculate next gamestate based on the current time
-
-        // instead we might want to do something like this:
-        // while (!finishedUpdating) {
-        //      const nextEventCompleteTime = GameEngine.getNextEventCompleteTime(persistedGameState);
-        //      const jumpToTime = Math.min(nextEventCompleteTime, Date.now());
-        //      const nextGameState = GameEngine.updateGameStateToNow(persistedGameState, jumpToTime); //  calculate next gamestate based on the current time
-        //      persistedGameState = nextGameState;
-        //      finishedUpdating = jumpToTime >= Date.now();
-        // }
-
-        this.saveGameState(nextGameState); //  persist the updated state
-    
+        const nextGameState = GameEngine.updateGameStateToNow(persistedGameState, Date.now());
+        this.saveGameState(nextGameState);
         return nextGameState;
     }
+
+    // public getGameState(): GameState {
+    //     const persistedGameState = this.loadGameState();
+
+    //     //  now run server side logic
+    //     const nextGameState = GameEngine.updateGameStateToNow(persistedGameState, Date.now()); //  calculate next gamestate based on the current time
+
+    //     // instead we might want to do something like this:
+    //     // while (!finishedUpdating) {
+    //     //      const nextEventCompleteTime = GameEngine.getNextEventCompleteTime(persistedGameState);
+    //     //      const jumpToTime = Math.min(nextEventCompleteTime, Date.now());
+    //     //      const nextGameState = GameEngine.updateGameStateToNow(persistedGameState, jumpToTime); //  calculate next gamestate based on the current time
+    //     //      persistedGameState = nextGameState;
+    //     //      finishedUpdating = jumpToTime >= Date.now();
+    //     // }
+
+    //     this.saveGameState(nextGameState); //  persist the updated state
+    
+    //     return nextGameState;
+    // }
 
     public tryPlayerAction(playerAction: PlayerAction): PlayerActionResult<GameState> {
         const persistedGameState = this.loadGameState();
@@ -102,4 +109,23 @@ export class GameRunService implements IGameRunService {
     private saveGameState(state: GameState): void {
         localStorage.setItem(this.STORAGE_KEY, JSON.stringify(state));
     }
+
+    private processContentRequests(state: GameState): GameState {
+        if (!state.contentRequests || state.contentRequests.length === 0) {
+          return state;
+        }
+        
+        let result = { ...state };
+        
+        for (const request of state.contentRequests) {
+          // Process each request with contentFactory
+          // Update relevant parts of the state
+        }
+        
+        // Clear processed requests
+        return {
+          ...result,
+          contentRequests: []
+        };
+      }
 }

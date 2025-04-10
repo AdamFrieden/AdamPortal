@@ -1,6 +1,6 @@
 // src/api/fakeApi.ts
 
-import { GameRunService, IGameRunService } from "../domain/gameRunService";
+import { GameRunService } from "../domain/gameRunService";
 import { ClientGameState, PlayerAction, PlayerActionResult, toClientGameState } from "../domain/models";
 
 export interface ApiResponse<T> {
@@ -19,8 +19,8 @@ export interface IApiService {
 
 class FakeApi implements IApiService {
 
-  private gameRunService: IGameRunService;
-  constructor(gameRunService?: IGameRunService) {
+  private gameRunService: GameRunService;
+  constructor(gameRunService?: GameRunService) {
     this.gameRunService = gameRunService || new GameRunService();
   }
 
@@ -55,8 +55,16 @@ class FakeApi implements IApiService {
       }
     }
 
-    const currentGameState = this.gameRunService.getGameState();
-   
+    // eventually we will need to pull in game state/context or whatever based on playerId or something 
+    const currentGameState = this.gameRunService.updateGameStateToNow();
+
+    // how do we handle a battle that takes place between two players?
+    // can we resolve the battle for one of the players first?
+
+    // if I'm viewing someone else's clan, I want to see their most update state, not wait until they refresh
+    
+    
+
     return {
       data: toClientGameState(currentGameState),
       status: 200,
