@@ -1,6 +1,6 @@
 import { ContentFactory } from "./contentFactory";
 import { GameEngine } from "./gameEngine";
-import { emptyGameState, GameState, Gladiator, PlayerAction, PlayerActionResult } from "./models";
+import { emptyGameState, GameState, Gladiator, PlayerAction, PlayerActionResult, IHaveClanEvent } from "./models";
 
 // export interface IGameRunService {
 //     deleteGameState(): void;
@@ -23,7 +23,11 @@ export class GameRunService {
     }
 
     public updateGameStateToNow(): GameState {
+
         const persistedGameState = this.loadGameState();
+
+
+        //  TODO 
         const nextGameState = GameEngine.updateGameStateToNow(persistedGameState, Date.now());
         this.saveGameState(nextGameState);
         return nextGameState;

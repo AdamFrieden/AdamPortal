@@ -47,5 +47,8 @@ Consider using EventBridge, Lambda, and SQS in order to resolve many battles at 
 
 Other things that can be resolved 'whenever' (like gladiator stamina recovery) can be done on a 'dumb' schedule + whenver the player pings the API (we would also conduct this update before resolving a battle)
 
+Client should pass some playerId/clanId to api
+Api should fetch clan object
+Api should be able to find all battles and resolve each individually, but will require fetching each clan
 
     

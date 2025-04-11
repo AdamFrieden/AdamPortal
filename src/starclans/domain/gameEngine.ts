@@ -33,17 +33,28 @@ export class GameEngine {
     // Call each system with the effective time
     const updatedResearchTasks = GameEngine.updateResearchTasks(state.researchTasks, effectiveNow);
     const updatedGladiators = GameEngine.updateGladiators(state.roster, effectiveNow);
-    const updatedScan = GameEngine.updateActiveScan(state.activeScan, effectiveNow);
+    const updatedScans = GameEngine.updateActiveScans(state, effectiveNow);
 
     const updatedState: GameState = {
       ...state,
       researchTasks: updatedResearchTasks,
       roster: updatedGladiators,
-      activeScan: updatedScan,
+      activeScans: updatedScans,
       lastRefresh: effectiveNow // Use the effective time for lastRefresh
     };
     return updatedState;
   }
+
+
+
+  public static findTimeToNextEvent(state: GameState): number {
+    const timeToNextResearchTaskCompletion = 123;
+    const timeToNextScanCompletion = 123;
+
+    return Math.min(timeToNextResearchTaskCompletion, timeToNextScanCompletion);
+  }
+
+
 
   public static attemptPlayerAction(
   state: GameState, 
@@ -90,9 +101,14 @@ export class GameEngine {
     return { state: nextState, actionSuccess: true };
   }
 
-  private static updateActiveScan(scan: StellarScan | undefined, now: number): StellarScan | undefined {
-    if (!scan || scan.status !== 'IN_PROGRESS') {
-      return scan;
+
+
+  private static updateActiveScans(state: GameState, now: number): GameState {
+
+    
+
+    if (!state.activeScan || state.activeScan.status !== 'IN_PROGRESS') {
+      return state;
     }
     
     const endTime = scan.startTime + scan.durationMs;
@@ -137,13 +153,15 @@ export class GameEngine {
     
     // Get the effective time that accounts for debug offset
     const effectiveNow = now + (state.debugTimeOffset || 0);
+    const duration = 1000 * 60 * 5; // 5 minutes for testing
     
     // Create a new scan with the effective time
     const newScan: StellarScan = {
       id: crypto.randomUUID(),
-      startTime: effectiveNow, // Use the effective time with offset
-      durationMs: 1000 * 60 * 5, // 5 minutes for testing
-      status: 'IN_PROGRESS'
+      startTime: effectiveNow,
+      durationMs: duration,
+      status: 'IN_PROGRESS',
+      eventTime: effectiveNow + duration
     };
     
     // If there was a completed scan, move it to history

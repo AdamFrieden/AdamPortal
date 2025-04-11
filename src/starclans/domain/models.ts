@@ -50,13 +50,19 @@ export interface GameState {
   roster: Gladiator[];
   rosterCapacity: number;
   waiverWire: Gladiator[];
-  activeScan?: StellarScan; // Add active scan to the game state
+  activeScans?: StellarScan[]; // Add active scan to the game state
   scanHistory?: StellarScan[]; // Add scan history
+
   contentRequests?: ContentRequest[];
+  clanEvents?: ClanEvent[];
+  battles?: Battle[];
+  clanId: string;
+
 }
 
 export function emptyGameState(): GameState {
   return {
+    clanId: '',
     clanName: '',
     roster: [],
     researchTasks: [],
@@ -179,6 +185,12 @@ export interface Battle {
 export interface ContentRequest {
   contentType: string;
   parameters: Record<string, any>;
+}
+
+// some interface for events that might modify future game state calculations?
+export interface ClanEvent {
+  id: string;
+  timestamp: number;
 }
 
 export type BattleStatus = 'NOT_STARTED' 
