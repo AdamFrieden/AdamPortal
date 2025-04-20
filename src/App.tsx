@@ -9,6 +9,8 @@ import VerseCommanderDemo from './components/VerseCommanderDemo';
 import StarClans from './pages/StarClans';
 import HomeContent from './pages/HomeContent';
 import StarClanLayout from './starclans/components/StarClanLayout';
+import DevKnowledgePage from './pages/DevKnowledge/DevKnowledgePage';
+import MarkdownDocPage from './pages/DevKnowledge/MarkdownDocPage';
 
 const App = () => {
 
@@ -23,6 +25,8 @@ const App = () => {
             <Route path="/ninjaparty" element={<NinjaParty />} />
             <Route path="/versecommander" element={<VerseCommander />} />
             <Route path="/starclans" element={<StarClans />} />
+            <Route path="/dev-knowledge" element={<DevKnowledgePage />} />
+            <Route path="/dev-knowledge/doc/:docId" element={<MarkdownDocPage />} />
           </Route>
 
           {/* Alternative layout routes */}
