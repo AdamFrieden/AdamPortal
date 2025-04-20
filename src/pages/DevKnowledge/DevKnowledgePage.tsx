@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { 
   Typography, 
   Container, 
@@ -10,7 +10,8 @@ import {
   Grid,
   Card,
   CardActionArea,
-  CardContent
+  CardContent,
+  Button
 } from '@mui/material';
 
 // Vite feature to import multiple modules
@@ -27,6 +28,7 @@ const DevKnowledgePage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     try {
@@ -54,6 +56,16 @@ const DevKnowledgePage: React.FC = () => {
     );
   }, [docs, searchTerm]);
 
+  // Handler for the random button click
+  const handleRandomClick = () => {
+    if (docs.length > 0) {
+      const randomIndex = Math.floor(Math.random() * docs.length);
+      const randomDoc = docs[randomIndex];
+      const randomDocUrl = `/dev-knowledge/doc/${encodeURIComponent(randomDoc.name.replace(/ /g, '_') + '.md')}`;
+      navigate(randomDocUrl);
+    }
+  };
+
   if (loading) {
     return <Container><CircularProgress /></Container>;
   }
@@ -64,9 +76,19 @@ const DevKnowledgePage: React.FC = () => {
 
   return (
     <Container maxWidth="lg">
-      <Typography variant="h4" component="h1" gutterBottom sx={{ textAlign: 'center', mt: 2, mb: 4 }}>
-        Dev Knowledge Base
-      </Typography>
+      {/* Title and Random Button */}
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 2, mb: 4, flexWrap: 'wrap' }}>
+        {/* <Typography variant="h4" component="h1" gutterBottom sx={{ textAlign: 'center', mb: { xs: 2, sm: 0 }, mr: { sm: 2 } }}>
+        </Typography> */}
+        <Button 
+          variant="contained" 
+          onClick={handleRandomClick}
+          disabled={docs.length === 0}
+          size="small"
+        >
+          Random Document
+        </Button>
+      </Box>
 
       {/* Search Input */}
       <Box sx={{ mb: 4, maxWidth: '600px', mx: 'auto' }}>
