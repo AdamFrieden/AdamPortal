@@ -25,45 +25,48 @@ def get_safe_filename(topic: str) -> str:
     # Add .md extension
     return f"{safe_name}.md"
 
-def _build_prompt(topic: str) -> str:
-    """Constructs the prompt for the OpenAI API call."""
+def build_prompt(topic: str) -> str:
+    """
+    Returns a richer, accuracy‑oriented prompt for OpenAI.
+    The model is asked to produce raw Markdown *only*.
+    """
     return f"""
-Generate a concise learning document for the topic: "{topic}".
+        You are an expert software architect and systems engineer with a practical, and foundational approach.  
+        Write a **concise but information‑dense learning note** on **{topic}** for a mid‑senior software/systems engineer.
 
-Use a markdown format like this example, appropriate for the topic:
+        ### Output rules
+        - **Format**: *pure Markdown only* – start with `#`, no front‑matter or prose outside the doc itself.
+        - **Length**: roughly **350–500 words** (≈2–3 min read).
+        - **Voice**: professional, practical, no hype.
+        - **Accuracy**: if unsure, say so briefly; never invent facts.  
+        - **Sources**: place **at least two authoritative links** in the **References** section (MD list). Use official docs, RFCs, academic papers, or well‑known blogs.
 
-# [EMOJI] {topic}
+        ### Suggested outline
+        # {topic}
 
-✅ **[One-sentence summary of the topic]**
+        > **few sentence takeaway**
 
-### 🧠 Core idea:
-- [Bullet point explaining the fundamental concept]
-- [Another key aspect of the core idea]
+        ## Core idea
+        - bullets capturing the fundamental concept and why it matters
 
-### 📦 Key features:
-- [Feature 1]
-- [Feature 2]
-- [Feature 3, etc.]
+        ## Key features
+        - bullets highlighting distinct capabilities and use cases
+        
+        ## Why / When / How
+        - why and when to use it
+        - common pitfalls and when not to use it
 
-### 🔍 Example:
-- [A simple, concrete example illustrating the concept]
+        ## Example / Walk‑through
+        ```pseudo
+        # concise code / CLI / sequence diagram
 
-### 📊 Comparison:
-- Compared to [Related Concept 1]: [Key difference/advantage/disadvantage]
-- Compared to [Related Concept 2]: [Key difference/advantage/disadvantage]
+        ## Real-world applications
+        - some real world modern day examples
 
-### 🚀 Real-world applications:
-- [Application 1]
-- [Application 2]
-- [Application 3, etc.]
+        ## (optional) Sources
+        - if applicable, include one or two authoritative links
 
-Instructions:
-1.  Replace the bracketed placeholders `[...]` with relevant information for the topic "{topic}".
-2.  Choose a single, relevant emoji for the main title `[EMOJI]`.
-3.  Keep the descriptions concise and easy to understand.
-4.  Focus on the most important aspects for a quick overview.
-5.  Output only the raw markdown text, starting directly with the '#'. Do not include any preamble or explanation.
-"""
+        """
 
 def generate_topic_doc(topic: str) -> str:
     """
@@ -71,16 +74,18 @@ def generate_topic_doc(topic: str) -> str:
     formatted in a specific markdown structure.
     """
 
-    prompt = _build_prompt(topic)
+    prompt = build_prompt(topic)
 
     try:
         response = client.chat.completions.create(
             model="gpt-4o",  # Or another suitable model like "gpt-3.5-turbo"
             messages=[
-                {"role": "system", "content": "You are an expert technical writer generating concise learning documents in a specific markdown format."},
+                {"role": "system", "content": "You are an expert software architect and systems engineer generating learning documents in markdown format."},
                 {"role": "user", "content": prompt}
             ],
-            temperature=0.5 # Adjust temperature for desired creativity/consistency
+            temperature=0.2, # Adjust temperature for desired creativity/consistency
+            top_p=0.9,
+            max_tokens=1000,
         )
         content = response.choices[0].message.content.strip()
 
@@ -142,11 +147,27 @@ if __name__ == "__main__":
         print(f"- {topic}")
 
     # --- Confirmation Phase ---
-    confirm = input("\nProceed with generation? (y/n): ").strip().lower()
-
-    if confirm != 'y':
-        print("Generation cancelled by user.")
-        exit(0)
+    print("\n--- Confirmation ---")
+    while True:
+        confirm = input(f"Proceed with generating {len(topics_to_generate)} topics? (y/n/number): ").strip().lower()
+        if confirm == 'y':
+            topics_to_process = topics_to_generate
+            print(f"Proceeding with all {len(topics_to_process)} topics.")
+            break
+        elif confirm == 'n':
+            print("Generation cancelled by user.")
+            exit(0)
+        else:
+            try:
+                num_to_generate = int(confirm)
+                if 1 <= num_to_generate <= len(topics_to_generate):
+                    topics_to_process = topics_to_generate[:num_to_generate]
+                    print(f"Proceeding with the first {len(topics_to_process)} topics.")
+                    break
+                else:
+                    print(f"❌ Error: Please enter a number between 1 and {len(topics_to_generate)}.")
+            except ValueError:
+                print("❌ Error: Invalid input. Please enter 'y', 'n', or a number.")
 
     # --- Generation Phase ---
     print("\nStarting generation...")
@@ -154,9 +175,9 @@ if __name__ == "__main__":
     skipped_count = existing_files # Start skipped count with pre-checked files
     error_count = 0
 
-    # Process only the topics identified for generation
-    total_to_generate = len(topics_to_generate)
-    for i, topic in enumerate(topics_to_generate):
+    # Process only the topics identified for generation based on user confirmation
+    total_to_process = len(topics_to_process)
+    for i, topic in enumerate(topics_to_process):
         output_filename = get_safe_filename(topic)
         output_filepath = OUTPUT_DIR / output_filename
 
@@ -164,10 +185,11 @@ if __name__ == "__main__":
         if output_filepath.exists():
             # Should ideally not happen due to pre-check, but handle defensively
             print(f"  ⚠️ Skipping {topic}: File found unexpectedly at {output_filepath.name}")
-            skipped_count += 1 # Adjust count if somehow file appeared
+            # Adjust counts - this topic wasn't really processed
+            # skipped_count += 1 # No need to increment skipped_count again, it was counted in preview
             continue
 
-        print(f"\n[{i+1}/{total_to_generate}] Generating: {topic}")
+        print(f"\n[{i+1}/{total_to_process}] Generating: {topic}")
         print(f"  ⏳ Contacting API...")
         documentation = generate_topic_doc(topic)
 
@@ -185,14 +207,16 @@ if __name__ == "__main__":
                 error_count += 1
 
         # Add delay to avoid rate limiting
-        if i < total_to_generate - 1: # Don't sleep after the last item
+        if i < total_to_process - 1: # Don't sleep after the last item
             # print(f"  💤 Sleeping for {API_CALL_DELAY_SECONDS} second(s)...")
             time.sleep(API_CALL_DELAY_SECONDS)
 
     print("\n--- Generation Summary ---")
     print(f"Successfully generated new files: {generated_count}")
     # Skipped count now includes those identified in preview + any unexpected finds
-    print(f"Skipped (already existing): {skipped_count}")
-    print(f"Errors encountered: {error_count}")
+    # Total skipped = Total topics - Processed (Generated + Error) - Unexpected Skips during loop (though this last part should be 0)
+    final_skipped_count = len(topics) - generated_count - error_count
+    print(f"Skipped (already existing or not processed): {final_skipped_count}")
+    print(f"Errors encountered during generation/saving: {error_count}")
     print("-------------------------")
     print("Documentation generation complete.")
