@@ -77,7 +77,7 @@ const Sidebar = ({ drawerOpen, isSmallScreen, onToggleDrawer }: SidebarProps) =>
           <ListItemText primary="Travel" />
         </ListItemButton>
         <ListItemButton component={Link} to="/dev-knowledge" onClick={onToggleDrawer} selected={location.pathname.startsWith('/dev-knowledge')}>
-          <ListItemText primary="Dev Knowledge" />
+          <ListItemText primary="Dev Learning" />
         </ListItemButton>
 
         {/* Dynamically Render Submenus */}

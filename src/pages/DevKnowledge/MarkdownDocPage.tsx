@@ -74,6 +74,18 @@ const MarkdownDocPage: React.FC = () => {
     }
   };
 
+  // Helper component for the random button to avoid duplication
+  const RandomButton: React.FC<{ onClick: () => void; disabled: boolean }> = ({ onClick, disabled }) => (
+    <Button 
+      variant="outlined"
+      onClick={onClick}
+      disabled={disabled}
+      size="small"
+    >
+      Next Random
+    </Button>
+  );
+
   if (loading) {
     return <Container><CircularProgress /></Container>;
   }
@@ -84,15 +96,8 @@ const MarkdownDocPage: React.FC = () => {
 
   return (
     <Container>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2, flexWrap: 'wrap' }}>
-        <Button 
-          variant="outlined"
-          onClick={handleRandomClick}
-          disabled={availableDocs.length === 0}
-          size="small"
-        >
-          Next Random
-        </Button>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', mb: 2, flexWrap: 'wrap' }}>
+        <RandomButton onClick={handleRandomClick} disabled={availableDocs.length === 0} />
       </Box>
       <Box sx={{
         '& img': {
@@ -131,6 +136,9 @@ const MarkdownDocPage: React.FC = () => {
          }
       }}>
         <ReactMarkdown>{markdown}</ReactMarkdown>
+      </Box>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', mt: 2, mb: 2 }}>
+        <RandomButton onClick={handleRandomClick} disabled={availableDocs.length === 0} />
       </Box>
     </Container>
   );
