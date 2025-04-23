@@ -27,46 +27,56 @@ def get_safe_filename(topic: str) -> str:
 
 def build_prompt(topic: str) -> str:
     """
-    Returns a richer, accuracy‑oriented prompt for OpenAI.
-    The model is asked to produce raw Markdown *only*.
+    Return an LLM prompt that produces a concise, highly practical
+    reference card—pure Markdown, ~300 words—covering the given topic.
     """
     return f"""
-        You are an expert software architect and systems engineer with a practical, and foundational approach.  
-        Write a **concise but information‑dense learning note** on **{topic}** for a mid‑senior software/systems engineer.
+    You are an *expert systems architect and technical educator* writing concise,
+    practical reference cards for experienced software engineers.
 
-        ### Output rules
-        - **Format**: *pure Markdown only* – start with `#`, no front‑matter or prose outside the doc itself.
-        - **Length**: roughly **350–500 words** (≈2–3 min read).
-        - **Voice**: professional, practical, no hype.
-        - **Accuracy**: if unsure, say so briefly; never invent facts.  
-        - **Sources**: place **at least two authoritative links** in the **References** section (MD list). Use official docs, RFCs, academic papers, or well‑known blogs.
+    For the topic **\"{topic}\"**, create a learning document that helps an engineer
+    quickly grasp the concept *and know when to reach for it in production*.
 
-        ### Suggested outline
-        # {topic}
+    ### Output rules
+    - **Format**: *pure Markdown only* — start with `#`, no pre-amble or front-matter.
+    - **Length**: about **350 words** (±30 %).
+    - **Tone**: direct, professional, no hype.
+    - **Accuracy**: if unsure, say so briefly; never invent facts.
+    - **References**: add **1-2 authoritative links** in a final **References** list.
 
-        > **few sentence takeaway**
+    ### Required Markdown outline
+    # {topic}
 
-        ## Core idea
-        - bullets capturing the fundamental concept and why it matters
+    > One-sentence elevator pitch (≤ 25 words)
 
-        ## Key features
-        - bullets highlighting distinct capabilities and use cases
-        
-        ## Why / When / How
-        - why and when to use it
-        - common pitfalls and when not to use it
+    ## Overview
+    Briefly explain what it is and why it exists.
 
-        ## Example / Walk‑through
-        ```pseudo
-        # concise code / CLI / sequence diagram
+    ## Core Idea / Mental Model
+    - Bullet(s) capturing the fundamental insight.
 
-        ## Real-world applications
-        - some real world modern day examples
+    ## Key Features & Benefits
+    - Bullets highlighting capabilities and advantages.
 
-        ## (optional) Sources
-        - if applicable, include one or two authoritative links
+    ## Trade-offs & Pitfalls
+    - Bulleted limitations or common mistakes.
 
-        """
+    ## When to Use / When to Avoid
+    - Short decision guide.
+
+    ## Real-World Examples & Modern Alternatives
+    - Tools, services, or patterns that embody or compete with it.
+
+    ## Common Misconceptions
+    - Quick myth-busting bullets.
+
+    ## Related Topics
+    - 3–5 concepts worth exploring next.
+
+    ## References
+    - Authoritative link 1  
+    - Authoritative link 2
+    """
 
 def generate_topic_doc(topic: str) -> str:
     """

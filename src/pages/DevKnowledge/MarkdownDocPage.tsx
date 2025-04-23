@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
-import { Container, Typography, CircularProgress, Alert, Button, Box } from '@mui/material';
+import { Container, CircularProgress, Alert, Button, Box } from '@mui/material';
 
 // Get the list of all document keys/paths for the random feature
 const allMarkdownFiles = import.meta.glob('./generated_docs/*.md');
@@ -82,15 +82,9 @@ const MarkdownDocPage: React.FC = () => {
     return <Container><Alert severity="error">{error}</Alert></Container>;
   }
 
-  // If we reach here, docId is guaranteed to be defined due to the early returns
-  const title = decodeURIComponent(docId!).replace(/_/g, ' ').replace('.md', '');
-
   return (
     <Container>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2, flexWrap: 'wrap' }}>
-        <Typography variant="h4" component="h1" gutterBottom sx={{ mb: { xs: 2, sm: 0 } }}>
-          {title}
-        </Typography>
         <Button 
           variant="outlined"
           onClick={handleRandomClick}
@@ -100,7 +94,44 @@ const MarkdownDocPage: React.FC = () => {
           Next Random
         </Button>
       </Box>
-      <ReactMarkdown>{markdown}</ReactMarkdown>
+      <Box sx={{
+        '& img': {
+          maxWidth: '100%',
+          height: 'auto',
+          display: 'block',
+        },
+        '& pre': {
+          overflowX: 'auto',
+          whiteSpace: 'pre-wrap',
+          wordBreak: 'break-all',
+          backgroundColor: (theme) => theme.palette.grey[100],
+          padding: (theme) => theme.spacing(2),
+          borderRadius: (theme) => theme.shape.borderRadius,
+        },
+        '& code': {
+           wordBreak: 'break-word',
+        },
+        '& table': {
+            display: 'block',
+            width: '100%',
+            overflowX: 'auto',
+            borderCollapse: 'collapse',
+            '& th, & td': {
+                padding: '8px',
+                border: (theme) => `1px solid ${theme.palette.divider}`,
+            },
+            '& th': {
+                backgroundColor: (theme) => theme.palette.grey[50],
+                textAlign: 'left',
+            },
+        },
+         '& p, & li, & blockquote, & td, & th': {
+            overflowWrap: 'break-word',
+            wordWrap: 'break-word',
+         }
+      }}>
+        <ReactMarkdown>{markdown}</ReactMarkdown>
+      </Box>
     </Container>
   );
 };
