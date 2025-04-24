@@ -14,7 +14,7 @@ const BattleGridView: React.FC<BattleGridViewProps> = ({ onClose }) => {
   const hexagonSize = { x: 7, y: 7 }; // Example size
 
   // TODO: Generate hexagons based on game state/rules
-  const hexagons = GridGenerator.parallelogram(-2, 3, -2, 1);
+  const hexagons = GridGenerator.parallelogram(-2, 0, -2, 1);
 
   return (
     <Box
@@ -29,6 +29,16 @@ const BattleGridView: React.FC<BattleGridViewProps> = ({ onClose }) => {
         justifyContent: 'center',
         alignItems: 'center',
         zIndex: 1000, // Ensure it's on top
+        '& .battle-hexagon': { // Target hexagons by class
+          fill: '#333', // Default color
+          stroke: '#555', // Add a subtle border
+          strokeWidth: 0.1,
+          transition: 'fill 0.2s ease-in-out', // Smooth transition
+          cursor: 'pointer',
+        },
+        '& .battle-hexagon:hover': {
+          fill: 'lightblue', // Hover color
+        }
       }}
       onClick={onClose} // Allow closing by clicking the background
     >
@@ -39,7 +49,13 @@ const BattleGridView: React.FC<BattleGridViewProps> = ({ onClose }) => {
         <HexGrid width={gridWidth} height={gridHeight}>
           <Layout size={hexagonSize} flat={false} spacing={1.1} origin={{ x: 0, y: 0 }}>
             {hexagons.map((hex, i) => (
-              <Hexagon key={i} q={hex.q} r={hex.r} s={hex.s}>
+              <Hexagon 
+                key={i} 
+                q={hex.q} 
+                r={hex.r} 
+                s={hex.s}
+                className="battle-hexagon" // Assign class name
+              >
                 {/* TODO: Add content or styling based on hex state */}
               </Hexagon>
             ))}
