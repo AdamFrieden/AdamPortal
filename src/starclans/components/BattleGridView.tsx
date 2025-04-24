@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { HexGrid, Layout, Hexagon, GridGenerator, HexUtils } from 'react-hexgrid';
-import { Box } from '@mui/material';
+import { Box, useTheme, useMediaQuery } from '@mui/material';
 
 interface BattleGridViewProps {
   // Define props needed for the battle grid, e.g., grid dimensions, active pieces, etc.
@@ -8,10 +8,16 @@ interface BattleGridViewProps {
 }
 
 const BattleGridView: React.FC<BattleGridViewProps> = ({ onClose }) => {
-  // Define grid configuration (size, flat/pointy top)
-  const gridWidth = 1200;
-  const gridHeight = 1000; // Adjusted height to better fit a parallelogram
-  const hexagonSize = { x: 7, y: 7 }; // Example size
+  // Get theme and check for mobile breakpoint
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
+  // Define responsive grid/hexagon configuration
+  const gridWidth = isMobile ? '90vw' : 1000; // Use viewport width on mobile, fixed otherwise
+  const gridHeight = isMobile ? '70vh' : 800; // Use viewport height on mobile
+  const hexagonSize = isMobile ? { x: 5, y: 5 } : { x: 7, y: 7 }; // Smaller hexagons on mobile
+  const layoutOrigin = isMobile ? { x: 10, y: 0 } : { x: 10, y: 0 }; // Adjust origin slightly for smaller grid
+  const layoutSpacing = 1.1;
 
   // TODO: Generate hexagons based on game state/rules
   const hexagons = GridGenerator.parallelogram(-2, 0, -2, 1);
@@ -67,11 +73,24 @@ const BattleGridView: React.FC<BattleGridViewProps> = ({ onClose }) => {
       onClick={onClose} // Allow closing by clicking the background
     >
       <Box
-        sx={{ backgroundColor: '#222', padding: 2, borderRadius: 1 }}
+        sx={{
+          backgroundColor: '#222',
+          padding: isMobile ? 1 : 2, // Less padding on mobile
+          borderRadius: 1,
+          width: isMobile ? '95vw' : 'auto', // Adjust width on mobile
+          height: isMobile ? '80vh' : 'auto', // Adjust height on mobile
+          maxWidth: '1200px', // Optional: Max width for larger screens
+          maxHeight: '90vh', // Optional: Max height
+          overflow: 'hidden', // Hide overflow if grid is larger than box
+          display: 'flex', // Use flex to center grid if needed
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
         onClick={(e) => e.stopPropagation()} // Prevent clicks inside from closing the overlay
       >
         <HexGrid width={gridWidth} height={gridHeight}>
-          <Layout size={hexagonSize} flat={false} spacing={1.1} origin={{ x: 0, y: 0 }}>
+          <Layout size={hexagonSize} flat={false} spacing={layoutSpacing} origin={layoutOrigin}>
             {hexagons.map((hex, i) => {
               // Generate class names: base class + specific color class
               const hexId = HexUtils.getID(hex);
@@ -94,7 +113,7 @@ const BattleGridView: React.FC<BattleGridViewProps> = ({ onClose }) => {
           </Layout>
         </HexGrid>
         {/* TODO: Add controls for placing shapes, confirming turns, etc. */}
-        <button onClick={onClose}>Close</button>
+        <button onClick={onClose} style={{ marginTop: isMobile ? '8px' : '16px' }}>Close</button> {/* Add some margin */}
       </Box>
     </Box>
   );
