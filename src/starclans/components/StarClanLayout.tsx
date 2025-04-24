@@ -14,10 +14,13 @@ import TechView from './TechView';
 import ScanView from './ScanView';
 import ClanView from './ClanView';
 import { ThemeProvider } from '../../context/ThemeProvider';
+import BattleGridView from './BattleGridView';
 
 const StarClanLayout = () => {
   const gameSaveStatus = useStarclanGameStore((state) => state.gameSaveStatus);
-  const apiProcessing = useStarclanUIStore((state) => state.isApiProcessing);
+  const isApiProcessing = useStarclanUIStore((state) => state.isApiProcessing);
+  const isBattleGridVisible = useStarclanUIStore((state) => state.isBattleGridVisible);
+  const hideBattleGrid = useStarclanUIStore((state) => state.hideBattleGrid);
   const hasGameState = useStarclanGameStore((state) => !!state.gameState);
   const rosterCapacity = useStarclanGameStore((state) => state.gameState?.rosterCapacity) || 0;
 
@@ -46,14 +49,15 @@ const StarClanLayout = () => {
 
   return (
     <ThemeProvider defaultDarkMode={true}>
+      {isBattleGridVisible && <BattleGridView onClose={hideBattleGrid} />}
       <Box id='topLayoutBox' sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
         <GameStateHeartbeat />
         <Box sx={{ display: 'flex', flexGrow: 1, overflow: 'auto' }}>
           <Box component="main" sx={{ p: 0, maxWidth: '100vw', margin: '0 auto', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              {(gameSaveStatus === 'NO_SAVE_FOUND' || !hasGameState) && !apiProcessing && (
+              {(gameSaveStatus === 'NO_SAVE_FOUND' || !hasGameState) && !isApiProcessing && (
                 <StartNewClan />
               )}
-              {!hasGameState && gameSaveStatus === 'NO_SAVE_FOUND' && apiProcessing && (
+              {!hasGameState && gameSaveStatus === 'NO_SAVE_FOUND' && isApiProcessing && (
                 <Box id='dashContextBoxLoading' width='100%'>
                   <TopTabBar selectedTab={selectedTab} onTabChange={handleTabChange} />
                   <Grid container spacing={2} sx={{ p: 2, justifyContent: 'center' }}>

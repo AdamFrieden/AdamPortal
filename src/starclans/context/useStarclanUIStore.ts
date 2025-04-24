@@ -8,12 +8,15 @@ export interface StarclanUIState {
   isApiProcessing: boolean;
   loadError: string | null;
   saveError: string | null;
+  isBattleGridVisible: boolean;
 
   // Actions
   showDebugPanel: (show: boolean) => void;
   setApiProcessing: (isProcessing: boolean) => void;
   setLoadError: (error: string | null) => void;
   setSaveError: (error: string | null) => void;
+  showBattleGrid: () => void;
+  hideBattleGrid: () => void;
 }
 
 const useStarclanUIStore = create<StarclanUIState>()(
@@ -25,6 +28,7 @@ const useStarclanUIStore = create<StarclanUIState>()(
       isApiProcessing: false,
       loadError: null,
       saveError: null,
+      isBattleGridVisible: false,
 
       // Actions
       showDebugPanel: (show: boolean) => {
@@ -45,6 +49,16 @@ const useStarclanUIStore = create<StarclanUIState>()(
       setSaveError: (error: string | null) => {
         set((state) => {
           state.saveError = error;
+        });
+      },
+      showBattleGrid: () => {
+        set((state) => {
+          state.isBattleGridVisible = true;
+        });
+      },
+      hideBattleGrid: () => {
+        set((state) => {
+          state.isBattleGridVisible = false;
         });
       },
     })),

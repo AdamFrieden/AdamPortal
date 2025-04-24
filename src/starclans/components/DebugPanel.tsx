@@ -7,6 +7,7 @@ import ConflictAssignment from './ConflictAssignment';
 const DebugPanel = () => {
   const isShowingDebugPanel = useStarclanUIStore((state) => state.isShowingDebugPanel);
   const showDebugPanel = useStarclanUIStore((state) => state.showDebugPanel);
+  const showBattleGrid = useStarclanUIStore((state) => state.showBattleGrid);
   const deleteData = useStarclanGameStore((state) => state.deleteData);
   const debugAddTimeOffset = useStarclanGameStore((state) => state.debugAddTimeOffset);
   const debugTimeOffset = useStarclanGameStore((state) => state.gameState?.debugTimeOffset || 0);
@@ -97,6 +98,20 @@ const DebugPanel = () => {
         </Box>
         
         <Divider sx={{ my: 2 }} />
+        
+        {/* Show Battle Grid Button */}
+        <Box mb={3}>
+          <Typography variant="subtitle1" gutterBottom>
+            Battle Grid Test
+          </Typography>
+          <Button 
+            variant="outlined" 
+            size="small"
+            onClick={showBattleGrid}
+          >
+            Show Battle Grid
+          </Button>
+        </Box>
         
         {/* Conflict Assignment Demo */}
         <Box mb={3}>
