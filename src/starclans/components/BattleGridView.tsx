@@ -18,8 +18,7 @@ const BattleGridView: React.FC<BattleGridViewProps> = ({ onClose }) => {
   const [currentSpacing, setCurrentSpacing] = useState(1.1);
   // Keep hex size responsive, but allow slight override via potential future control
   const baseHexSize = isMobile ? 5 : 7;
-  const [hexSizeFactor, setHexSizeFactor] = useState(1); // Example for future control
-  const currentHexSize = { x: baseHexSize * hexSizeFactor, y: baseHexSize * hexSizeFactor };
+  const currentHexSize = { x: baseHexSize, y: baseHexSize };
 
   // Responsive grid dimensions and origin (can still be adjusted)
   const gridWidth = isMobile ? '90vw' : 1000; 
