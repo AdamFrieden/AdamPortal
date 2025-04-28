@@ -10,7 +10,7 @@ import { useState } from 'react';
 import { GladiatorCardSkeleton } from './GladiatorSkeletonCard';
 import { ContentFactory } from '../domain/contentFactory';
 import GameStateHeartbeat from './GameStateHeartbeat';
-import TechView from './TechView';
+import MissionView from './MissionView';
 import ScanView from './ScanView';
 import ClanView from './ClanView';
 import { ThemeProvider } from '../../context/ThemeProvider';
@@ -39,7 +39,7 @@ const StarClanLayout = () => {
       case 0:
         return <ClanView />;
       case 1:
-        return <TechView />;
+        return <MissionView />;
       case 2:
         return <ScanView />;
       default:

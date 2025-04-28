@@ -8,3 +8,6 @@ Renown - higher renown gives higher level trader deals?
 Increase renown through monster slaying?
 
 
+
+Gladiators have other stats used for different missions
+Command, Hacking, Speed, Technical, Resolve, etc

@@ -11,12 +11,12 @@ import {
   MenuItem
 } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { motion } from 'framer-motion';
 
 import { ACTION_TYPES, ClientGladiator } from '../domain/models'; // adjust the import path as needed
 import useStarclanGameStore from '../context/useStarclanGameStore';
 import GladiatorAvatar from './GladiatorAvatar';
 import { TypingText } from './TypingText';
+import { AnimatedCounter } from './AnimatedCounter';
 
 interface GladiatorCardProps {
   gladiator: ClientGladiator;
@@ -104,80 +104,14 @@ export const GladiatorCard: React.FC<GladiatorCardProps> = ({ gladiator, onRecru
         display: "flex",
         flexDirection: "column",
         position: 'relative',
-        backgroundColor: 'rgba(10, 25, 40, 0.75)',
-        border: '1px dashed rgba(0, 180, 255, 0.5)',
-        boxShadow: '0 0 12px rgba(0, 180, 255, 0.6)',
-        borderRadius: '8px',
+        backgroundColor: 'rgba(20, 20, 20, 1)',
+        border: '0px solid',
+        boxShadow: '0 0 6px rgba(0, 0, 0, 0.29)',
+        borderRadius: '18px',
         overflow: 'hidden',
-        borderColor: gladiator.status === 'ENSLAVED' ? 'primary.main' : 'rgba(0, 180, 255, 0.5)',
+        borderColor: gladiator.status === 'ENSLAVED' ? 'primary.main' : 'rgba(0, 0, 0, 0.56)',
       }}
     >
-      <Box
-        sx={{
-          position: 'absolute',
-          inset: 0,
-          backgroundImage: `
-            linear-gradient(to right, rgba(0,180,255,0.03) 1px, transparent 1px),
-            linear-gradient(to bottom, rgba(0,180,255,0.03) 1px, transparent 1px)
-          `,
-          backgroundSize: '25px 25px',
-          zIndex: 1,
-          pointerEvents: 'none',
-          opacity: 0.7,
-        }}
-      />
-      <Box
-        sx={{
-          position: 'absolute',
-          inset: 0,
-          backgroundImage: 'repeating-linear-gradient(to bottom, rgba(0,180,255,0.06) 0px, rgba(0,180,255,0.06) 1px, transparent 1px, transparent 4px)',
-          zIndex: 2,
-          pointerEvents: 'none',
-          opacity: 0.8,
-        }}
-      />
-
-      <motion.div
-        style={{
-          position: 'relative',
-          zIndex: 5,
-          height: '100%',
-          width: '100%',
-          padding: '8px',
-          display: 'flex',
-          flexDirection: 'column',
-        }}
-        initial={{ scale: 1, rotate: 0 }}
-        animate={{
-          scale: [1, 1.01, 1],
-          rotate: [0, 0.1, -0.1, 0],
-          transition: {
-            repeat: Infinity,
-            duration: 8,
-            ease: 'easeInOut',
-          },
-        }}
-        whileHover={{
-          scale: [1, 1.02, 0.99, 1.01],
-          rotate: [0, -0.5, 0.5, 0],
-          opacity: [1, 0.9, 1],
-          filter: ['none', 'brightness(1.15)', 'none'],
-          transition: {
-            duration: 0.4,
-            times: [0, 0.2, 0.4, 0.6],
-          },
-        }}
-        whileTap={{
-          scale: [1, 0.97, 1.03, 1],
-          rotate: [0, 1, -1, 0],
-          opacity: [1, 0.7, 1],
-          filter: ['none', 'brightness(1.25)', 'none'],
-          transition: {
-            duration: 0.3,
-            times: [0, 0.2, 0.5, 0.7],
-          },
-        }}
-      >
         <CardContent sx={{ p: 1, pb: 0 }}>
           <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
             <Box display="flex" alignItems="center">
@@ -220,13 +154,19 @@ export const GladiatorCard: React.FC<GladiatorCardProps> = ({ gladiator, onRecru
           
           {gladiator.status !== 'ENSLAVED' && renderStaminaSection()}
 
-          <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 3 }}>
-            <Typography variant="h6" color="success">
-              ~{gladiator.estimatedPower}
+          <Box sx={{ display: "flex", justifyContent: "flex-end", alignItems: "center", mt: 3 }}>
+            <Typography variant="h6" color="success" sx={{ mr: 0.5 }}>
+              ~
             </Typography>
+            <AnimatedCounter
+              component={Typography}
+              variant="h6"
+              color="success"
+              endValue={gladiator.estimatedPower}
+              duration={5}
+            />
           </Box>
         </CardContent>
-      </motion.div>
     </Card>
     <Menu
      anchorEl={anchorEl}

@@ -5,7 +5,7 @@ import {
   DialogContent,
   DialogActions,
   Button,
-  Slide,
+  Grow,
 } from '@mui/material';
 import Grid from '@mui/material/Grid2'
 import { ClientGladiator } from '../domain/models';
@@ -25,7 +25,9 @@ const Transition = React.forwardRef(function Transition(
   },
   ref: React.Ref<unknown>,
 ) {
-  return <Slide direction="up" ref={ref} {...props} />;
+  return <Grow in={props.in} ref={ref} {...props} />;
+  // return <Slide direction="left" ref={ref} {...props} />;
+  // return <Zoom in={props.in} ref={ref} {...props} />;
 });
 
 export const RecruitGladiatorsDialog: React.FC<RecruitGladiatorsDialogProps> = ({
