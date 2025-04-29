@@ -30,7 +30,7 @@ import { CSS } from '@dnd-kit/utilities';
 
 import MissionCard, { Mission } from './MissionCard';
 import MissionAssignmentDialog from './MissionAssignmentDialog';
-import { MultipleContainers } from './dnd/MultipleContainers';
+import { MultipleGladiatorContainers } from './dnd/MultipleGladiatorContainers';
 
 // Sample mission data (can come from store later)
 const initialMissions: Mission[] = [
@@ -48,10 +48,8 @@ const MissionView = () => {
   
   return (
       <Box sx={{ p: 2, display: 'flex', gap: 2 }}> {/* Use flex for side-by-side containers */}
-        <MultipleContainers
+        <MultipleGladiatorContainers
           itemCount={5}
-          strategy={rectSortingStrategy}
-          vertical
         />
       </Box>
   );
