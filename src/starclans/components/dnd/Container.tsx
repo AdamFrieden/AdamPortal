@@ -2,7 +2,7 @@ import React, { forwardRef } from "react";
 import classNames from "classnames";
 
 import styles from "./Container.module.scss";
-import { Remove } from "./Remove";
+import { Remove } from "../Remove";
 import { Handle } from "./Handle";
 
 export interface ContainerProps {

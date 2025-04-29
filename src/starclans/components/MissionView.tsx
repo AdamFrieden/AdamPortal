@@ -30,7 +30,7 @@ import { CSS } from '@dnd-kit/utilities';
 
 import MissionCard, { Mission } from './MissionCard';
 import MissionAssignmentDialog from './MissionAssignmentDialog';
-import { MultipleContainers } from './MultipleContainers';
+import { MultipleContainers } from './dnd/MultipleContainers';
 
 // Sample mission data (can come from store later)
 const initialMissions: Mission[] = [

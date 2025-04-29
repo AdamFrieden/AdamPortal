@@ -4,7 +4,7 @@ import type { DraggableSyntheticListeners } from "@dnd-kit/core";
 import type { Transform } from "@dnd-kit/utilities";
 
 import styles from "./Item.module.scss";
-import { Remove } from "./Remove";
+import { Remove } from "../Remove";
 import { Handle } from "./Handle";
 
 export interface Props {

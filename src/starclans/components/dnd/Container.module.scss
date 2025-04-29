@@ -11,7 +11,7 @@
     border-radius: 5px;
     min-height: 200px;
     transition: background-color 350ms ease;
-    background-color: rgba(246, 246, 246, 1);
+    background-color: rgb(26, 28, 41);
     border: 1px solid rgba(0, 0, 0, 0.05);
     font-size: 1em;
   
@@ -45,7 +45,7 @@
     }
   
     &.hover {
-      background-color: rgb(235, 235, 235, 1);
+      background-color: rgb(82, 113, 163);
     }
   
     &.unstyled {
