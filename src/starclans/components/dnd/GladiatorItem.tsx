@@ -15,31 +15,19 @@ export interface GladiatorItemProps {
   disabled?: boolean;
   dragging?: boolean;
   handle?: boolean;
-  handleProps?: any;
+  handleProps?: (React.HTMLAttributes<any> & { ref?: React.Ref<any> }) | undefined; // Refined type
   index?: number;
   fadeIn?: boolean;
   transform?: Transform | null;
   listeners?: DraggableSyntheticListeners;
   sorting?: boolean;
-  style?: React.CSSProperties; // Keep original style prop for potential overrides
+  // style?: React.CSSProperties; // Removed style prop
   transition?: string | null;
-  wrapperStyle?: React.CSSProperties; // Keep wrapperStyle for now, though sx is preferred
+  // wrapperStyle?: React.CSSProperties; // Removed wrapperStyle prop
   value: React.ReactNode; // Placeholder for gladiator data/display
   onRemove?(): void;
-  // renderItem prop is less likely needed now styling is internal, but kept for API consistency
-  renderItem?(args: {
-    dragOverlay: boolean;
-    dragging: boolean;
-    sorting: boolean;
-    index: number | undefined;
-    fadeIn: boolean;
-    listeners: DraggableSyntheticListeners;
-    ref: React.Ref<HTMLElement>;
-    style: React.CSSProperties | undefined;
-    transform: GladiatorItemProps['transform'];
-    transition: GladiatorItemProps['transition'];
-    value: GladiatorItemProps['value'];
-  }): React.ReactElement;
+  sx?: object; // Add sx prop for customization
+  // renderItem prop removed
 }
 
 export const GladiatorItem = React.memo(
@@ -56,13 +44,14 @@ export const GladiatorItem = React.memo(
         index,
         listeners,
         onRemove,
-        renderItem,
+        // renderItem, // Removed renderItem
         sorting,
-        style,
+        // style, // Removed style
         transition,
         transform,
         value, // This will eventually be replaced/used by specific gladiator details
-        wrapperStyle,
+        // wrapperStyle, // Removed wrapperStyle
+        sx,
         ...props
       },
       ref
@@ -73,29 +62,13 @@ export const GladiatorItem = React.memo(
         if (!dragOverlay) {
           return;
         }
-        // Still useful for global cursor change
         document.body.style.cursor = 'grabbing';
         return () => {
           document.body.style.cursor = '';
         };
       }, [dragOverlay]);
 
-      // If a custom renderItem is provided, use it (maintains compatibility if needed)
-      if (renderItem) {
-        return renderItem({
-          dragOverlay: Boolean(dragOverlay),
-          dragging: Boolean(dragging),
-          sorting: Boolean(sorting),
-          index,
-          fadeIn: Boolean(fadeIn),
-          listeners,
-          ref,
-          style, // Pass original style through
-          transform,
-          transition,
-          value,
-        });
-      }
+      // renderItem logic removed
 
       // Default rendering using MUI Box/Paper
       return (
@@ -118,7 +91,8 @@ export const GladiatorItem = React.memo(
               '0%': { opacity: 0 },
               '100%': { opacity: 1 },
             },
-            ...wrapperStyle, // Apply wrapperStyle if provided
+            // ...wrapperStyle, // Removed wrapperStyle
+            ...sx // Apply incoming sx prop to outer Box
           }}
           {...props} // Pass any other props through
         >
@@ -141,7 +115,9 @@ export const GladiatorItem = React.memo(
               '&:focus-visible': {
                 boxShadow: `0 0 0 2px ${theme.palette.primary.main}`, // Example focus ring
               },
-              ...style, // Apply original style prop for overrides last
+              // ...style, // Removed style prop application
+              // Apply incoming sx prop potentially here too, or rely on outer box sx?
+              // For simplicity, applying sx to outer Box only for now.
             }}
             {...(!handle ? listeners : undefined)}
             tabIndex={!handle && !disabled ? 0 : undefined}

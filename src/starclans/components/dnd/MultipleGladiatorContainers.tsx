@@ -381,8 +381,8 @@ export function MultipleGladiatorContainers({
         return (
             <GladiatorContainer
                 label={`Container ${containerId}`} // Adjust label as needed
-                columns={columns}
-                shadow // Use theme shadow for overlay
+                // columns={columns} // Removed columns prop
+                elevation={8} // Use elevation instead of shadow (e.g., 8 for high elevation)
                 sx={{ height: '100%' }} // Example sx override for overlay
             >
                 {items[containerId].map((item, index) => (
@@ -461,7 +461,7 @@ export function MultipleGladiatorContainers({
                             key={containerId}
                             id={containerId}
                             label={`Container ${containerId}`} // Adjust label as needed
-                            columns={columns}
+                            // columns={columns} // Removed columns prop
                             items={items[containerId]}
                             scrollable={scrollable}
                             handle={true} // Assuming containers should have handles
@@ -489,7 +489,7 @@ export function MultipleGladiatorContainers({
                         items={empty}
                         onClick={handleAddColumn}
                         placeholder
-                        columns={columns} // Pass columns for layout consistency
+                        // columns={columns} // Removed columns prop
                         label="+ Add Container" // Use label prop for text
                         children={null} // Explicitly pass null children
                     >

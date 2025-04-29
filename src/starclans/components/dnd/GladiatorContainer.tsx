@@ -9,9 +9,7 @@ import { Handle } from './Handle';   // Keep using the existing Handle
 // Mimic the props from the original ContainerProps for compatibility
 export interface GladiatorContainerProps {
   children: React.ReactNode;
-  columns?: number;
   label?: string;
-  style?: React.CSSProperties; // Allow passing standard style object
   sx?: object; // Allow passing sx prop for overrides
   horizontal?: boolean;
   hover?: boolean;
@@ -20,9 +18,9 @@ export interface GladiatorContainerProps {
     // Add other potential attributes from useSortable if needed, though HTMLAttributes covers most
   }) | undefined;
   scrollable?: boolean;
-  shadow?: boolean; // Use MUI elevation instead?
+  elevation?: number; // Renamed from shadow, expects 0-24
   placeholder?: boolean;
-  unstyled?: boolean; // Less relevant with sx, but kept for API consistency
+  style?: React.CSSProperties; // Explicitly added standard style prop back
   onClick?(): void;
   onRemove?(): void;
 }
@@ -31,7 +29,6 @@ export const GladiatorContainer = forwardRef<HTMLDivElement, GladiatorContainerP
   (
     {
       children,
-      columns = 1,
       handleProps,
       horizontal, // We'll use gridAutoFlow for horizontal layout
       hover,
@@ -39,11 +36,10 @@ export const GladiatorContainer = forwardRef<HTMLDivElement, GladiatorContainerP
       onRemove,
       label,
       placeholder,
-      style,
       sx,
       scrollable,
-      shadow, // Map this to elevation
-      unstyled, // Will primarily remove padding/background
+      elevation, // Renamed from shadow
+      style, // Destructure standard style prop
       ...props
     }: GladiatorContainerProps,
     ref
@@ -54,22 +50,18 @@ export const GladiatorContainer = forwardRef<HTMLDivElement, GladiatorContainerP
     const baseSx: SxProps<Theme> = {
       display: 'flex',
       flexDirection: 'column',
-      gridAutoRows: 'max-content', // Similar to original
-      overflow: unstyled ? 'visible' : 'hidden',
+      overflow: 'hidden', // Default overflow
       boxSizing: 'border-box',
       minWidth: 350,
       m: 1.25, // Equivalent to margin: 10px
       borderRadius: theme.shape.borderRadius,
       minHeight: 200,
-      transition: theme.transitions.create('background-color', { duration: theme.transitions.duration.standard }),
+      transition: theme.transitions.create(['background-color', 'box-shadow'], { duration: theme.transitions.duration.standard }), // Add box-shadow to transition
       bgcolor: 'background.paper', // Use theme paper background
       border: `1px solid ${alpha(theme.palette.common.black, 0.05)}`, // Subtle border
       outline: 'none',
       ...(onClick && { // Styles for ButtonBase
           textAlign: 'initial',
-          '&:hover': { // Basic hover for clickable if needed
-              // backgroundColor: alpha(theme.palette.action.hover, 0.04), // Example hover
-          }
       }),
     };
 
@@ -86,22 +78,13 @@ export const GladiatorContainer = forwardRef<HTMLDivElement, GladiatorContainerP
         bgcolor: 'transparent', // Transparent background for placeholder
         borderStyle: 'dashed',
         borderColor: alpha(theme.palette.divider, 0.5), // Dashed border using divider color
+        overflow: 'visible', // Allow content visibility for placeholder text
         '&:hover': {
           borderColor: theme.palette.divider, // Darker border on hover
         },
       }),
-      ...(scrollable && { // Apply scroll specifically to the children container
-          // Scroll handled by inner Box now
-      }),
-      ...(unstyled && { // Remove padding, background, border for unstyled
-          p: 0,
-          bgcolor: 'transparent !important', // Override base bgcolor
-          border: 'none !important', // Override base border
-          minHeight: 'auto', // Allow shrinking
-          overflow: 'visible',
-      }),
-      ...(shadow && { // Use theme elevation for shadow
-          boxShadow: theme.shadows[4], // Example elevation, adjust as needed
+      ...(elevation !== undefined && { // Use elevation prop for shadow
+          boxShadow: theme.shadows[elevation], // Use provided elevation
       }),
       '&:focus-visible': { // Consistent focus outline
           borderColor: 'transparent',
@@ -115,12 +98,10 @@ export const GladiatorContainer = forwardRef<HTMLDivElement, GladiatorContainerP
         pr: 1, // padding-right: 8px
         alignItems: 'center',
         justifyContent: 'space-between',
-        // Use theme paper or a slightly different shade for header?
         bgcolor: 'background.paper',
-        borderTopLeftRadius: 'inherit', // Inherit from parent
+        borderTopLeftRadius: 'inherit',
         borderTopRightRadius: 'inherit',
         borderBottom: `1px solid ${alpha(theme.palette.divider, 0.8)}`,
-        // Hover effect for actions might need separate handling if desired
     };
 
     const contentSx: SxProps<Theme> = {
@@ -142,7 +123,7 @@ export const GladiatorContainer = forwardRef<HTMLDivElement, GladiatorContainerP
         {...props} // Pass remaining props
         {...(onClick && { onClick: onClick, tabIndex: 0, role: 'button' })} // Add onClick and a11y props if clickable
       >
-        {label && !unstyled ? (
+        {label ? (
           <Box sx={headerSx}>
             <Typography variant="subtitle1" component="span">{label}</Typography>
             <Box sx={{ display: 'flex' }}>
@@ -152,12 +133,12 @@ export const GladiatorContainer = forwardRef<HTMLDivElement, GladiatorContainerP
           </Box>
         ) : null}
 
-        {placeholder && !unstyled ? (
+        {placeholder ? (
           // Placeholder text/content goes directly in the main component
           <Typography variant="button">{children}</Typography>
         ) : (
-          // Render actual children in the grid container
-          <Box component="ul" sx={contentSx}>
+          // Render actual children
+          <Box sx={contentSx}>
             {children}
           </Box>
         )}
