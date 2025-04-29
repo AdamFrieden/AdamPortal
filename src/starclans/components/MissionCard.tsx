@@ -11,16 +11,24 @@ export interface Mission {
 interface MissionCardProps {
   mission: Mission;
   onClick: (mission: Mission) => void;
+  isOverlay?: boolean;
 }
 
-const MissionCard: React.FC<MissionCardProps> = ({ mission, onClick }) => {
+const MissionCard: React.FC<MissionCardProps> = ({ mission, onClick, isOverlay = false }) => {
   const handleCardClick = () => {
-    onClick(mission);
+    if (!isOverlay) {
+        onClick(mission);
+    }
   };
 
   return (
-    <Card sx={{ mb: 1 }}>
-      <CardActionArea onClick={handleCardClick}>
+    <Card sx={{ 
+        mb: 1, 
+        border: isOverlay ? '2px dashed blue' : undefined, 
+        backgroundColor: isOverlay ? 'action.hover' : undefined,
+        pointerEvents: isOverlay ? 'none' : 'auto', 
+    }}>
+      <CardActionArea onClick={handleCardClick} disabled={isOverlay}>
         <CardContent>
           <Typography variant="h6" component="div">
             {mission.title}

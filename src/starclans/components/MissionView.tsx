@@ -1,8 +1,36 @@
-import { useState } from 'react';
-import { Box } from '@mui/material';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
+import { Box, Typography } from '@mui/material';
+import { createPortal } from 'react-dom';
+import {
+  DndContext,
+  closestCenter,
+  MouseSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+  DragOverlay,
+  DropAnimation,
+  defaultDropAnimationSideEffects,
+  UniqueIdentifier,
+  CollisionDetection,
+  pointerWithin,
+  rectIntersection,
+  getFirstCollision,
+  MeasuringStrategy,
+  DragStartEvent,
+} from '@dnd-kit/core';
+import {
+  SortableContext,
+  useSortable,
+  arrayMove,
+  verticalListSortingStrategy,
+  rectSortingStrategy,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 import MissionCard, { Mission } from './MissionCard';
 import MissionAssignmentDialog from './MissionAssignmentDialog';
+import { MultipleContainers } from './MultipleContainers';
 
 // Sample mission data (can come from store later)
 const initialMissions: Mission[] = [
@@ -12,46 +40,20 @@ const initialMissions: Mission[] = [
   { id: 'mission-4', title: 'Defend Starbase Alpha', description: 'Repel attackers.' },
 ];
 
+// Define Container IDs
+
+// --- Main MissionView Component ---
+
 const MissionView = () => {
-  // State for dialog
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [selectedMission, setSelectedMission] = useState<Mission | null>(null);
-
-  // State for missions (could come from store)
-  const [missions] = useState<Mission[]>(initialMissions);
-
-  const handleMissionClick = (mission: Mission) => {
-    setSelectedMission(mission);
-    setDialogOpen(true);
-  };
-
-  const handleCloseDialog = () => {
-    setDialogOpen(false);
-    setSelectedMission(null); // Clear selection on close
-  };
-
+  
   return (
-    <Box sx={{ p: 2, maxWidth: '600px', margin: '0 auto' }}>
-      {/* <Typography variant="h4" gutterBottom>Missions</Typography> */}
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-        {missions.map((mission) => (
-          <MissionCard 
-            key={mission.id} 
-            mission={mission} 
-            onClick={() => handleMissionClick(mission)} 
-          />
-        ))}
-      </Box>
-
-      {/* Render the Dialog */}
-      {selectedMission && (
-        <MissionAssignmentDialog
-          open={dialogOpen}
-          onClose={handleCloseDialog}
-          mission={selectedMission}
+      <Box sx={{ p: 2, display: 'flex', gap: 2 }}> {/* Use flex for side-by-side containers */}
+        <MultipleContainers
+          itemCount={5}
+          strategy={rectSortingStrategy}
+          vertical
         />
-      )}
-    </Box>
+      </Box>
   );
 };
 
