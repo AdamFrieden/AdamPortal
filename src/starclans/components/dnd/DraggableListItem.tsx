@@ -1,4 +1,4 @@
-// src/starclans/components/dnd/GladiatorItem.tsx
+// src/starclans/components/dnd/DraggableListItem.tsx
 import React, { useEffect } from 'react';
 import { Box, Paper, Typography, alpha, useTheme } from '@mui/material';
 import type { DraggableSyntheticListeners } from '@dnd-kit/core';
@@ -9,8 +9,9 @@ import type { Transform } from '@dnd-kit/utilities';
 import { Remove } from '../Remove'; // Adjust path if necessary
 import { Handle } from './Handle';   // Keep using the existing Handle for now
 
-export interface GladiatorItemProps {
-  id: string | number; // Added id prop for clarity
+export interface DraggableListItemProps {
+  id: string | number; // Keep id prop
+  children: React.ReactNode; // Added children prop for generic content
   dragOverlay?: boolean;
   disabled?: boolean;
   dragging?: boolean;
@@ -24,17 +25,18 @@ export interface GladiatorItemProps {
   // style?: React.CSSProperties; // Removed style prop
   transition?: string | null;
   // wrapperStyle?: React.CSSProperties; // Removed wrapperStyle prop
-  value: React.ReactNode; // Placeholder for gladiator data/display
+  // value prop removed
   onRemove?(): void;
   sx?: object; // Add sx prop for customization
   // renderItem prop removed
 }
 
-export const GladiatorItem = React.memo(
-  React.forwardRef<HTMLDivElement, GladiatorItemProps>( // Changed ref type to HTMLDivElement
+export const DraggableListItem = React.memo( // Renamed component
+  React.forwardRef<HTMLDivElement, DraggableListItemProps>( // Changed ref type to HTMLDivElement, updated props type
     (
       {
         id,
+        children, // Destructure children
         dragOverlay,
         dragging,
         disabled,
@@ -49,7 +51,7 @@ export const GladiatorItem = React.memo(
         // style, // Removed style
         transition,
         transform,
-        value, // This will eventually be replaced/used by specific gladiator details
+        // value prop removed
         // wrapperStyle, // Removed wrapperStyle
         sx,
         ...props
@@ -102,8 +104,9 @@ export const GladiatorItem = React.memo(
               position: 'relative',
               display: 'flex',
               alignItems: 'center',
-              p: 2, // Standard padding
-              height: '120px', // Set a fixed height (adjust as needed)
+              p: 1, // Adjusted padding slightly
+              minHeight: '60px', // Reduced default height, let content dictate more
+              width: '100%', // Ensure paper takes full width of Box
               borderRadius: theme.shape.borderRadius, // Use theme border radius
               boxSizing: 'border-box',
               listStyle: 'none', // Ensure no list styles
@@ -116,21 +119,17 @@ export const GladiatorItem = React.memo(
                 boxShadow: `0 0 0 2px ${theme.palette.primary.main}`, // Example focus ring
               },
               // ...style, // Removed style prop application
-              // Apply incoming sx prop potentially here too, or rely on outer box sx?
-              // For simplicity, applying sx to outer Box only for now.
             }}
             {...(!handle ? listeners : undefined)}
             tabIndex={!handle && !disabled ? 0 : undefined}
           >
-            {/* Placeholder for Gladiator Content */}
-            <Box sx={{ flexGrow: 1 }}>
-              <Typography variant="body1">Gladiator: {value}</Typography>
-              <Typography variant="caption">ID: {id}</Typography>
-              {/* Add Avatar, Power etc. here later */}
+            {/* Render the generic children passed into the component */}
+            <Box sx={{ flexGrow: 1, overflow: 'hidden', mr: 1 /* Add some margin */ }}>
+              {children}
             </Box>
 
             {/* Actions (Handle/Remove) */}
-            <Box sx={{ display: 'flex', alignItems: 'center', ml: 1 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', ml: 'auto' /* Push buttons to the right */ }}>
               {onRemove && !disabled ? (
                 <Remove
                     // Potentially add some sx styling if Remove needs adjustments
@@ -152,4 +151,4 @@ export const GladiatorItem = React.memo(
 );
 
 // Ensure component has a display name for debugging/React DevTools
-GladiatorItem.displayName = 'GladiatorItem'; 
+DraggableListItem.displayName = 'DraggableListItem'; // Updated display name 
