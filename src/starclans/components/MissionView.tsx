@@ -30,7 +30,7 @@ import { CSS } from '@dnd-kit/utilities';
 
 import MissionCard, { Mission } from './MissionCard';
 import MissionAssignmentDialog from './MissionAssignmentDialog';
-import { MultipleDraggableLists } from './dnd/MultipleDraggableLists';
+import { MultipleDraggableLists, Items } from './dnd/MultipleDraggableLists';
 
 // Sample mission data
 const initialMissions: Mission[] = [
@@ -63,22 +63,14 @@ const containerLabels = {
   // 'Assigned Missions': 'Assigned Missions'
 };
 
-// --- Types ---
-// You might want to import the Items type from MultipleDraggableLists if possible
-// Otherwise, redefine it here or use Record
-interface Items {
-    [containerId: string]: string[];
-}
-
 // --- Main MissionView Component ---
 
 const MissionView = () => {
-  // State to manage the items if you want interactions to persist
-  // For a static example, you can pass the prepared data directly
+  // State uses the imported Items type
   const [missionItems, setMissionItems] = useState<Items>(() => prepareInitialItems(initialMissions));
   const [missionItemData] = useState(() => prepareItemData(initialMissions));
 
-  // Callback to update state when items change (optional but recommended for interaction)
+  // Callback uses the imported Items type
   const handleItemsChange = useCallback((newItems: Items) => {
       setMissionItems(newItems);
       // Potentially trigger API calls or other side effects here
@@ -98,7 +90,7 @@ const MissionView = () => {
               itemData={missionItemData} // Pass mission details
               containerLabels={containerLabels} // Pass container labels
               itemHandle={true} // Example: Enable handles for mission items
-              // containerHandle={true} // Example: Enable handles for containers
+              containerHandle={true} // Example: Enable handles for containers
               // trashableItems={true} // Example: Enable trash functionality
               onItemsChange={handleItemsChange} // Pass handler to update state
               onContainersChange={handleContainersChange} // Pass handler for container changes

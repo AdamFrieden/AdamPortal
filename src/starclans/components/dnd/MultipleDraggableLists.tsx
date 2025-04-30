@@ -45,7 +45,8 @@ const PLACEHOLDER_ID = 'dnd-placeholder';
 const TRASH_ID = 'dnd-trash'; // Optional trash droppable
 
 // --- Types ---
-interface Items {
+// Export the Items interface for use in parent components
+export interface Items {
     [containerId: string]: string[];
 }
 
