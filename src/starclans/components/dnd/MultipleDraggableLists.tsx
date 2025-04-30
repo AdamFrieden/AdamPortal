@@ -50,16 +50,9 @@ export interface Items {
     [containerId: string]: string[];
 }
 
-// Example data structure - Replace with your actual data type
-interface ExampleItemData {
-    name: string;
-    power?: number;
-    description?: string;
-}
-
 interface MultipleDraggableListsProps {
     initialItems?: Items;
-    itemData?: Record<string, ExampleItemData>; // Pass specific data keyed by item ID
+    renderItem: (id: string) => React.ReactNode; // Function to render each item
     containerLabels?: Record<string, string>; // Optional labels for containers
     isLoading?: boolean;
     vertical?: boolean; // Layout direction for containers
@@ -86,7 +79,7 @@ const dropAnimationConfig: DropAnimation = {
 // --- Main Component ---
 export const MultipleDraggableLists = ({
     initialItems,
-    itemData = {},
+    renderItem,
     containerLabels = {},
     isLoading = false,
     vertical = false,
@@ -126,16 +119,6 @@ export const MultipleDraggableLists = ({
         }
         return Object.keys(items).find(key => items[key].includes(idStr)) || null;
     }, [items, containers]);
-
-    const getActiveItemData = () => {
-        if (!activeId || activeIsContainer) return null;
-        return itemData[activeId.toString()];
-    };
-
-    const getActiveContainerItems = () => {
-        if (!activeId || !activeIsContainer) return [];
-        return items[activeId.toString()] || [];
-    };
 
     // Drag Handlers
     const handleDragStart = useCallback(({ active }: DragStartEvent) => {
@@ -370,13 +353,11 @@ export const MultipleDraggableLists = ({
 
     // Render Overlays
     const renderItemOverlay = (id: UniqueIdentifier) => {
-        const data = itemData[id.toString()];
         return (
             // Use DraggableListItem directly for the overlay representation
             <DraggableListItem id={id.toString()} dragOverlay handle={itemHandle}>
-                {/* Render overlay content based on data */}
-                <Typography variant="body1">{data?.name ?? `Item ${id}`}</Typography>
-                {data?.power != null && <Typography variant="caption">Power: {data.power}</Typography>}
+                {/* Call renderItem for overlay content */}
+                {renderItem(id.toString())}
             </DraggableListItem>
         );
     }
@@ -392,13 +373,11 @@ export const MultipleDraggableLists = ({
             >
                 {/* Render placeholder items or basic representation */}
                 {(items[idStr] ?? []).map(itemId => {
-                    const data = itemData[itemId];
                     // Use DraggableListItem for items within the container overlay
                     return (
                         <DraggableListItem key={itemId} id={itemId} handle={itemHandle}>
-                            {/* Render items within overlay container */}
-                            <Typography variant="body1">{data?.name ?? `Item ${itemId}`}</Typography>
-                            {data?.power != null && <Typography variant="caption">Power: {data.power}</Typography>}
+                            {/* Call renderItem for overlay items */}
+                            {renderItem(itemId)}
                         </DraggableListItem>
                     );
                 })}
@@ -444,7 +423,7 @@ export const MultipleDraggableLists = ({
                             id={containerId} // ID for useSortable
                             label={containerLabels[containerId] ?? containerId}
                             items={items[containerId] ?? []}
-                            itemData={itemData}
+                            renderItem={renderItem}
                             itemStrategy={itemStrategy}
                             itemHandle={itemHandle}
                             containerHandle={containerHandle}
@@ -485,7 +464,7 @@ export const MultipleDraggableLists = ({
 interface SortableContainerProps extends Omit<DraggableListContainerProps, 'children' | 'style'> { // Exclude style, children is handled internally
     id: string; // ID for useSortable
     items: string[];
-    itemData: Record<string, ExampleItemData>;
+    renderItem: (id: string) => React.ReactNode; // ADD renderItem prop
     itemStrategy: SortingStrategy;
     itemHandle?: boolean;
     containerHandle?: boolean;
@@ -494,7 +473,9 @@ interface SortableContainerProps extends Omit<DraggableListContainerProps, 'chil
 }
 
 const SortableContainer = React.memo<SortableContainerProps>(({
-    id, items, label, itemData, itemStrategy, itemHandle, containerHandle, scrollable, onRemoveContainer, onRemoveItem, ...props
+    id, items, label,
+    renderItem, // Destructure renderItem
+    itemStrategy, itemHandle, containerHandle, scrollable, onRemoveContainer, onRemoveItem, ...props
 }) => {
     const {
         attributes,
@@ -513,11 +494,8 @@ const SortableContainer = React.memo<SortableContainerProps>(({
     return (
         <DraggableListContainer
             ref={setNodeRef}
-            // No id prop passed to DraggableListContainer itself
             label={label}
             handleProps={containerHandle ? { ref: setActivatorNodeRef, ...attributes, ...listeners } : undefined}
-            // Remove direct listeners prop - handled by useSortable + handleProps or setNodeRef
-            // listeners={!containerHandle ? listeners : undefined} 
             onRemove={onRemoveContainer}
             scrollable={scrollable}
             sx={{
@@ -530,7 +508,6 @@ const SortableContainer = React.memo<SortableContainerProps>(({
         >
             <SortableContext items={items} strategy={itemStrategy}>
                 {items.map((itemId) => {
-                    const data = itemData[itemId];
                     return (
                         <SortableItem
                             key={itemId}
@@ -538,9 +515,8 @@ const SortableContainer = React.memo<SortableContainerProps>(({
                             handle={itemHandle}
                             onRemove={() => onRemoveItem?.(itemId)}
                         >
-                            {/* Render actual item content */}
-                            <Typography variant="body1">{data?.name ?? `Item ${itemId}`}</Typography>
-                            {data?.power != null && <Typography variant="caption">Power: {data.power}</Typography>}
+                            {/* Call renderItem here to get the actual content */}
+                            {renderItem(itemId)}
                         </SortableItem>
                     );
                 })}
