@@ -700,6 +700,24 @@ export const TravelData: Trip[] = [
   },
   {
     id: 61,
+    destination: 'Tbilisi, Georgia',
+    country: 'Georgia',
+    date: '2025-05-22',
+    position: [41.6938, 44.8015],
+    description: 'Explored the ancient capital with its old town, sulfur baths, and vibrant food scene.',
+    photoUrls: []
+  },
+  {
+    id: 62,
+    destination: 'Stepantsminda, Georgia',
+    country: 'Georgia',
+    date: '2025-05-28',
+    position: [42.6586, 44.6406],
+    description: 'Visited the iconic Gergeti Trinity Church with dramatic views of Mount Kazbegi.',
+    photoUrls: []
+  },
+  {
+    id: 63,
     destination: 'Chamonix, France',
     country: 'France',
     date: '2026-01-29',
@@ -708,7 +726,7 @@ export const TravelData: Trip[] = [
     photoUrls: []
   },
   {
-    id: 62,
+    id: 64,
     destination: 'Zermatt, Switzerland',
     country: 'Switzerland',
     date: '2026-02-04',
