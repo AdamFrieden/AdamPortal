@@ -697,5 +697,23 @@ export const TravelData: Trip[] = [
       'https://www.facebook.com/share/18cTYkczWJ/',
       'https://www.instagram.com/p/DBSFUF3vGzd/?img_index=1'
     ]
+  },
+  {
+    id: 61,
+    destination: 'Chamonix, France',
+    country: 'France',
+    date: '2026-01-29',
+    position: [45.9237, 6.8694],
+    description: 'World-class skiing and stunning views of Mont Blanc.',
+    photoUrls: []
+  },
+  {
+    id: 62,
+    destination: 'Zermatt, Switzerland',
+    country: 'Switzerland',
+    date: '2026-02-04',
+    position: [46.0207, 7.7491],
+    description: 'Car-free alpine village with iconic views of the Matterhorn.',
+    photoUrls: []
   }
 ];
