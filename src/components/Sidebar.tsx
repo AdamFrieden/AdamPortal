@@ -38,13 +38,13 @@ const Sidebar = ({ drawerOpen, isSmallScreen, onToggleDrawer }: SidebarProps) =>
 
   // Example submenus with their items
   const submenus = [
-    {
-      id: 'creativeWriting',
-      label: 'Creative Writing',
-      items: [
-        { label: '[empty]', path: '/' },
-      ],
-    },
+    // {
+    //   id: 'creativeWriting',
+    //   label: 'Creative Writing',
+    //   items: [
+    //     { label: '[empty]', path: '/' },
+    //   ],
+    // },
     {
       id: 'projects',
       label: 'Projects',
@@ -76,9 +76,9 @@ const Sidebar = ({ drawerOpen, isSmallScreen, onToggleDrawer }: SidebarProps) =>
         <ListItemButton component={Link} to="/travel" onClick={onToggleDrawer} selected={isActive('/travel')}>
           <ListItemText primary="Travel" />
         </ListItemButton>
-        <ListItemButton component={Link} to="/dev-knowledge" onClick={onToggleDrawer} selected={location.pathname.startsWith('/dev-knowledge')}>
+        {/* <ListItemButton component={Link} to="/dev-knowledge" onClick={onToggleDrawer} selected={location.pathname.startsWith('/dev-knowledge')}>
           <ListItemText primary="Dev Learning" />
-        </ListItemButton>
+        </ListItemButton> */}
 
         {/* Dynamically Render Submenus */}
         {submenus.map((submenu) => (
